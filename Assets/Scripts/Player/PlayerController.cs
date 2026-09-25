@@ -370,7 +370,6 @@ namespace Player
             }
         }
         
-        
         private bool DetectTileCollision(Bounds ours, int dir, Tilemap tmap)
         {
             Vector2[] boundCorners = new Vector2[4];
