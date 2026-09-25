@@ -1799,10 +1799,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0
-    y: 0.033333335
-    width: 1
-    height: 0.93333334
+    x: 0.17862372
+    y: 0
+    width: 0.64254344
+    height: 1
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 34
@@ -2121,7 +2121,7 @@ GameObject:
   - component: {fileID: 793351919}
   - component: {fileID: 793351918}
   - component: {fileID: 793351920}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Walls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4117,7 +4117,7 @@ MonoBehaviour:
     useOutsideNormalAngle: 0
     layerMask:
       serializedVersion: 2
-      m_Bits: 1
+      m_Bits: 64
     minDepth: 0
     maxDepth: 0
     minNormalAngle: 0

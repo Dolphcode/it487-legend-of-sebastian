@@ -3,6 +3,7 @@ using Math = System.Math;
 using MidpointRounding = System.MidpointRounding;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Tilemaps;
 
 namespace Player
 {
@@ -32,7 +33,6 @@ namespace Player
         private bool snappedToGridFlag = false;
         private Vector3 lastPosition, deltaPosition;
         private bool vBlocked = false;
-        
         
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
@@ -162,31 +162,62 @@ namespace Player
                 // Specify other
                 Collider2D other = colliders[i];
                 Debug.Log($"We are colliding with {other.gameObject.name}");
+
+                if (other is TilemapCollider2D) ResolveTileCollision(other.gameObject.GetComponent<Tilemap>());
+                else ResolveBasicCollision(other);
                 
-                // Grab bounds and determine signed overlap vector
-                Bounds others = other.bounds;
-                ours = new Bounds(new Vector2(transform.position.x, transform.position.y) + collider2D.offset * transform.localScale,
-                    collider2D.size * transform.localScale);
+            }
+        }
+
+        private void ResolveTileCollision(Tilemap other)
+        {
+            Bounds ours = new Bounds(new Vector2(transform.position.x, transform.position.y) + collider2D.offset * transform.localScale,
+                collider2D.size * transform.localScale);
+            Vector2[] boundCorners = new Vector2[4];
+            boundCorners[0] = ours.min;
+            boundCorners[1] = ours.max;
+            boundCorners[2] = new Vector2(ours.min.x, ours.max.y);
+            boundCorners[3] = new Vector2(ours.max.x, ours.min.y);
             
-                // Compute overlaps
-                float overlapX = Mathf.Min(ours.max.x, others.max.x) - Mathf.Max(ours.min.x, others.min.x);
-                float overlapY = Mathf.Min(ours.max.y, others.max.y) - Mathf.Max(ours.min.y, others.min.y);
+            // Perform resolution for each corner
+            foreach (Vector2 point in boundCorners)
+            {
+                // Check what tiles this point is overlapping
+                Collider2D[] collidersOnCorner = new Collider2D[4];
+                int colliderCount;
+                if ((colliderCount = Physics2D.OverlapPoint(point, contactFilter, collidersOnCorner)) == 0) continue;
+                
+                // 
+                fo
+                
+            }
+        }
+
+        private void ResolveBasicCollision(Collider2D other)
+        {
+            // Grab bounds and determine signed overlap vector
+            Bounds others = other.bounds;
+            Bounds ours = new Bounds(new Vector2(transform.position.x, transform.position.y) + collider2D.offset * transform.localScale,
+                collider2D.size * transform.localScale);
             
-                // Cut short if neither is overlapping
-                if (overlapX <= 0.1f || overlapY <= 0.1f) continue;
+            // Compute overlaps
+            float overlapX = Mathf.Min(ours.max.x, others.max.x) - Mathf.Max(ours.min.x, others.min.x);
+            float overlapY = Mathf.Min(ours.max.y, others.max.y) - Mathf.Max(ours.min.y, others.min.y);
             
-                // Resolve the smaller overlap
-                // But prioritize horizontal over vertical
-                if (overlapX <= overlapY && overlapX > 0.1f)
-                {
-                    float correctionDir = -Mathf.Sign(others.center.x - ours.center.x);
-                    transform.position += Vector3.right * correctionDir * overlapX;
-                }
-                else
-                {
-                    float correctionDir = -Mathf.Sign(others.center.y - ours.center.y);
-                    transform.position += Vector3.up * correctionDir * overlapY;
-                }
+            // Cut short if neither is overlapping
+            if (overlapX <= 0.1f || overlapY <= 0.1f) return;
+            
+            // Resolve the smaller overlap
+            // But prioritize horizontal over vertical
+            if (overlapX <= overlapY && overlapX > 0.1f)
+            {
+                float correctionDir = -Mathf.Sign(others.center.x - ours.center.x);
+                transform.position += Vector3.right * correctionDir * overlapX;
+            }
+            else
+            {
+                float correctionDir = -Mathf.Sign(others.center.y - ours.center.y);
+                transform.position += Vector3.up * correctionDir * overlapY;
             }
         }
     }
