@@ -345,8 +345,6 @@ namespace Player
 
         private void ResolveTileCollision(Vector3Int checkLoc, Tilemap tmap)
         {
-            this.tmap = tmap;
-            Debug.Log($"Checking location {checkLoc}, {tmap.HasTile(checkLoc)}");
             if (tmap.HasTile(checkLoc))
             {
                 Bounds ours = new Bounds(new Vector2(transform.position.x, transform.position.y) + collider2D.offset * transform.localScale,
@@ -466,56 +464,5 @@ namespace Player
             }
         }
 
-        private Tilemap tmap;
-        private void OnDrawGizmos()
-        {
-            if (tmap == null)
-                return;
-
-            Gizmos.color = Color.red;
-
-            foreach (Vector3Int cell in tmap.cellBounds.allPositionsWithin)
-            {
-                if (!tmap.HasTile(cell))
-                    continue;
-
-                Bounds bounds;
-
-                Tile t = tmap.GetTile<Tile>(cell);
-
-                if (t is CollidingTile c)
-                {
-                    Bounds localBounds = c.GetBounds();
-
-                    Vector3 worldCellSize = Vector3.Scale(
-                        tmap.cellSize,
-                        tmap.transform.lossyScale
-                    );
-
-                    Vector3 center =
-                        tmap.GetCellCenterWorld(cell) +
-                        Vector3.Scale(localBounds.center, worldCellSize);
-
-                    Vector3 size =
-                        Vector3.Scale(localBounds.size, worldCellSize);
-
-                    bounds = new Bounds(center, size);
-                }
-                else
-                {
-                    Vector3 worldCellSize = Vector3.Scale(
-                        tmap.cellSize,
-                        tmap.transform.lossyScale
-                    );
-
-                    bounds = new Bounds(
-                        tmap.GetCellCenterWorld(cell),
-                        worldCellSize
-                    );
-                }
-
-                Gizmos.DrawWireCube(bounds.center, bounds.size);
-            }
-        }
     }
 }
