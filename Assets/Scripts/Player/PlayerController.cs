@@ -72,6 +72,9 @@ namespace Player
         // Fixed Update is called once per physics frame
         void FixedUpdate()
         {
+            // Check if player is frozen, skip if so
+            if (playerInputFrozen) return;
+            
             // Get the movement input value and round it to integral values
             Vector2 moveInputValue = moveAction.ReadValue<Vector2>();
             int xIn = (int)Math.Round(moveInputValue.x, MidpointRounding.AwayFromZero);
@@ -91,8 +94,9 @@ namespace Player
         /// <param name="tiles">Tiles to move, must be positive (will be converted internally if not)</param>
         /// <param name="time">Time to move, must be a positive value (will be clamped to 0 or more)</param>
         /// <param name="direction">The direction in which the player will move over the span of this coroutine. Defaults to right if invalid direction is provided</param>
+        /// <param name="snapToGrid">Toggle this if you would like to automatically compute movement such that the player ends on a whole number tile</param>
         /// <returns>IEnumerator to pass into <c>StartCoroutine</c></returns>
-        public IEnumerator ForcePlayerCoroutine(int tiles, float time, PlayerDirection direction)
+        public IEnumerator ForcePlayerCoroutine(int tiles, float time, PlayerDirection direction, bool snapToGrid)
         {
             // Back out if 0 time provided
             if (time <= 0f)
@@ -111,8 +115,31 @@ namespace Player
             // Convert tiles to positive
             if (tiles < 0) tiles = Mathf.Abs(tiles);
             
-            // Compute move speed and determine directional parameters
-            float compMoveSpeed = (float)tiles / time;
+            // Compute move total (if needed), move speed, and determine directional parameters
+            float actualMovementTotal = (float)tiles;
+            if (snapToGrid)
+            {
+                switch (direction)
+                {
+                    case PlayerDirection.DOWN:
+                    case PlayerDirection.UP:
+                        int dirVFactor = (int)direction - 1;
+                        float initY = transform.position.y;
+                        float snappedY = Mathf.Round(initY + dirVFactor * tiles);
+                        actualMovementTotal = Mathf.Abs(snappedY - initY);
+                        break;
+                    case PlayerDirection.LEFT:
+                    case PlayerDirection.RIGHT:
+                    default:
+                        int dirHFactor = -((int)direction - 2);
+                        float initX = transform.position.x;
+                        float snappedX = Mathf.Round(initX + dirHFactor * tiles);
+                        actualMovementTotal = Mathf.Abs(snappedX - initX);
+                        break;
+                }
+            }
+            
+            float compMoveSpeed = actualMovementTotal / time;
             int xIn, yIn; // NOTE: Defaults to right if an invalid direction is provided
             switch (direction)
             {
