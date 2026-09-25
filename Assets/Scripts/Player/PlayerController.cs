@@ -45,6 +45,11 @@ namespace Player
         
         // On Start components
         private BoxCollider2D collider2D;
+        private Animator animator;
+        private SpriteRenderer sprite;
+        
+        // Animator IDs
+        private int _animMovingId, _animDirectionId;
         
         // State Variables
         private float currY = 0f, expectedY = 0f;
@@ -59,6 +64,13 @@ namespace Player
         {
             // Get all components
             collider2D = GetComponent<BoxCollider2D>();
+            animator = GetComponent<Animator>();
+            sprite = GetComponent<SpriteRenderer>();
+            
+            // Get animator ids
+            _animMovingId = Animator.StringToHash("Moving");
+            _animDirectionId = Animator.StringToHash("Direction");
+            
             
             // Actions
             moveAction = InputSystem.actions.FindAction("Move");
@@ -84,6 +96,8 @@ namespace Player
             // Be sure to freeze player input if plannign on moving elsewhere
             // Generally MovePlayer should only be called in FixedUpdate or after FixedUpdate frame
             MovePlayer(this.moveSpeed, xIn, yIn);
+            
+            SetAnimatorState(xIn != 0 || yIn != 0, (PlayerDirection)facing);
         }
 
         /// <summary>
@@ -161,6 +175,9 @@ namespace Player
                     xIn = 1;
                     break;
             }
+            
+            // Set animator state
+            SetAnimatorState(true, direction);
 
             // Every physics frame
             for (; time > 0f; time -= Time.fixedDeltaTime)
@@ -168,6 +185,9 @@ namespace Player
                 MovePlayer(compMoveSpeed, xIn, yIn);
                 yield return new WaitForFixedUpdate();
             }
+            
+            // End idle
+            SetAnimatorState(false, direction);
         }
 
         private void MovePlayer(float moveSpeed, int xIn, int yIn)
@@ -488,6 +508,16 @@ namespace Player
                 float correctionDir = -Mathf.Sign(others.center.y - ours.center.y);
                 transform.position += Vector3.up * correctionDir * overlapY;
             }
+        }
+
+        private void SetAnimatorState(bool walking, PlayerDirection direction)
+        {
+            animator.SetInteger(_animDirectionId, (int)direction);
+            animator.SetBool(_animMovingId, walking);
+            
+            // FLip for left specifically
+            if (direction == PlayerDirection.LEFT) sprite.flipX = true;
+            else sprite.flipX = false;
         }
 
     }
