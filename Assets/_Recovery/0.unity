@@ -218,10 +218,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.12518302
+    x: 0
     y: 0
-    width: 0.74963397
-    height: 1
+    width: 0
+    height: 0
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 34
@@ -633,7 +633,7 @@ GameObject:
   - component: {fileID: 1632810237}
   - component: {fileID: 1632810235}
   - component: {fileID: 1632810238}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Link
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -672,20 +672,6 @@ MonoBehaviour:
   positionSnapThreshold: 0.01
   motionBias: 0.3
   overlapOvershootMax: 0.4
-  contactFilter:
-    useTriggers: 0
-    useLayerMask: 1
-    useDepth: 0
-    useOutsideDepth: 0
-    useNormalAngle: 0
-    useOutsideNormalAngle: 0
-    layerMask:
-      serializedVersion: 2
-      m_Bits: 1
-    minDepth: 0
-    maxDepth: 0
-    minNormalAngle: 0
-    maxNormalAngle: 0
 --- !u!50 &1632810236
 Rigidbody2D:
   serializedVersion: 5
@@ -694,9 +680,9 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1632810232}
-  m_BodyType: 1
+  m_BodyType: 0
   m_Simulated: 1
-  m_UseFullKinematicContacts: 1
+  m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDamping: 0

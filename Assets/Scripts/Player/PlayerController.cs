@@ -15,33 +15,38 @@ namespace Player
         [SerializeField] [Range(0f, 1.0e-4f)] private float blockTestThreshold = 1.0e-5f;
         [SerializeField] private float positionSnapThreshold = 1f/32f;
         [SerializeField] private float motionBias = 0.1f;
+        [SerializeField] private float overlapOvershootMax = 0.2f;
+
+        [Header("Collision Config")] [SerializeField]
+        private ContactFilter2D contactFilter;
         
         // On Start actions
         private InputAction moveAction;  
         
         // On Start components
-        private Rigidbody2D rigidbody2D;
+        private BoxCollider2D collider2D;
         
         // State variables
         private float currY = 0f, expectedY = 0f;
         private int prevYIn = 0;
         private bool snappedToGridFlag = false;
-        private Vector2 lastPosition, deltaPosition;
+        private Vector3 lastPosition, deltaPosition;
+        private bool vBlocked = false;
         
         
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
             // Get all components
-            rigidbody2D = GetComponent<Rigidbody2D>();
+            collider2D = GetComponent<BoxCollider2D>();
             
             // Actions
             moveAction = InputSystem.actions.FindAction("Move");
             
             // Save the current y position
-            currY = rigidbody2D.position.y;
-            lastPosition = rigidbody2D.position;
-            expectedY = rigidbody2D.position.y;
+            currY = transform.position.y;
+            lastPosition = transform.position;
+            expectedY = transform.position.y;
         }
 
         // Fixed Update is called once per physics frame
@@ -61,59 +66,128 @@ namespace Player
             // The purpose of this is to take the change in y from the previous frame to the current after
             // collision is resolved (which presumably occurs after FixedUpdate? may need to verify this
             // We also compute the delta position between frames to apply a motion bias and save the last position at this frame
-            deltaPosition = rigidbody2D.position - lastPosition;
+            deltaPosition = transform.position - lastPosition;
             Debug.Log(deltaPosition);
-            lastPosition = rigidbody2D.position;
-            currY = rigidbody2D.position.y;
+            lastPosition = transform.position;
+            currY = transform.position.y;
+            Debug.Log($"Position at start: {transform.position}");
 
             // Evaluate vertical movement first
             // Skip to horizontal if we are being blocked vertically by a wall essentially and both a vertical and horizontal input are being applied
             // We only perform the block test if we were pressing a y input in the previous frame of course
             // I realized I needed to distinguish between being blocked up or down
-            Vector2 newPosition = rigidbody2D.position;
+            Vector2 newPosition = transform.position;
             float delta = moveSpeed * Time.fixedDeltaTime;
-            bool vBlocked = ((expectedY - currY > blockTestThreshold && prevYIn == 1) ||
-                             (expectedY - currY < -blockTestThreshold && prevYIn == -1));
-            if (yIn != 0 && !vBlocked)
+            Debug.Log($"vblocked is {vBlocked} because we expect {expectedY}, got {currY} given input {prevYIn}");
+            if (yIn != 0)
             {
-                float a = Mathf.Round(rigidbody2D.position.x + motionBias * Mathf.Sign(deltaPosition.x)) - rigidbody2D.position.x;
-                float b = Mathf.Max(delta - Mathf.Abs(a), 0f) * yIn;
-                
-                // The correction component (a component) for grid snapping
-                float remainderMove = Mathf.Min(Mathf.Abs(a), delta) * Mathf.Sign(a);
+                // Check if we are blocked in the direction we are trying to go in?
+                Collider2D[] vblockCheckArray = new Collider2D[1];
+                vBlocked = Physics2D.OverlapBox(new Vector2(transform.position.x, transform.position.y + delta * yIn) + collider2D.offset * transform.localScale,
+                    (collider2D.size - new Vector2(0.05f, 0.05f)) * transform.localScale,
+                    0f,
+                    contactFilter,
+                    vblockCheckArray) > 0;
 
-                newPosition = rigidbody2D.position + new Vector2(remainderMove, b);
-                rigidbody2D.MovePosition(newPosition);
-            } else if (xIn != 0) // Then horizontal
+                // If we are not blocked we can perform vertical motion as usual
+                if (!vBlocked)
+                {
+                    float a = Mathf.Round(transform.position.x + motionBias * Mathf.Sign(deltaPosition.x)) -
+                              transform.position.x;
+                    float b = Mathf.Max(delta - Mathf.Abs(a), 0f) * yIn;
+
+                    // The correction component (a component) for grid snapping
+                    float remainderMove = Mathf.Min(Mathf.Abs(a), delta) * Mathf.Sign(a);
+
+                    newPosition = transform.position + new Vector3(remainderMove, b, 0f);
+                    transform.position = newPosition;
+                }
+            } 
+            
+            if (xIn != 0 && (yIn == 0 || vBlocked)) // Then handle horizontal input (if we aren't pressing vertical input or vertical is blocked)
             {
-                float a;
-                if (yIn != 0)
-                    a = Mathf.Round(rigidbody2D.position.y) - rigidbody2D.position.y;
-                else
-                    a = Mathf.Round(rigidbody2D.position.y + motionBias * Mathf.Sign(deltaPosition.y)) - rigidbody2D.position.y;
+                float a = Mathf.Round(transform.position.y + motionBias * Mathf.Sign(deltaPosition.y)) - transform.position.y;
                 float b = Mathf.Max(delta - Mathf.Abs(a), 0f) * xIn;
-
                 float remainderMove = Mathf.Min(Mathf.Abs(a), delta) * Mathf.Sign(a);
-
-                newPosition = rigidbody2D.position + new Vector2(b, remainderMove);
-                rigidbody2D.MovePosition(newPosition);
+                
+                newPosition = transform.position + new Vector3(b, remainderMove, 0f);
+                
+                /*
+                if (vBlocked)
+                {
+                    Vector2 overshotFrom = new Vector2(Mathf.Round(newPosition.x + 0.5f * -xIn), Mathf.Round(newPosition.y));
+                    Vector2 boxCenter = overshotFrom + Vector2.down * 0.5f + Vector2.up * yIn;
+                    Vector2 boxSize = new Vector2(2f - overlapOvershootMax, 0.95f);
+                    
+                    
+                    Vector2 boxCornerTL = boxCenter - boxSize * 0.5f;
+                    Vector2 boxCornerBR = boxCenter + boxSize * 0.5f;
+                    Vector2 boxCornerTR = new Vector2(boxCornerTL.x + boxSize.x, boxCornerTL.y);
+                    Vector2 boxCornerBL = new Vector2(boxCornerBR.x - boxSize.x, boxCornerBR.y);
+                    Debug.DrawLine(boxCornerTL, boxCornerTR, Color.red, 0.5f, false);
+                    Debug.DrawLine(boxCornerBL, boxCornerBR, Color.red, 0.5f, false);
+                    Debug.DrawLine(boxCornerBL, boxCornerTL, Color.red, 0.5f, false);
+                    Debug.DrawLine(boxCornerBR, boxCornerTR, Color.red, 0.5f, false);
+                    
+                    
+                    //bool tileClear = Physics2D.OverlapBox(boxCenter, boxSize, 0f, ~LayerMask.GetMask("Player")) is null; 
+                    //if (tileClear)
+                    //    newPosition.x = Mathf.Round(newPosition.x);
+                }*/
+                
+                transform.position = newPosition;
             }
             
-            // At slow speeds, there is a bug that occurs likely due to the overlapping of identically
-            // sized single tile hitboxes. To reduce this I implement an additional, more aggressive positional
-            // grid snap so that hitboxes align correctly in this micropixel case scenario
-            Vector2 snappedPosition = newPosition;
-            if (Mathf.Abs(newPosition.x - Mathf.Round(newPosition.x)) < positionSnapThreshold)
-                snappedPosition.x =  Mathf.Round(newPosition.x);
-            if (Mathf.Abs(newPosition.y - Mathf.Round(newPosition.y)) < positionSnapThreshold)
-                snappedPosition.y =  Mathf.Round(newPosition.y);
-            rigidbody2D.MovePosition(snappedPosition);
-            
             // Save what the y should be without collision resolution
-            expectedY = snappedPosition.y;
+            expectedY = transform.position.y;
             
             // Save this yIn as the previous yIn
             prevYIn = yIn;
+           
+            // Reset vblocked
+            vBlocked = false;
+            
+            /* COLLISION SOLVING */
+            Collider2D[] colliders = new Collider2D[4];
+            Bounds ours = new Bounds(new Vector2(transform.position.x, transform.position.y) + collider2D.offset * transform.localScale,
+                (collider2D.size) * transform.localScale);
+            
+            int overlapCount = Physics2D.OverlapBox(ours.center, 
+                ours.size,
+                0f,
+                contactFilter,
+                colliders);
+            for (int i = 0; i < overlapCount; i++)
+            {
+                // Specify other
+                Collider2D other = colliders[i];
+                Debug.Log($"We are colliding with {other.gameObject.name}");
+                
+                // Grab bounds and determine signed overlap vector
+                Bounds others = other.bounds;
+                ours = new Bounds(new Vector2(transform.position.x, transform.position.y) + collider2D.offset * transform.localScale,
+                    collider2D.size * transform.localScale);
+            
+                // Compute overlaps
+                float overlapX = Mathf.Min(ours.max.x, others.max.x) - Mathf.Max(ours.min.x, others.min.x);
+                float overlapY = Mathf.Min(ours.max.y, others.max.y) - Mathf.Max(ours.min.y, others.min.y);
+            
+                // Cut short if neither is overlapping
+                if (overlapX <= 0.1f || overlapY <= 0.1f) continue;
+            
+                // Resolve the smaller overlap
+                // But prioritize horizontal over vertical
+                if (overlapX <= overlapY && overlapX > 0.1f)
+                {
+                    float correctionDir = -Mathf.Sign(others.center.x - ours.center.x);
+                    transform.position += Vector3.right * correctionDir * overlapX;
+                }
+                else
+                {
+                    float correctionDir = -Mathf.Sign(others.center.y - ours.center.y);
+                    transform.position += Vector3.up * correctionDir * overlapY;
+                }
+            }
         }
     }
 }
