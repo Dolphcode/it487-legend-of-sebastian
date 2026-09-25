@@ -188,7 +188,7 @@ namespace Player
                 if ((colliderCount = Physics2D.OverlapPoint(point, contactFilter, collidersOnCorner)) == 0) continue;
                 
                 // 
-                fo
+                
                 
             }
         }
