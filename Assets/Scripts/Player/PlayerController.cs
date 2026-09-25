@@ -7,19 +7,26 @@ using UnityEngine.Tilemaps;
 
 namespace Player
 {
+    /// <summary>
+    /// PlayerController represents an emulation of the player controller for Link in the NES version of The Legend of Zelda. The goal
+    /// of this script is to closely emulate the grid-based movement of Link in TLoZ. This includes some of the fun little movement quirks
+    /// which are described in the FixedUpdate function of this class. Essentially custom collision resolution and tile-based movement
+    /// is implemented in order to make this function as closely to the original as possible. This is purely a PlayerController, and does not
+    /// at all represent other data/constructs suc has health or inventory. This will be implemented in a separate module.
+    /// TODO: A lot of this code could probably be repeated for enemies. The difference being that Player is controlled by input while
+    ///       enemies are controlled by an enemy brain. THUS, it might be helpful to extract some of these functions and fields to
+    ///       an abstract class which PlayerController and EnemyController might extend. Something like an EntityController base class?
+    /// </summary>
     public class PlayerController : MonoBehaviour
     {
 
-        [Header("Movement Config")] [SerializeField]
-        private float moveSpeed = 5f;
-
+        [Header("Movement Config")] [SerializeField] private float moveSpeed = 5f;
         [SerializeField] [Range(0f, 1.0e-4f)] private float blockTestThreshold = 1.0e-5f;
         [SerializeField] private float positionSnapThreshold = 1f/32f;
         [SerializeField] private float motionBias = 0.1f;
         [SerializeField] private float overlapOvershootMax = 0.2f;
 
-        [Header("Collision Config")] [SerializeField]
-        private ContactFilter2D contactFilter;
+        [Header("Collision Config")] [SerializeField] private ContactFilter2D contactFilter;
         
         // On Start actions
         private InputAction moveAction;  
@@ -27,15 +34,13 @@ namespace Player
         // On Start components
         private BoxCollider2D collider2D;
         
-        // State variables
+        // State Variables
         private float currY = 0f, expectedY = 0f;
         private int prevYIn = 0;
         private bool snappedToGridFlag = false;
         private Vector3 lastPosition, deltaPosition;
         private bool vBlocked = false;
-
-        // 0 = down, 1 = right, 2 = up, 3 = left
-        private int facing = 0;
+        private int facing = 0; // 0 = down, 1 = right, 2 = up, 3 = left
         
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
@@ -57,7 +62,12 @@ namespace Player
         {
             /*
              * 1. Vertical movement evaluates before horizontal. If holding UP/LEFT you will go all the way up first and then when you collide with the wall you will start going left.
-             * 2. 
+             * 2. When switching from moving horizontally to vertically or vice versa, Link will snap to the closest whole number edge of the original axis
+             *    We apply a motion bias to bias link to move in the direction of wherever he was moving originally if an input was being pressed
+             *    before the horizontal to vertical or vertical to horizontal input switch
+             *
+             *  This took a lot of work to get right. I had to give up on using Rigidbody2D (which in retrospect didn't make much sense to use in
+             *  the first place). I sincerely doubt I could write this out ever again, but you know, who knows I guess...
              */
             
             // Get the movement input value and round it to integral values
@@ -119,30 +129,6 @@ namespace Player
                 float remainderMove = Mathf.Min(Mathf.Abs(a), delta) * Mathf.Sign(a);
                 
                 newPosition = transform.position + new Vector3(b, remainderMove, 0f);
-                
-                /*
-                if (vBlocked)
-                {
-                    Vector2 overshotFrom = new Vector2(Mathf.Round(newPosition.x + 0.5f * -xIn), Mathf.Round(newPosition.y));
-                    Vector2 boxCenter = overshotFrom + Vector2.down * 0.5f + Vector2.up * yIn;
-                    Vector2 boxSize = new Vector2(2f - overlapOvershootMax, 0.95f);
-                    
-                    
-                    Vector2 boxCornerTL = boxCenter - boxSize * 0.5f;
-                    Vector2 boxCornerBR = boxCenter + boxSize * 0.5f;
-                    Vector2 boxCornerTR = new Vector2(boxCornerTL.x + boxSize.x, boxCornerTL.y);
-                    Vector2 boxCornerBL = new Vector2(boxCornerBR.x - boxSize.x, boxCornerBR.y);
-                    Debug.DrawLine(boxCornerTL, boxCornerTR, Color.red, 0.5f, false);
-                    Debug.DrawLine(boxCornerBL, boxCornerBR, Color.red, 0.5f, false);
-                    Debug.DrawLine(boxCornerBL, boxCornerTL, Color.red, 0.5f, false);
-                    Debug.DrawLine(boxCornerBR, boxCornerTR, Color.red, 0.5f, false);
-                    
-                    
-                    //bool tileClear = Physics2D.OverlapBox(boxCenter, boxSize, 0f, ~LayerMask.GetMask("Player")) is null; 
-                    //if (tileClear)
-                    //    newPosition.x = Mathf.Round(newPosition.x);
-                }*/
-                
                 transform.position = newPosition;
                 
                 // NOTE: Set facing (0 is down, 1 is right, 2 is up, 3 is left)
@@ -192,12 +178,7 @@ namespace Player
             boundCorners[2] = ours.max;
             boundCorners[3] = new Vector2(ours.min.x, ours.max.y);
             boundCorners[1] = new Vector2(ours.max.x, ours.min.y);
-            Debug.DrawLine(
-                new Vector2(ours.min.x, ours.min.y),
-                new Vector2(ours.max.x, ours.min.y),
-                Color.green,
-                1f
-            ); 
+            
             // Perform resolution for edge based on distance
             int pointA = facing, pointB = (facing + 1) % 4; // 0 -> 0,1, 1 -> 1,2, 2 -> 2,3, 3 -> 3,0
             Debug.Log($"Resolving tile collision? {boundCorners[pointA]}, {boundCorners[pointB]} given that my bounds are {ours}"); 
@@ -215,12 +196,15 @@ namespace Player
                     direction = Vector2.left; break;
             }
 
+            // TODO: Convert this to a serialize field
             float epsilon = 1e-1f;
-
-            Debug.Log(
-                $"Resolving tile collision, checking at {boundCorners[pointA] + direction * epsilon} and at {boundCorners[pointB] + direction * epsilon}");
+            
+            // So to compute world to cell, all Unity does is a simple floor operation
+            // So presumably, the way this works is because everything is scaled up 2x, we take the bound corners we're trying to convert, divide by 2
+            // then floor. So theoretically, adding 1 is equivalent to dividing by 2, adding 0.5, and then computing the floor. Note that
+            // floor(x + 0.5) is functionally equivalent to round(x). So floor(0.5(2x + 1)) -> round(x) which is probably what we want for
+            // collisions to function correctly. Otherwise we got some weeeeeird jank : (
             Vector3Int tileA = other.WorldToCell(boundCorners[pointA] + direction * epsilon + Vector2.one), tileB = other.WorldToCell(boundCorners[pointB] + direction * epsilon + Vector2.one);
-            Debug.Log($"Resolving tile collision? checking tiles tile a {tileA}, and tileB {tileB}");
             if (tileA.x == tileB.x) // Vertical
             {
                 for (int i = Mathf.Min(tileA.y, tileB.y); i <= Mathf.Max(tileA.y, tileB.y); i++)
