@@ -1,4 +1,4 @@
-using System;
+using System.Collections;
 using Math = System.Math;
 using MidpointRounding = System.MidpointRounding;
 using UnityEngine;
@@ -19,6 +19,16 @@ namespace Player
     /// </summary>
     public class PlayerController : MonoBehaviour
     {
+        /// <summary>
+        /// TODO: Convert any references to facing or direction to PlayerDirection type for easier readability
+        /// </summary>
+        public enum PlayerDirection
+        {
+            DOWN,
+            RIGHT,
+            UP,
+            LEFT
+        }
 
         [Header("Movement Config")] [SerializeField] private float moveSpeed = 5f;
         [SerializeField] [Range(0f, 1.0e-4f)] private float blockTestThreshold = 1.0e-5f;
@@ -27,6 +37,8 @@ namespace Player
         [SerializeField] private float overlapOvershootMax = 0.2f;
 
         [Header("Collision Config")] [SerializeField] private ContactFilter2D contactFilter;
+
+        [Header("Player Control Settings")] public bool playerInputFrozen = false;
         
         // On Start actions
         private InputAction moveAction;  
@@ -60,6 +72,79 @@ namespace Player
         // Fixed Update is called once per physics frame
         void FixedUpdate()
         {
+            // Get the movement input value and round it to integral values
+            Vector2 moveInputValue = moveAction.ReadValue<Vector2>();
+            int xIn = (int)Math.Round(moveInputValue.x, MidpointRounding.AwayFromZero);
+            int yIn = (int)Math.Round(moveInputValue.y, MidpointRounding.AwayFromZero);
+            
+            // Apply input and move player in FixedUpdate if player input is not frozen
+            // Be sure to freeze player input if plannign on moving elsewhere
+            // Generally MovePlayer should only be called in FixedUpdate or after FixedUpdate frame
+            MovePlayer(this.moveSpeed, xIn, yIn);
+        }
+
+        /// <summary>
+        /// Forces the player to move in a direction over a number of tiles within a set amount of time. NOTE that if the player
+        /// is not frozen a warning will be issued and the coroutine will end immediately. It is generally advised not to try to
+        /// force the player while also leaving them unfrozen.
+        /// </summary>
+        /// <param name="tiles">Tiles to move, must be positive (will be converted internally if not)</param>
+        /// <param name="time">Time to move, must be a positive value (will be clamped to 0 or more)</param>
+        /// <param name="direction">The direction in which the player will move over the span of this coroutine. Defaults to right if invalid direction is provided</param>
+        /// <returns>IEnumerator to pass into <c>StartCoroutine</c></returns>
+        public IEnumerator ForcePlayerCoroutine(int tiles, float time, PlayerDirection direction)
+        {
+            // Back out if 0 time provided
+            if (time <= 0f)
+            {
+                Debug.LogWarning("Called ForcePlayerCoroutine for 0 seconds, breaking out of coroutine now");
+                yield break;
+            }
+            
+            // Back out if player is not frozen
+            if (!playerInputFrozen)
+            {
+                Debug.LogWarning("Called ForcePlayerCoroutine without freezing player, breaking out of coroutine now");
+                yield break;
+            }
+
+            // Convert tiles to positive
+            if (tiles < 0) tiles = Mathf.Abs(tiles);
+            
+            // Compute move speed and determine directional parameters
+            float compMoveSpeed = (float)tiles / time;
+            int xIn, yIn; // NOTE: Defaults to right if an invalid direction is provided
+            switch (direction)
+            {
+                case PlayerDirection.DOWN:
+                    yIn = -1;
+                    xIn = 0;
+                    break;
+                case PlayerDirection.UP:
+                    yIn = 1;
+                    xIn = 0;
+                    break;
+                case PlayerDirection.LEFT:
+                    yIn = 0;
+                    xIn = -1;
+                    break;
+                case PlayerDirection.RIGHT:
+                default:
+                    yIn = 0;
+                    xIn = 1;
+                    break;
+            }
+
+            // Every physics frame
+            for (; time > 0f; time -= Time.fixedDeltaTime)
+            {
+                MovePlayer(compMoveSpeed, xIn, yIn);
+                yield return new WaitForFixedUpdate();
+            }
+        }
+
+        private void MovePlayer(float moveSpeed, int xIn, int yIn)
+        {
             /*
              * 1. Vertical movement evaluates before horizontal. If holding UP/LEFT you will go all the way up first and then when you collide with the wall you will start going left.
              * 2. When switching from moving horizontally to vertically or vice versa, Link will snap to the closest whole number edge of the original axis
@@ -70,20 +155,13 @@ namespace Player
              *  the first place). I sincerely doubt I could write this out ever again, but you know, who knows I guess...
              */
             
-            // Get the movement input value and round it to integral values
-            Vector2 moveInputValue = moveAction.ReadValue<Vector2>();
-            int xIn = (int)Math.Round(moveInputValue.x, MidpointRounding.AwayFromZero);
-            int yIn = (int)Math.Round(moveInputValue.y, MidpointRounding.AwayFromZero);
-            
             // Save the current y position and shift the y position from fixed update at the previous frame
             // The purpose of this is to take the change in y from the previous frame to the current after
             // collision is resolved (which presumably occurs after FixedUpdate? may need to verify this
             // We also compute the delta position between frames to apply a motion bias and save the last position at this frame
             deltaPosition = transform.position - lastPosition;
-            Debug.Log(deltaPosition);
             lastPosition = transform.position;
             currY = transform.position.y;
-            Debug.Log($"Position at start: {transform.position}");
 
             // Evaluate vertical movement first
             // Skip to horizontal if we are being blocked vertically by a wall essentially and both a vertical and horizontal input are being applied
@@ -95,12 +173,34 @@ namespace Player
             if (yIn != 0)
             {
                 // Check if we are blocked in the direction we are trying to go in?
-                Collider2D[] vblockCheckArray = new Collider2D[1];
-                vBlocked = Physics2D.OverlapBox(new Vector2(transform.position.x, transform.position.y + delta * yIn) + collider2D.offset * transform.localScale,
-                    (collider2D.size - new Vector2(0.05f, 0.05f)) * transform.localScale,
+                // Had to modify this function to account for tilemap
+                Collider2D[] vblockCheckArray = new Collider2D[4];
+                Bounds blockCheckBox = new Bounds(
+                    new Vector2(transform.position.x, transform.position.y + delta * yIn) + collider2D.offset * transform.localScale,
+                    (collider2D.size - new Vector2(0.05f, 0.05f)) * transform.localScale);
+                int vBlockCheckCount = Physics2D.OverlapBox(blockCheckBox.center, 
+                    blockCheckBox.size,
                     0f,
                     contactFilter,
-                    vblockCheckArray) > 0;
+                    vblockCheckArray);
+                for (int i = 0; i < vBlockCheckCount; i++)
+                {
+                    if (vblockCheckArray[i] is TilemapCollider2D)
+                    {
+                        Tilemap tmap = vblockCheckArray[i].gameObject.GetComponent<Tilemap>();
+                        bool detected = DetectTileCollision(blockCheckBox, yIn, tmap);
+                        if (detected)
+                        {
+                            vBlocked = true;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        vBlocked = true;
+                        break;
+                    }
+                }
 
                 // If we are not blocked we can perform vertical motion as usual
                 if (!vBlocked)
@@ -245,22 +345,109 @@ namespace Player
 
         private void ResolveTileCollision(Vector3Int checkLoc, Tilemap tmap)
         {
+            this.tmap = tmap;
             Debug.Log($"Checking location {checkLoc}, {tmap.HasTile(checkLoc)}");
             if (tmap.HasTile(checkLoc))
             {
                 Bounds ours = new Bounds(new Vector2(transform.position.x, transform.position.y) + collider2D.offset * transform.localScale,
                     collider2D.size * transform.localScale);
-                Bounds others = new Bounds(tmap.GetCellCenterWorld(checkLoc), Vector3.Scale(tmap.cellSize, tmap.transform.localScale));
+                Bounds others;
+                
+                // Check if tile has special collision data
+                Tile t = tmap.GetTile<Tile>(checkLoc);
+                if (t is CollidingTile)
+                {
+                    Debug.Log("I have a special collision");
+                    
+                    CollidingTile c = t as CollidingTile;
+                    Bounds collisionExtents = c.GetBounds();
+                    collisionExtents.center = Vector3.Scale(collisionExtents.center, tmap.transform.localScale);
+                    collisionExtents.extents = Vector3.Scale(collisionExtents.extents, tmap.transform.localScale);
+                    others = new Bounds(tmap.GetCellCenterWorld(checkLoc) + Vector3.Scale(tmap.cellSize, collisionExtents.center), Vector3.Scale(tmap.cellSize, collisionExtents.size));
+                    Debug.Log($"My special bounds is {others}");
+                } else others = new Bounds(tmap.GetCellCenterWorld(checkLoc), Vector3.Scale(tmap.cellSize, tmap.transform.localScale));
+                
                 Debug.Log($"Resolving tile collision? The tile at {checkLoc} maps to {others}");
                 ResolveBoundsCollision(others, ours);
             }
         }
+        
+        
+        private bool DetectTileCollision(Bounds ours, int dir, Tilemap tmap)
+        {
+            Vector2[] boundCorners = new Vector2[4];
+            
+            // Ordered so i can select corners to check based on distance
+            boundCorners[0] = ours.min;
+            boundCorners[2] = ours.max;
+            boundCorners[3] = new Vector2(ours.min.x, ours.max.y);
+            boundCorners[1] = new Vector2(ours.max.x, ours.min.y);
+            int pointA = dir, pointB = (facing + 1) % 4; // 0 -> 0,1, 1 -> 1,2, 2 -> 2,3, 3 -> 3,0
+            if (dir == 1)
+            {
+                pointA = 2;
+                pointB = 3;
+            }
+            else
+            {
+                pointA = 0;
+                pointB = 1;
+            }
+            
+            // TODO: Convert this to a serialize field
+            float epsilon = 1e-1f;
+            
+            // So to compute world to cell, all Unity does is a simple floor operation
+            // So presumably, the way this works is because everything is scaled up 2x, we take the bound corners we're trying to convert, divide by 2
+            // then floor. So theoretically, adding 1 is equivalent to dividing by 2, adding 0.5, and then computing the floor. Note that
+            // floor(x + 0.5) is functionally equivalent to round(x). So floor(0.5(2x + 1)) -> round(x) which is probably what we want for
+            // collisions to function correctly. Otherwise we got some weeeeeird jank : (
+            Vector3Int tileA = tmap.WorldToCell(boundCorners[pointA] + dir * epsilon * Vector2.up + Vector2.one), tileB = tmap.WorldToCell(boundCorners[pointB] + dir * epsilon * Vector2.up + Vector2.one);
+            for (int i = Mathf.Min(tileA.x, tileB.x); i <= Mathf.Max(tileA.x, tileB.x); i++)
+            {
+                Vector3Int checkLoc = new Vector3Int(i, tileA.y, 0);
+                
+                if (tmap.HasTile(checkLoc))
+                {
+                    // Bounds for the tile we are checking at this moment
+                    Bounds others;
+                
+                    // Check if tile has special collision data
+                    Tile t = tmap.GetTile<Tile>(checkLoc);
+                    if (t is CollidingTile)
+                    {
+                        Debug.Log("I have a special collision");
+                    
+                        CollidingTile c = t as CollidingTile;
+                        Bounds collisionExtents = c.GetBounds();
+                        collisionExtents.center = Vector3.Scale(collisionExtents.center, tmap.transform.localScale);
+                        collisionExtents.extents = Vector3.Scale(collisionExtents.extents, tmap.transform.localScale);
+                        others = new Bounds(tmap.GetCellCenterWorld(checkLoc) + Vector3.Scale(tmap.cellSize, collisionExtents.center), Vector3.Scale(tmap.cellSize, collisionExtents.size));
+                        Debug.Log($"My special bounds is {others}");
+                    } else others = new Bounds(tmap.GetCellCenterWorld(checkLoc), Vector3.Scale(tmap.cellSize, tmap.transform.localScale));
+                    
+                    // Compute overlaps
+                    float overlapX = Mathf.Min(ours.max.x, others.max.x) - Mathf.Max(ours.min.x, others.min.x);
+                    float overlapY = Mathf.Min(ours.max.y, others.max.y) - Mathf.Max(ours.min.y, others.min.y);
+            
+                    // Cut short if neither is overlapping, continue
+                    if (overlapX <= 0.1f || overlapY <= 0.1f) continue;
+                    else return true;
+                }
+            }
+
+            // No tile collision detected
+            return false;
+        }
 
         private void ResolveBoundsCollision(Bounds others, Bounds ours)
         {
+            Debug.Log($"Computing overlaps: between others: {others} and ours: {ours}");
+            
             // Compute overlaps
             float overlapX = Mathf.Min(ours.max.x, others.max.x) - Mathf.Max(ours.min.x, others.min.x);
             float overlapY = Mathf.Min(ours.max.y, others.max.y) - Mathf.Max(ours.min.y, others.min.y);
+            Debug.Log($"Computing overlaps: The computed overlaps are {overlapX}, {overlapY}");
             
             // Cut short if neither is overlapping
             if (overlapX <= 0.1f || overlapY <= 0.1f) return;
@@ -276,6 +463,58 @@ namespace Player
             {
                 float correctionDir = -Mathf.Sign(others.center.y - ours.center.y);
                 transform.position += Vector3.up * correctionDir * overlapY;
+            }
+        }
+
+        private Tilemap tmap;
+        private void OnDrawGizmos()
+        {
+            if (tmap == null)
+                return;
+
+            Gizmos.color = Color.red;
+
+            foreach (Vector3Int cell in tmap.cellBounds.allPositionsWithin)
+            {
+                if (!tmap.HasTile(cell))
+                    continue;
+
+                Bounds bounds;
+
+                Tile t = tmap.GetTile<Tile>(cell);
+
+                if (t is CollidingTile c)
+                {
+                    Bounds localBounds = c.GetBounds();
+
+                    Vector3 worldCellSize = Vector3.Scale(
+                        tmap.cellSize,
+                        tmap.transform.lossyScale
+                    );
+
+                    Vector3 center =
+                        tmap.GetCellCenterWorld(cell) +
+                        Vector3.Scale(localBounds.center, worldCellSize);
+
+                    Vector3 size =
+                        Vector3.Scale(localBounds.size, worldCellSize);
+
+                    bounds = new Bounds(center, size);
+                }
+                else
+                {
+                    Vector3 worldCellSize = Vector3.Scale(
+                        tmap.cellSize,
+                        tmap.transform.lossyScale
+                    );
+
+                    bounds = new Bounds(
+                        tmap.GetCellCenterWorld(cell),
+                        worldCellSize
+                    );
+                }
+
+                Gizmos.DrawWireCube(bounds.center, bounds.size);
             }
         }
     }
