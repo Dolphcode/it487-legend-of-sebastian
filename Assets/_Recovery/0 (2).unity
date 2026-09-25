@@ -1799,10 +1799,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.17862372
+    x: 0
     y: 0
-    width: 0.64254344
-    height: 1
+    width: 0
+    height: 0
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 34
@@ -4481,13 +4481,13 @@ GameObject:
   - component: {fileID: 2058783542}
   - component: {fileID: 2058783541}
   - component: {fileID: 2058783543}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Objects
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2058783540
 Transform:
   m_ObjectHideFlags: 0

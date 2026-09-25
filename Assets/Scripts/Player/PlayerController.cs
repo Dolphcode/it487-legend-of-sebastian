@@ -33,6 +33,9 @@ namespace Player
         private bool snappedToGridFlag = false;
         private Vector3 lastPosition, deltaPosition;
         private bool vBlocked = false;
+
+        // 0 = down, 1 = right, 2 = up, 3 = left
+        private int facing = 0;
         
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
@@ -99,8 +102,13 @@ namespace Player
                     // The correction component (a component) for grid snapping
                     float remainderMove = Mathf.Min(Mathf.Abs(a), delta) * Mathf.Sign(a);
 
+                    // Update position
                     newPosition = transform.position + new Vector3(remainderMove, b, 0f);
                     transform.position = newPosition;
+                    
+                    // NOTE: Set facing (0 is down, 1 is right, 2 is up, 3 is left)
+                    if (Mathf.Abs(b) > 0f) facing = 2 * ((b < 0f) ? 0 : 1);
+                    else facing = 1 + 2 * ((remainderMove > 0f) ? 0 : 1);
                 }
             } 
             
@@ -136,7 +144,12 @@ namespace Player
                 }*/
                 
                 transform.position = newPosition;
+                
+                // NOTE: Set facing (0 is down, 1 is right, 2 is up, 3 is left)
+                if (Mathf.Abs(b) > 0f) facing = 1 + 2 * ((b > 0f) ? 0 : 1);
+                else facing = 2 * ((remainderMove < 0f) ? 0 : 1);
             }
+            Debug.Log($"0 down, 1 right, 2 up, 3 left, what are we facing? {facing}");
             
             // Save what the y should be without collision resolution
             expectedY = transform.position.y;
@@ -174,23 +187,66 @@ namespace Player
             Bounds ours = new Bounds(new Vector2(transform.position.x, transform.position.y) + collider2D.offset * transform.localScale,
                 collider2D.size * transform.localScale);
             Vector2[] boundCorners = new Vector2[4];
+            // Ordered so i can select corners to check based on distance
             boundCorners[0] = ours.min;
-            boundCorners[1] = ours.max;
-            boundCorners[2] = new Vector2(ours.min.x, ours.max.y);
-            boundCorners[3] = new Vector2(ours.max.x, ours.min.y);
-            
-            // Perform resolution for each corner
-            foreach (Vector2 point in boundCorners)
+            boundCorners[2] = ours.max;
+            boundCorners[3] = new Vector2(ours.min.x, ours.max.y);
+            boundCorners[1] = new Vector2(ours.max.x, ours.min.y);
+            Debug.DrawLine(
+                new Vector2(ours.min.x, ours.min.y),
+                new Vector2(ours.max.x, ours.min.y),
+                Color.green,
+                1f
+            ); 
+            // Perform resolution for edge based on distance
+            int pointA = facing, pointB = (facing + 1) % 4; // 0 -> 0,1, 1 -> 1,2, 2 -> 2,3, 3 -> 3,0
+            Debug.Log($"Resolving tile collision? {boundCorners[pointA]}, {boundCorners[pointB]} given that my bounds are {ours}"); 
+            // Get grid tiles
+            Vector2 direction = Vector2.zero;
+            switch (facing)
             {
-                // Check what tiles this point is overlapping
-                Collider2D[] collidersOnCorner = new Collider2D[4];
-                int colliderCount;
-                if ((colliderCount = Physics2D.OverlapPoint(point, contactFilter, collidersOnCorner)) == 0) continue;
-                
-                // 
-                
-                
+                case 0:
+                    direction = Vector2.down; break;
+                case 1:
+                    direction = Vector2.right; break;
+                case 2:
+                    direction = Vector2.up; break;
+                case 3:
+                    direction = Vector2.left; break;
             }
+
+            float epsilon = 1e-1f;
+
+            Debug.Log(
+                $"Resolving tile collision, checking at {boundCorners[pointA] + direction * epsilon} and at {boundCorners[pointB] + direction * epsilon}");
+            Vector3Int tileA = other.WorldToCell(boundCorners[pointA] + direction * epsilon + Vector2.one), tileB = other.WorldToCell(boundCorners[pointB] + direction * epsilon + Vector2.one);
+            Debug.Log($"Resolving tile collision? checking tiles tile a {tileA}, and tileB {tileB}");
+            if (tileA.x == tileB.x) // Vertical
+            {
+                for (int i = Mathf.Min(tileA.y, tileB.y); i <= Mathf.Max(tileA.y, tileB.y); i++)
+                {
+                    Vector3Int checkLoc = new Vector3Int(tileA.x, i, 0);
+                    ResolveTileCollision(checkLoc, other);
+                }
+            }
+            else if (tileA.y == tileB.y) // Assume horizontal
+            {
+                for (int i = Mathf.Min(tileA.x, tileB.x); i <= Mathf.Max(tileA.x, tileB.x); i++)
+                {
+                    Vector3Int checkLoc = new Vector3Int(i, tileA.y, 0);
+                    ResolveTileCollision(checkLoc, other);
+                }
+            }
+            else
+            {
+                for (int i = Mathf.Min(tileA.x, tileB.x); i <= Mathf.Max(tileA.x, tileB.x); i++)
+                for (int j = Mathf.Min(tileA.y, tileB.y); j <= Mathf.Max(tileA.y, tileB.y); j++)
+                {
+                    Vector3Int checkLoc = new Vector3Int(i, j, 0);
+                    ResolveTileCollision(checkLoc, other);
+                }
+            }
+
         }
 
         private void ResolveBasicCollision(Collider2D other)
@@ -200,6 +256,24 @@ namespace Player
             Bounds ours = new Bounds(new Vector2(transform.position.x, transform.position.y) + collider2D.offset * transform.localScale,
                 collider2D.size * transform.localScale);
             
+            ResolveBoundsCollision(others, ours); 
+        }
+
+        private void ResolveTileCollision(Vector3Int checkLoc, Tilemap tmap)
+        {
+            Debug.Log($"Checking location {checkLoc}, {tmap.HasTile(checkLoc)}");
+            if (tmap.HasTile(checkLoc))
+            {
+                Bounds ours = new Bounds(new Vector2(transform.position.x, transform.position.y) + collider2D.offset * transform.localScale,
+                    collider2D.size * transform.localScale);
+                Bounds others = new Bounds(tmap.GetCellCenterWorld(checkLoc), Vector3.Scale(tmap.cellSize, tmap.transform.localScale));
+                Debug.Log($"Resolving tile collision? The tile at {checkLoc} maps to {others}");
+                ResolveBoundsCollision(others, ours);
+            }
+        }
+
+        private void ResolveBoundsCollision(Bounds others, Bounds ours)
+        {
             // Compute overlaps
             float overlapX = Mathf.Min(ours.max.x, others.max.x) - Mathf.Max(ours.min.x, others.min.x);
             float overlapY = Mathf.Min(ours.max.y, others.max.y) - Mathf.Max(ours.min.y, others.min.y);
