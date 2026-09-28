@@ -13757,6 +13757,7 @@ GameObject:
   - component: {fileID: 1632810238}
   - component: {fileID: 1632810239}
   - component: {fileID: 1632810240}
+  - component: {fileID: 1632810241}
   m_Layer: 3
   m_Name: Link
   m_TagString: Player
@@ -13966,6 +13967,30 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1632810241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1632810232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e23c78a5e9716e468c78cb239913e6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Player.PlayerInventory
+  consumableEntries:
+  - name: rupee
+    startingCount: 0
+  - name: key
+    startingCount: 0
+  - name: bomb
+    startingCount: 0
+  unlockableEntries:
+  - name: sword
+    startsWith: 0
+  - name: bow
+    startsWith: 0
 --- !u!1 &1836276161
 GameObject:
   m_ObjectHideFlags: 0

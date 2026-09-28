@@ -517,8 +517,10 @@ namespace Player
             animator.SetBool(_animMovingId, walking);
             
             // FLip for left specifically
-            if (direction == PlayerDirection.LEFT) sprite.flipX = true;
-            else sprite.flipX = false;
+            Debug.Log($"Player is facing in direction {direction}, are we facing left? {direction == PlayerDirection.LEFT}");
+            //if (direction == PlayerDirection.LEFT) sprite.flipX = true;
+            //else sprite.flipX = false;
+            Debug.Log($"This we change the sprite's flip value to {sprite.flipX}");
         }
 
     }
