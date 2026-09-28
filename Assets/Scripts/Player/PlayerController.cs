@@ -98,6 +98,7 @@ namespace Player
             MovePlayer(this.moveSpeed, xIn, yIn);
             
             SetAnimatorState(xIn != 0 || yIn != 0, (PlayerDirection)facing);
+
         }
 
         /// <summary>
