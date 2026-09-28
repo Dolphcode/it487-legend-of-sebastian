@@ -41,7 +41,9 @@ namespace Player
         [Header("Player Control Settings")] public bool playerInputFrozen = false;
         
         // On Start actions
-        private InputAction moveAction;  
+        private InputAction moveAction;
+        private InputAction primaryAction;
+        private InputAction secondaryAction;
         
         // On Start components
         private BoxCollider2D collider2D;
@@ -74,6 +76,8 @@ namespace Player
             
             // Actions
             moveAction = InputSystem.actions.FindAction("Move");
+            primaryAction = InputSystem.action.FindAction("PrimaryWeapon");
+            secondaryAction = InputSystem.action.FindAction("SecondaryWeapon");
             
             // Save the current y position
             currY = transform.position.y;
@@ -87,6 +91,20 @@ namespace Player
             // Check if player is frozen, skip if so
             if (playerInputFrozen) return;
             
+            if (primaryAction.IsPressed())
+            {
+                playerInputFrozen = true;
+                //start coroutine here!!!
+                return;
+                
+            }
+
+            if (secondaryAction.IsPressed())
+            {
+                playerInputFrozen = true;
+                //start coroutine here!!!
+                return;
+            }
             // Get the movement input value and round it to integral values
             Vector2 moveInputValue = moveAction.ReadValue<Vector2>();
             int xIn = (int)Math.Round(moveInputValue.x, MidpointRounding.AwayFromZero);
