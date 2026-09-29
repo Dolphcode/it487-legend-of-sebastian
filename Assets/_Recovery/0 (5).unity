@@ -5866,10 +5866,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.17862372
+    x: 0
     y: 0
-    width: 0.64254344
-    height: 1
+    width: 0
+    height: 0
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 34
@@ -14381,7 +14381,7 @@ MonoBehaviour:
     maxNormalAngle: 0
   gates:
   - {fileID: 729940872}
-  walkableRegion: {x: 24, y: 14}
+  walkableRegion: {x: 12, y: 7}
   walkableRegionOffset: {x: -50, y: 2}
   wallTilemaps:
   - {fileID: 793351919}

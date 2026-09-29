@@ -1,6 +1,9 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Player;
+using System;
+using UnityEngine.Tilemaps;
 
 public class RoomTransitionTrigger : MonoBehaviour
 {
@@ -24,12 +27,16 @@ public class RoomTransitionTrigger : MonoBehaviour
     [SerializeField] private int playerMoveTiles = 2;
 
     [SerializeField] private float cameraMoveTime = 2f;
+
+    public event Action<RoomTransitionTrigger, bool, bool> OnTransitionBegin;
+    public event Action<RoomTransitionTrigger, bool, bool> OnTransitionEnd;
     
     // Components
     private BoxCollider2D boxCollider2D;
 
     private Camera mainCamera2D;
     private bool positionFlag;
+
     
     private void Start()
     {
@@ -54,14 +61,16 @@ public class RoomTransitionTrigger : MonoBehaviour
             if (initialPositionFlag) boxCollider2D.offset = new Vector2(tileSize * 0.5f, 0f);
             else boxCollider2D.offset = new Vector2(-tileSize * 0.5f, 0f);
         }
+ 
     }
-
+    
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.tag == "Player")
         {
             PlayerController player = other.gameObject.GetComponent<PlayerController>();
             player.playerInputFrozen = true;
+            OnTransitionBegin?.Invoke(this, vertical, positionFlag);
             StartCoroutine(CameraTransitionCoroutine(player));
         }
     }
@@ -114,5 +123,8 @@ public class RoomTransitionTrigger : MonoBehaviour
         
         // And unfreeze the player
         player.playerInputFrozen = false;
+        
+        // Animation has ended
+        OnTransitionEnd?.Invoke(this, vertical, positionFlag);
     }
 }
