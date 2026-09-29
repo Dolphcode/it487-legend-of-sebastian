@@ -85,25 +85,29 @@ namespace Player
             expectedY = transform.position.y;
         }
 
-        // Fixed Update is called once per physics frame
-        void FixedUpdate()
+        void Update()
         {
-            // Check if player is frozen, skip if so
             if (playerInputFrozen) return;
-            
-            if (primaryAction.IsPressed())
+
+            if (primaryAction.WasPressedThisFrame())
             {
                 playerInputFrozen = true;
                 StartCoroutine(Primary());
                 return;
             }
 
-            if (secondaryAction.IsPressed())
+            if (secondaryAction.WasPressedThisFrame())
             {
                 playerInputFrozen = true;
                 StartCoroutine(Secondary());
                 return;
             }
+        }
+        // Fixed Update is called once per physics frame
+        void FixedUpdate()
+        {
+            // Check if player is frozen, skip if so
+            if (playerInputFrozen) return;
 
             // Get the movement input value and round it to integral values
             Vector2 moveInputValue = moveAction.ReadValue<Vector2>();
@@ -213,9 +217,11 @@ namespace Player
         IEnumerator Primary()
         {
             Debug.Log("Primary Attack Started!");
-            playerInputFrozen = true;
             ExecutePrimaryAttack((PlayerDirection)facing);
-            yield return new WaitForSeconds(0.25f);
+            yield return null;
+            float attackLength = animator.GetCurrentAnimatorStateInfo(0).length;
+            yield return new WaitForSeconds(attackLength);
+            animator.Play("Idle", 0, 0f);
             playerInputFrozen = false;
         }
 
@@ -224,16 +230,16 @@ namespace Player
             switch (dir)
             {
                 case PlayerDirection.DOWN:
-                    animator.SetTrigger("DownAttack");
+                    animator.Play("link_down_attack", 0, 0f);
                     break;
                 case PlayerDirection.RIGHT:
-                    animator.SetTrigger("RightAttack");
+                    animator.Play("link_right_attack", 0, 0f);
                     break;
                 case PlayerDirection.LEFT:
-                    animator.SetTrigger("LeftAttack");
+                    animator.Play("link_left_attack", 0, 0f);
                     break;
                 case PlayerDirection.UP:
-                    animator.SetTrigger("UpAttack");
+                    animator.Play("link_up_attack", 0, 0f);
                     break;
                 
             }
