@@ -24,7 +24,7 @@ namespace Player
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.GetComponent<TilemapCollider2D>() != null || other.CompareTag("Wall"))
+            if (other.CompareTag("Wall"))
             {
                 Destroy(gameObject);
             }
