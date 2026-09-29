@@ -28,6 +28,11 @@ public class BaseEntityController : MonoBehaviour
     [Header("Spawn Config")] [SerializeField]
     private List<RoomTransitionTrigger> gates;
 
+    [Header("Health Config")] [SerializeField]
+    private int hp = 2;
+
+    [SerializeField] private int knockbackAmount = 10;
+
     // On Start components
     private BoxCollider2D collider2D;
     private Animator animator;
@@ -107,6 +112,24 @@ public class BaseEntityController : MonoBehaviour
         Vector2Int currentTilePosition = new Vector2Int(Mathf.RoundToInt(transform.position.x - walkableRegionOffset.x),
             Mathf.RoundToInt(transform.position.y - walkableRegionOffset.y)) / 2;
         List<PlayerDirection> validDirections = new List<PlayerDirection>() {PlayerDirection.LEFT, PlayerDirection.DOWN, PlayerDirection.RIGHT, PlayerDirection.UP};
+        
+        // Check alignment to restrict movement
+        bool xAligned = Mathf.RoundToInt((transform.position.x - walkableRegionOffset.x) / 2f) * 2
+                        == Mathf.RoundToInt(transform.position.x - walkableRegionOffset.x);
+
+        bool yAligned = Mathf.RoundToInt((transform.position.y - walkableRegionOffset.y) / 2f) * 2
+                        == Mathf.RoundToInt(transform.position.y - walkableRegionOffset.y);
+        if (!xAligned)
+        {
+            validDirections.Remove(PlayerDirection.UP);
+            validDirections.Remove(PlayerDirection.DOWN);
+        }
+        else if (!yAligned)
+        {
+            validDirections.Remove(PlayerDirection.LEFT);
+            validDirections.Remove(PlayerDirection.RIGHT);
+        }
+        
         Vector2Int chosenDirection = Vector2Int.zero;
         while (validDirections.Count > 0)
         {
@@ -152,8 +175,21 @@ public class BaseEntityController : MonoBehaviour
         maxDist--;
 
         moveAmount = Random.Range(1, maxDist) * 2;
-        moveDirection = chosenDirection;
 
+        float position = chosenDirection.x != 0
+            ? transform.position.x - walkableRegionOffset.x
+            : transform.position.y - walkableRegionOffset.y;
+
+        float remainder = Mathf.Repeat(position, 2f);
+
+        if (remainder > 0.001f)
+        {
+            float correction = 2f - remainder;
+            moveAmount += correction;
+            moveAmount -= 2f;
+        }
+        
+        moveDirection = chosenDirection;
         walkTimeLeft = moveAmount / moveSpeed;
     }
 
@@ -163,14 +199,35 @@ public class BaseEntityController : MonoBehaviour
     {
         if (isActive)
         {
-            if (walkTimeLeft <= 0f)
+            if (knockedBack)
             {
-                transform.position = new Vector3(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y),
-                    transform.position.z); // Grid snap
-                PickDirection(); // Select new direction
+                
             }
-            MoveEntity(moveSpeed, moveDirection.x, moveDirection.y);
-            walkTimeLeft -= Time.fixedDeltaTime;
+            else
+            {
+                if (walkTimeLeft <= 0f)
+                {
+                    transform.position = new Vector3(Mathf.Round(transform.position.x),
+                        Mathf.Round(transform.position.y),
+                        transform.position.z); // Grid snap
+                    PickDirection(); // Select new direction
+                }
+
+                MoveEntity(moveSpeed, moveDirection.x, moveDirection.y);
+                walkTimeLeft -= Time.fixedDeltaTime;
+            }
+        }
+    }
+
+    private float knockbackTimeLeft = 0f;
+    private bool knockedBack = false;
+    public void OnHit(Vector2Int direction, int damage)
+    {
+        hp -= damage;
+        if (hp <= 0) Destroy(gameObject);
+        else
+        {
+            knockedBack = true;
         }
     }
 
@@ -207,6 +264,11 @@ public class BaseEntityController : MonoBehaviour
         sprite.enabled = true;
         PickDirection();
         yield break;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        
     }
 
 private void MoveEntity(float moveSpeed, int xIn, int yIn)
