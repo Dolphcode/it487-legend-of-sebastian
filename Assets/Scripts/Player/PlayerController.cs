@@ -76,8 +76,8 @@ namespace Player
             
             // Actions
             moveAction = InputSystem.actions.FindAction("Move");
-            primaryAction = InputSystem.action.FindAction("PrimaryWeapon");
-            secondaryAction = InputSystem.action.FindAction("SecondaryWeapon");
+            primaryAction = InputSystem.actions.FindAction("PrimaryWeapon");
+            secondaryAction = InputSystem.actions.FindAction("SecondaryWeapon");
             
             // Save the current y position
             currY = transform.position.y;
@@ -94,17 +94,17 @@ namespace Player
             if (primaryAction.IsPressed())
             {
                 playerInputFrozen = true;
-                //start coroutine here!!!
+                StartCoroutine(Primary());
                 return;
-                
             }
 
             if (secondaryAction.IsPressed())
             {
                 playerInputFrozen = true;
-                //start coroutine here!!!
+                StartCoroutine(Secondary());
                 return;
             }
+
             // Get the movement input value and round it to integral values
             Vector2 moveInputValue = moveAction.ReadValue<Vector2>();
             int xIn = (int)Math.Round(moveInputValue.x, MidpointRounding.AwayFromZero);
@@ -209,6 +209,41 @@ namespace Player
             SetAnimatorState(false, direction);
         }
 
+
+        IEnumerator Primary()
+        {
+            Debug.Log("Primary Attack Started!");
+            playerInputFrozen = true;
+            ExecutePrimaryAttack((PlayerDirection)facing);
+            yield return new WaitForSeconds(0.25f);
+            playerInputFrozen = false;
+        }
+
+        private void ExecutePrimaryAttack(PlayerDirection dir)
+        {
+            switch (dir)
+            {
+                case PlayerDirection.DOWN:
+                    animator.SetTrigger("DownAttack");
+                    break;
+                case PlayerDirection.RIGHT:
+                    animator.SetTrigger("RightAttack");
+                    break;
+                case PlayerDirection.LEFT:
+                    animator.SetTrigger("LeftAttack");
+                    break;
+                case PlayerDirection.UP:
+                    animator.SetTrigger("UpAttack");
+                    break;
+                
+            }
+        }
+        IEnumerator Secondary()
+        {
+            Debug.Log("Secondary Attack Started!");
+            playerInputFrozen = false;
+            yield return null;
+        }
         private void MovePlayer(float moveSpeed, int xIn, int yIn)
         {
             /*
