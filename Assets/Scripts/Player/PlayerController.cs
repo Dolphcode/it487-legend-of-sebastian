@@ -52,6 +52,7 @@ namespace Player
         private InputAction moveAction;
         private InputAction primaryAction;
         private InputAction secondaryAction;
+        private InputAction godAction;
         
         // On Start components
         private BoxCollider2D collider2D;
@@ -69,6 +70,7 @@ namespace Player
         private Vector3 lastPosition, deltaPosition;
         private bool vBlocked = false;
         private int facing = 0; // 0 = down, 1 = right, 2 = up, 3 = left
+        private bool godModeActive = false;
         
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
@@ -87,6 +89,7 @@ namespace Player
             moveAction = InputSystem.actions.FindAction("Move");
             primaryAction = InputSystem.actions.FindAction("PrimaryWeapon");
             secondaryAction = InputSystem.actions.FindAction("SecondaryWeapon");
+            godAction = InputSystem.actions.FindAction("GodMode");
             
             // Save the current y position
             currY = transform.position.y;
@@ -110,6 +113,11 @@ namespace Player
                 playerInputFrozen = true;
                 StartCoroutine(Secondary());
                 return;
+            }
+
+            if (godAction != null && godAction.WasPressedThisFrame())
+            {
+                ToggleGodMode();
             }
         }
         // Fixed Update is called once per physics frame
@@ -222,7 +230,22 @@ namespace Player
             SetAnimatorState(false, direction);
         }
 
+        private void ToggleGodMode()
+        {
+            godModeActive = !godModeActive;
 
+            if(godModeActive)
+            {
+                //Disable hurtbox and set items to max
+                Debug.Log("God Mode Enabled");
+            }
+            else
+            {
+                //Reenable hurtbox
+                Debug.Log("God Mode Disabled");
+            }
+            }
+            
         IEnumerator Primary()
         {
             Debug.Log("Primary Attack Started!");
