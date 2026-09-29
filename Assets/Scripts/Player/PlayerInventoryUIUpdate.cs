@@ -19,10 +19,10 @@ namespace Player
         {
             if (name == "rupee")
             {
-                rupees.text = $"x{curr}";
+                rupees.text = $"{curr}";
             } else if (name == "key")
             {
-                keys.text = $"x{curr}";
+                keys.text = $"{curr}";
             }
         }
         
