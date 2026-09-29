@@ -516,7 +516,7 @@ AnimatorStateMachine:
     m_Position: {x: 590, y: 410, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -3688482766297941404}
-    m_Position: {x: 920, y: 160, z: 0}
+    m_Position: {x: 0, y: 250, z: 0}
   m_ChildStateMachines:
   - serializedVersion: 1
     m_StateMachine: {fileID: 6758491854403921042}
@@ -537,6 +537,7 @@ AnimatorStateMachine:
     - {fileID: 4519799980107560568}
     - {fileID: -3949317842088752213}
     - {fileID: -1908650866576369119}
+    - {fileID: 4917028731716975975}
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 50, y: 20, z: 0}
   m_EntryPosition: {x: -30, y: 140, z: 0}
@@ -778,6 +779,12 @@ AnimatorController:
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
   - m_Name: RightAttack
+    m_Type: 9
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
+  - m_Name: Dead
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -1146,6 +1153,23 @@ AnimatorTransition:
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 2081332414420832866}
+  m_Solo: 0
+  m_Mute: 0
+  m_IsExit: 0
+  serializedVersion: 1
+--- !u!1109 &4917028731716975975
+AnimatorTransition:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_Conditions:
+  - m_ConditionMode: 1
+    m_ConditionEvent: Dead
+    m_EventTreshold: 0
+  m_DstStateMachine: {fileID: 0}
+  m_DstState: {fileID: -3688482766297941404}
   m_Solo: 0
   m_Mute: 0
   m_IsExit: 0

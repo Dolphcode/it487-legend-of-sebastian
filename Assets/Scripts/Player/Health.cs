@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using Player;
 
 public class Health : MonoBehaviour
 {
@@ -7,6 +8,7 @@ public class Health : MonoBehaviour
     //This means that half a heart = 1 health and 1 full heart = 2 health. Keep this in mind when doing damage values.
     private int maxHealth;
     public int currentHealth;
+    [SerializeField] private PlayerController pcScript;
 
     [Header ("Heart UI")]
     [SerializeField] Image Heart1;
@@ -36,6 +38,7 @@ public class Health : MonoBehaviour
                 Heart1.sprite = emptyHeart;
                 Heart2.sprite = emptyHeart;
                 Heart3.sprite = emptyHeart;
+                pcScript.GameOver();
                 break;
             case 1:
                 Heart1.sprite = halfHeart;
@@ -67,8 +70,6 @@ public class Health : MonoBehaviour
                 Heart2.sprite = fullHeart;
                 Heart3.sprite = fullHeart;
                 break;
-
-
         }
     }
 }

@@ -670,5 +670,12 @@ namespace Player
             else sprite.flipX = false;
         }
 
+        public void GameOver()
+        {
+            Debug.Log("Game Over!");
+            playerInputFrozen = true;
+            //animator.Play("link_die", 0, 0f);
+        }
+
     }
 }

@@ -15128,6 +15128,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
   currentHealth: 0
+  pcScript: {fileID: 1632810235}
   Heart1: {fileID: 4703339}
   Heart2: {fileID: 1388665537}
   Heart3: {fileID: 7918806}
