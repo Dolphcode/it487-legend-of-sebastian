@@ -266,23 +266,21 @@ namespace Player
             if (swordHitbox != null)
             {
                 Vector3 offsetVector = Vector3.zero;
+                animator.SetTrigger("Attack");
+                animator.SetInteger("Direction", facing);
                 switch (dir)
                 {
                     case PlayerDirection.DOWN:
                         offsetVector = Vector3.down * swordOffset;
-                        animator.Play("link_down_attack", 0, 0f);
                         break;
                     case PlayerDirection.RIGHT:
                         offsetVector = Vector3.right * swordOffset;
-                        animator.Play("link_right_attack", 0, 0f);
                         break;
                     case PlayerDirection.LEFT:
                         offsetVector = Vector3.left * swordOffset;
-                        animator.Play("link_left_attack", 0, 0f);
                         break;
                     case PlayerDirection.UP:
                         offsetVector = Vector3.up * swordOffset;
-                        animator.Play("link_up_attack", 0, 0f);
                         break;
                 }
 

@@ -129,7 +129,7 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 11
-        width: 17
+        width: 16
         height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -149,9 +149,9 @@ TextureImporter:
       name: LinkDownAttack_1
       rect:
         serializedVersion: 2
-        x: 16
+        x: 17
         y: 0
-        width: 18
+        width: 16
         height: 27
       alignment: 9
       pivot: {x: 0.5, y: 0.7037037}
@@ -171,9 +171,9 @@ TextureImporter:
       name: LinkDownAttack_2
       rect:
         serializedVersion: 2
-        x: 33
+        x: 34
         y: 3
-        width: 17
+        width: 16
         height: 24
       alignment: 9
       pivot: {x: 0.5, y: 0.6666667}
@@ -195,7 +195,7 @@ TextureImporter:
         serializedVersion: 2
         x: 51
         y: 7
-        width: 15
+        width: 16
         height: 20
       alignment: 9
       pivot: {x: 0.5, y: 0.6}
