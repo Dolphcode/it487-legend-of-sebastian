@@ -43,6 +43,10 @@ namespace Player
         [Header("Sword Config")]
         [SerializeField] private GameObject swordHitbox;
         [SerializeField] private float swordOffset = 0.8f;
+
+        [Header("Bow and Arrow Config")]
+        [SerializeField] private GameObject arrowPrefab;
+        [SerializeField] private float arrowSpawnOffset = 0.5f;
         
         // On Start actions
         private InputAction moveAction;
@@ -266,8 +270,52 @@ namespace Player
         IEnumerator Secondary()
         {
             Debug.Log("Secondary Attack Started!");
+            ExecuteSecondaryAttack((PlayerDirection)facing);
             playerInputFrozen = false;
             yield return null;
+        }
+
+        private void ExecuteSecondaryAttack(PlayerDirection dir)
+        {
+            if (arrowPrefab == null) return;
+
+            Vector2 fireDirection = Vector2.down;
+            float zRotation = 0f;
+
+            switch (dir)
+            {
+                case PlayerDirection.DOWN:
+                    fireDirection = Vector2.down;
+                    zRotation = 180f;
+                    break;
+                case PlayerDirection.RIGHT:
+                    fireDirection = Vector2.right;
+                    zRotation = -90f;
+                    break;
+                case PlayerDirection.LEFT:
+                    fireDirection = Vector2.left;
+                    zRotation = 90f;
+                    break;
+                case PlayerDirection.UP:
+                    fireDirection = Vector2.up;
+                    zRotation = 0f;
+                    break;
+            }
+
+            //Calculate spawn position in front of Link
+            Vector3 spawnPos = transform.position + (Vector3)(fireDirection * arrowSpawnOffset);
+
+            //Spawn arrow with correct rotation
+            Quaternion spawnRotation = Quaternion.Euler(0f, 0f, zRotation);
+            GameObject arrowObj = Instantiate(arrowPrefab, spawnPos, spawnRotation);
+
+            //
+            Arrow arrowScript = arrowObj.GetComponent<Arrow>();
+            if (arrowScript != null)
+            {
+                arrowScript.Initialize(fireDirection);
+            }
+
         }
         private void MovePlayer(float moveSpeed, int xIn, int yIn)
         {

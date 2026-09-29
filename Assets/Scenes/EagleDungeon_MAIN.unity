@@ -14958,6 +14958,8 @@ MonoBehaviour:
   playerInputFrozen: 0
   swordHitbox: {fileID: 1131572514}
   swordOffset: 0.8
+  arrowPrefab: {fileID: 5745978206075673744, guid: eee66bf0da13af54fa1c1cdb957eb2b8, type: 3}
+  arrowSpawnOffset: 0.5
 --- !u!61 &1632810237
 BoxCollider2D:
   m_ObjectHideFlags: 0
