@@ -39,14 +39,21 @@ namespace Player
         [Header("Collision Config")] [SerializeField] private ContactFilter2D contactFilter;
 
         [Header("Player Control Settings")] public bool playerInputFrozen = false;
+
+        [Header("Sword Config")]
+        [SerializeField] private GameObject swordHitbox;
+        [SerializeField] private float swordOffset = 0.8f;
         
         // On Start actions
-        private InputAction moveAction;  
+        private InputAction moveAction;
+        private InputAction primaryAction;
+        private InputAction secondaryAction;
         
         // On Start components
         private BoxCollider2D collider2D;
         private Animator animator;
         private SpriteRenderer sprite;
+
         
         // Animator IDs
         private int _animMovingId, _animDirectionId;
@@ -74,6 +81,8 @@ namespace Player
             
             // Actions
             moveAction = InputSystem.actions.FindAction("Move");
+            primaryAction = InputSystem.actions.FindAction("PrimaryWeapon");
+            secondaryAction = InputSystem.actions.FindAction("SecondaryWeapon");
             
             // Save the current y position
             currY = transform.position.y;
@@ -81,12 +90,30 @@ namespace Player
             expectedY = transform.position.y;
         }
 
+        void Update()
+        {
+            if (playerInputFrozen) return;
+
+            if (primaryAction.WasPressedThisFrame())
+            {
+                playerInputFrozen = true;
+                StartCoroutine(Primary());
+                return;
+            }
+
+            if (secondaryAction.WasPressedThisFrame())
+            {
+                playerInputFrozen = true;
+                StartCoroutine(Secondary());
+                return;
+            }
+        }
         // Fixed Update is called once per physics frame
         void FixedUpdate()
         {
             // Check if player is frozen, skip if so
             if (playerInputFrozen) return;
-            
+
             // Get the movement input value and round it to integral values
             Vector2 moveInputValue = moveAction.ReadValue<Vector2>();
             int xIn = (int)Math.Round(moveInputValue.x, MidpointRounding.AwayFromZero);
@@ -191,6 +218,57 @@ namespace Player
             SetAnimatorState(false, direction);
         }
 
+
+        IEnumerator Primary()
+        {
+            Debug.Log("Primary Attack Started!");
+            ExecutePrimaryAttack((PlayerDirection)facing);
+            yield return null;
+            float attackLength = animator.GetCurrentAnimatorStateInfo(0).length;
+            yield return new WaitForSeconds(attackLength);
+            if (swordHitbox != null)
+            {
+                swordHitbox.SetActive(false);
+            }
+            SetAnimatorState(false, ((PlayerDirection)facing));
+            playerInputFrozen = false;
+        }
+
+        private void ExecutePrimaryAttack(PlayerDirection dir)
+        {
+            if (swordHitbox != null)
+            {
+                Vector3 offsetVector = Vector3.zero;
+                switch (dir)
+                {
+                    case PlayerDirection.DOWN:
+                        offsetVector = Vector3.down * swordOffset;
+                        animator.Play("link_down_attack", 0, 0f);
+                        break;
+                    case PlayerDirection.RIGHT:
+                        offsetVector = Vector3.right * swordOffset;
+                        animator.Play("link_right_attack", 0, 0f);
+                        break;
+                    case PlayerDirection.LEFT:
+                        offsetVector = Vector3.left * swordOffset;
+                        animator.Play("link_left_attack", 0, 0f);
+                        break;
+                    case PlayerDirection.UP:
+                        offsetVector = Vector3.up * swordOffset;
+                        animator.Play("link_up_attack", 0, 0f);
+                        break;
+                }
+
+                swordHitbox.transform.localPosition = offsetVector;
+                swordHitbox.SetActive(true);
+            }
+        }
+        IEnumerator Secondary()
+        {
+            Debug.Log("Secondary Attack Started!");
+            playerInputFrozen = false;
+            yield return null;
+        }
         private void MovePlayer(float moveSpeed, int xIn, int yIn)
         {
             /*
@@ -501,6 +579,18 @@ namespace Player
         {
             animator.SetInteger(_animDirectionId, (int)direction);
             animator.SetBool(_animMovingId, walking);
+        }
+
+        public Vector2Int GetFacingDirection()
+        {
+            switch ((PlayerDirection)facing)
+            {
+                case PlayerDirection.DOWN: return Vector2Int.down;
+                case PlayerDirection.UP: return Vector2Int.up;
+                case PlayerDirection.LEFT: return Vector2Int.left;
+                case PlayerDirection.RIGHT: return Vector2Int.right;
+                default: return Vector2Int.zero;
+            }
         }
 
     }

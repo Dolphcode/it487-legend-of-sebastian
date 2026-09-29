@@ -235,7 +235,11 @@ public class BaseEntityController : MonoBehaviour
     {
         if (knockedBack) return; // Still being knocked back so we still have iframes essentially
         hp -= damage;
-        if (hp <= 0) Destroy(gameObject);
+        if (hp <= 0)
+        {
+            foreach(var gate in gates) DisconnectGate(gate);
+            Destroy(gameObject);
+        }
         else
         {
             knockedBack = true;
@@ -249,6 +253,12 @@ public class BaseEntityController : MonoBehaviour
     {
         trigger.OnTransitionBegin += OnGateTransitionBegin;
         trigger.OnTransitionEnd += OnGateTransitionEnd;
+    }
+
+    private void DisconnectGate(RoomTransitionTrigger trigger)
+    {
+        trigger.OnTransitionBegin -= OnGateTransitionBegin;
+        trigger.OnTransitionEnd -= OnGateTransitionEnd;
     }
 
     private bool isActive = false;
@@ -281,9 +291,10 @@ public class BaseEntityController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        
         if (other.CompareTag("Player"))
         {
-            OnHit(Vector2Int.left, 1);
+            //OnHit(Vector2Int.left, 1);
         }   
     }
 
