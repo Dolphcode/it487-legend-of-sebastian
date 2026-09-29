@@ -39,6 +39,10 @@ namespace Player
         [Header("Collision Config")] [SerializeField] private ContactFilter2D contactFilter;
 
         [Header("Player Control Settings")] public bool playerInputFrozen = false;
+
+        [Header("Sword Config")]
+        [SerializeField] private GameObject swordHitbox;
+        [SerializeField] private float swordOffset = 0.8f;
         
         // On Start actions
         private InputAction moveAction;
@@ -49,6 +53,7 @@ namespace Player
         private BoxCollider2D collider2D;
         private Animator animator;
         private SpriteRenderer sprite;
+
         
         // Animator IDs
         private int _animMovingId, _animDirectionId;
@@ -221,27 +226,41 @@ namespace Player
             yield return null;
             float attackLength = animator.GetCurrentAnimatorStateInfo(0).length;
             yield return new WaitForSeconds(attackLength);
-            animator.Play("Idle", 0, 0f);
+            if (swordHitbox != null)
+            {
+                swordHitbox.SetActive(false);
+            }
+            SetAnimatorState(false, ((PlayerDirection)facing));
             playerInputFrozen = false;
         }
 
         private void ExecutePrimaryAttack(PlayerDirection dir)
         {
-            switch (dir)
+            if (swordHitbox != null)
             {
-                case PlayerDirection.DOWN:
-                    animator.Play("link_down_attack", 0, 0f);
-                    break;
-                case PlayerDirection.RIGHT:
-                    animator.Play("link_right_attack", 0, 0f);
-                    break;
-                case PlayerDirection.LEFT:
-                    animator.Play("link_left_attack", 0, 0f);
-                    break;
-                case PlayerDirection.UP:
-                    animator.Play("link_up_attack", 0, 0f);
-                    break;
-                
+                Vector3 offsetVector = Vector3.zero;
+                switch (dir)
+                {
+                    case PlayerDirection.DOWN:
+                        offsetVector = Vector3.down * swordOffset;
+                        animator.Play("link_down_attack", 0, 0f);
+                        break;
+                    case PlayerDirection.RIGHT:
+                        offsetVector = Vector3.right * swordOffset;
+                        animator.Play("link_right_attack", 0, 0f);
+                        break;
+                    case PlayerDirection.LEFT:
+                        offsetVector = Vector3.left * swordOffset;
+                        animator.Play("link_left_attack", 0, 0f);
+                        break;
+                    case PlayerDirection.UP:
+                        offsetVector = Vector3.up * swordOffset;
+                        animator.Play("link_up_attack", 0, 0f);
+                        break;
+                }
+
+                swordHitbox.transform.localPosition = offsetVector;
+                swordHitbox.SetActive(true);
             }
         }
         IEnumerator Secondary()
