@@ -1,346 +1,304 @@
+using System.Collections.Generic;
 using System.Collections;
-using Math = System.Math;
-using MidpointRounding = System.MidpointRounding;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 
-namespace Player
+
+public class BaseEntityController : MonoBehaviour
 {
-    /// <summary>
-    /// PlayerController represents an emulation of the player controller for Link in the NES version of The Legend of Zelda. The goal
-    /// of this script is to closely emulate the grid-based movement of Link in TLoZ. This includes some of the fun little movement quirks
-    /// which are described in the FixedUpdate function of this class. Essentially custom collision resolution and tile-based movement
-    /// is implemented in order to make this function as closely to the original as possible. This is purely a PlayerController, and does not
-    /// at all represent other data/constructs suc has health or inventory. This will be implemented in a separate module.
-    /// TODO: A lot of this code could probably be repeated for enemies. The difference being that Player is controlled by input while
-    ///       enemies are controlled by an enemy brain. THUS, it might be helpful to extract some of these functions and fields to
-    ///       an abstract class which PlayerController and EnemyController might extend. Something like an EntityController base class?
-    /// </summary>
-    public class PlayerController : MonoBehaviour
+    public enum PlayerDirection
     {
-        /// <summary>
-        /// TODO: Convert any references to facing or direction to PlayerDirection type for easier readability
-        /// </summary>
-        public enum PlayerDirection
+        DOWN,
+        RIGHT,
+        UP,
+        LEFT
+    }
+
+    [Header("Movement Config")] [SerializeField]
+    private float moveSpeed = 5f;
+
+    [SerializeField] [Range(0f, 1.0e-4f)] private float blockTestThreshold = 1.0e-5f;
+    [SerializeField] private float positionSnapThreshold = 1f / 32f;
+    [SerializeField] private float motionBias = 0.1f;
+    [SerializeField] private float overlapOvershootMax = 0.2f;
+
+    [Header("Collision Config")] [SerializeField]
+    private ContactFilter2D contactFilter;
+
+    [Header("Spawn Config")] [SerializeField]
+    private List<RoomTransitionTrigger> gates;
+
+    [Header("Health Config")] [SerializeField]
+    private int hp = 2;
+
+    [SerializeField] private int knockbackAmount = 10;
+    [SerializeField] private float knockbackSpeed = 20f;
+
+    // On Start components
+    private BoxCollider2D collider2D;
+    private Animator animator;
+    private SpriteRenderer sprite;
+
+    // State Variables
+    private float currY = 0f, expectedY = 0f;
+    private int prevYIn = 0;
+    private bool snappedToGridFlag = false;
+    private Vector3 lastPosition, deltaPosition;
+    private bool vBlocked = false;
+    private int facing = 0; // 0 = down, 1 = right, 2 = up, 3 = left
+    
+    // Saved start position
+    private Vector3 startPosition;
+    
+    [Header("Pathing Config")] [SerializeField]
+    private Vector2Int walkableRegion;
+
+    [SerializeField] private Vector2Int walkableRegionOffset;
+    [SerializeField] private List<Tilemap> wallTilemaps;
+
+    // Walktable region map
+    private bool[] validTiles;
+    
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        collider2D = GetComponent<BoxCollider2D>();
+        animator = GetComponent<Animator>();
+        sprite = GetComponent<SpriteRenderer>();
+
+        // Save the current y position
+        currY = transform.position.y;
+        lastPosition = transform.position;
+        expectedY = transform.position.y;
+        
+        // Record the stalfos start position
+        startPosition = transform.position;
+        
+        // Initialize trigger information
+        foreach (RoomTransitionTrigger gate in gates)
         {
-            DOWN,
-            RIGHT,
-            UP,
-            LEFT
+            InitializeGate(gate);
         }
-
-        [Header("Movement Config")] [SerializeField] private float moveSpeed = 5f;
-        [SerializeField] [Range(0f, 1.0e-4f)] private float blockTestThreshold = 1.0e-5f;
-        [SerializeField] private float positionSnapThreshold = 1f/32f;
-        [SerializeField] private float motionBias = 0.1f;
-        [SerializeField] private float overlapOvershootMax = 0.2f;
-
-        [Header("Collision Config")] [SerializeField] private ContactFilter2D contactFilter;
-
-        [Header("Player Control Settings")] public bool playerInputFrozen = false;
-
-        [Header("Sword Config")]
-        [SerializeField] private GameObject swordHitbox;
-        [SerializeField] private float swordOffset = 0.8f;
-
-        [Header("Bow and Arrow Config")]
-        [SerializeField] private GameObject arrowPrefab;
-        [SerializeField] private float arrowSpawnOffset = 0.5f;
         
-        // On Start actions
-        private InputAction moveAction;
-        private InputAction primaryAction;
-        private InputAction secondaryAction;
-        private InputAction godAction;
-        
-        // On Start components
-        private BoxCollider2D collider2D;
-        private Animator animator;
-        private SpriteRenderer sprite;
-
-        
-        // Animator IDs
-        private int _animMovingId, _animDirectionId;
-        
-        // State Variables
-        private float currY = 0f, expectedY = 0f;
-        private int prevYIn = 0;
-        private bool snappedToGridFlag = false;
-        private Vector3 lastPosition, deltaPosition;
-        private bool vBlocked = false;
-        private int facing = 0; // 0 = down, 1 = right, 2 = up, 3 = left
-        private bool godModeActive = false;
-        
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
+               
+        // Initialize the valid tiles
+        validTiles = new bool[walkableRegion.x * walkableRegion.y];
+        for (int y = 0; y < walkableRegion.y; y++)
         {
-            // Get all components
-            collider2D = GetComponent<BoxCollider2D>();
-            animator = GetComponent<Animator>();
-            sprite = GetComponent<SpriteRenderer>();
-            
-            // Get animator ids
-            _animMovingId = Animator.StringToHash("Moving");
-            _animDirectionId = Animator.StringToHash("Direction");
-            
-            
-            // Actions
-            moveAction = InputSystem.actions.FindAction("Move");
-            primaryAction = InputSystem.actions.FindAction("PrimaryWeapon");
-            secondaryAction = InputSystem.actions.FindAction("SecondaryWeapon");
-            godAction = InputSystem.actions.FindAction("GodMode");
-            
-            // Save the current y position
-            currY = transform.position.y;
-            lastPosition = transform.position;
-            expectedY = transform.position.y;
-        }
-
-        void Update()
-        {
-            if (playerInputFrozen) return;
-
-            if (primaryAction.WasPressedThisFrame())
+            for (int x = 0; x < walkableRegion.x; x++)
             {
-                playerInputFrozen = true;
-                StartCoroutine(Primary());
-                return;
-            }
-
-            if (secondaryAction.WasPressedThisFrame())
-            {
-                playerInputFrozen = true;
-                StartCoroutine(Secondary());
-                return;
-            }
-
-            if (godAction != null && godAction.WasPressedThisFrame())
-            {
-                ToggleGodMode();
-            }
-        }
-        // Fixed Update is called once per physics frame
-        void FixedUpdate()
-        {
-            // Check if player is frozen, skip if so
-            if (playerInputFrozen) return;
-
-            // Get the movement input value and round it to integral values
-            Vector2 moveInputValue = moveAction.ReadValue<Vector2>();
-            int xIn = (int)Math.Round(moveInputValue.x, MidpointRounding.AwayFromZero);
-            int yIn = (int)Math.Round(moveInputValue.y, MidpointRounding.AwayFromZero);
-            
-            // Apply input and move player in FixedUpdate if player input is not frozen
-            // Be sure to freeze player input if plannign on moving elsewhere
-            // Generally MovePlayer should only be called in FixedUpdate or after FixedUpdate frame
-            MovePlayer(this.moveSpeed, xIn, yIn);
-            
-            SetAnimatorState(xIn != 0 || yIn != 0, (PlayerDirection)facing);
-
-        }
-
-        /// <summary>
-        /// Forces the player to move in a direction over a number of tiles within a set amount of time. NOTE that if the player
-        /// is not frozen a warning will be issued and the coroutine will end immediately. It is generally advised not to try to
-        /// force the player while also leaving them unfrozen.
-        /// </summary>
-        /// <param name="tiles">Tiles to move, must be positive (will be converted internally if not)</param>
-        /// <param name="time">Time to move, must be a positive value (will be clamped to 0 or more)</param>
-        /// <param name="direction">The direction in which the player will move over the span of this coroutine. Defaults to right if invalid direction is provided</param>
-        /// <param name="snapToGrid">Toggle this if you would like to automatically compute movement such that the player ends on a whole number tile</param>
-        /// <returns>IEnumerator to pass into <c>StartCoroutine</c></returns>
-        public IEnumerator ForcePlayerCoroutine(int tiles, float time, PlayerDirection direction, bool snapToGrid)
-        {
-            // Back out if 0 time provided
-            if (time <= 0f)
-            {
-                Debug.LogWarning("Called ForcePlayerCoroutine for 0 seconds, breaking out of coroutine now");
-                yield break;
-            }
-            
-            // Back out if player is not frozen
-            if (!playerInputFrozen)
-            {
-                Debug.LogWarning("Called ForcePlayerCoroutine without freezing player, breaking out of coroutine now");
-                yield break;
-            }
-
-            // Convert tiles to positive
-            if (tiles < 0) tiles = Mathf.Abs(tiles);
-            
-            // Compute move total (if needed), move speed, and determine directional parameters
-            float actualMovementTotal = (float)tiles;
-            if (snapToGrid)
-            {
-                switch (direction)
+                Vector3 testCell = new Vector3(x * 2 + walkableRegionOffset.x, y * 2 + walkableRegionOffset.y, 0f);
+                foreach (Tilemap t in wallTilemaps)
                 {
-                    case PlayerDirection.DOWN:
-                    case PlayerDirection.UP:
-                        int dirVFactor = (int)direction - 1;
-                        float initY = transform.position.y;
-                        float snappedY = Mathf.Round(initY + dirVFactor * tiles);
-                        actualMovementTotal = Mathf.Abs(snappedY - initY);
-                        break;
-                    case PlayerDirection.LEFT:
-                    case PlayerDirection.RIGHT:
-                    default:
-                        int dirHFactor = -((int)direction - 2);
-                        float initX = transform.position.x;
-                        float snappedX = Mathf.Round(initX + dirHFactor * tiles);
-                        actualMovementTotal = Mathf.Abs(snappedX - initX);
-                        break;
+                    if (t.HasTile(t.WorldToCell(testCell)))
+                    {
+                        validTiles[y * walkableRegion.x + x] = false;
+                        goto LOOPEND;
+                    }
                 }
+
+                validTiles[y * walkableRegion.x + x] = true;
+                LOOPEND: ;
             }
-            
-            float compMoveSpeed = actualMovementTotal / time;
-            int xIn, yIn; // NOTE: Defaults to right if an invalid direction is provided
+        }
+    }
+
+
+    private float moveAmount = 0f;
+    private float walkTimeLeft = 0f;
+    private Vector2Int moveDirection = Vector2Int.zero;
+
+    private void PickDirection()
+    {
+        Vector2Int currentTilePosition = new Vector2Int(Mathf.RoundToInt(transform.position.x - walkableRegionOffset.x),
+            Mathf.RoundToInt(transform.position.y - walkableRegionOffset.y)) / 2;
+        List<PlayerDirection> validDirections = new List<PlayerDirection>() {PlayerDirection.LEFT, PlayerDirection.DOWN, PlayerDirection.RIGHT, PlayerDirection.UP};
+        
+        // Check alignment to restrict movement
+        bool xAligned = Mathf.RoundToInt((transform.position.x - walkableRegionOffset.x) / 2f) * 2
+                        == Mathf.RoundToInt(transform.position.x - walkableRegionOffset.x);
+
+        bool yAligned = Mathf.RoundToInt((transform.position.y - walkableRegionOffset.y) / 2f) * 2
+                        == Mathf.RoundToInt(transform.position.y - walkableRegionOffset.y);
+        if (!xAligned)
+        {
+            validDirections.Remove(PlayerDirection.UP);
+            validDirections.Remove(PlayerDirection.DOWN);
+        }
+        else if (!yAligned)
+        {
+            validDirections.Remove(PlayerDirection.LEFT);
+            validDirections.Remove(PlayerDirection.RIGHT);
+        }
+        
+        Vector2Int chosenDirection = Vector2Int.zero;
+        while (validDirections.Count > 0)
+        {
+            PlayerDirection direction = validDirections[Random.Range(0, validDirections.Count)];
+            Vector2Int directionTest = Vector2Int.zero;
             switch (direction)
             {
-                case PlayerDirection.DOWN:
-                    yIn = -1;
-                    xIn = 0;
-                    break;
-                case PlayerDirection.UP:
-                    yIn = 1;
-                    xIn = 0;
-                    break;
-                case PlayerDirection.LEFT:
-                    yIn = 0;
-                    xIn = -1;
-                    break;
-                case PlayerDirection.RIGHT:
-                default:
-                    yIn = 0;
-                    xIn = 1;
-                    break;
+                case PlayerDirection.LEFT: directionTest = Vector2Int.left; break;
+                case PlayerDirection.RIGHT: directionTest = Vector2Int.right; break;
+                case PlayerDirection.DOWN: directionTest = Vector2Int.down; break;
+                case PlayerDirection.UP: directionTest = Vector2Int.up; break;
             }
-            
-            // Set animator state
-            SetAnimatorState(true, direction);
 
-            // Every physics frame
-            for (; time > 0f; time -= Time.fixedDeltaTime)
+            Vector2Int positionTest = directionTest + currentTilePosition;
+            int index = positionTest.y * walkableRegion.x + positionTest.x;
+            if (positionTest.x < 0 || positionTest.x >= walkableRegion.x || positionTest.y < 0 ||
+                positionTest.y >= walkableRegion.y || !validTiles[index])
             {
-                MovePlayer(compMoveSpeed, xIn, yIn);
-                yield return new WaitForFixedUpdate();
-            }
-            
-            // End idle
-            SetAnimatorState(false, direction);
-        }
-
-        private void ToggleGodMode()
-        {
-            godModeActive = !godModeActive;
-
-            if(godModeActive)
-            {
-                //Disable hurtbox and set items to max
-                Debug.Log("God Mode Enabled");
+                validDirections.Remove(direction);
             }
             else
             {
-                //Reenable hurtbox
-                Debug.Log("God Mode Disabled");
+                chosenDirection = directionTest;
+                break;
             }
-            }
-            
-        IEnumerator Primary()
-        {
-            Debug.Log("Primary Attack Started!");
-            ExecutePrimaryAttack((PlayerDirection)facing);
-            yield return null;
-            float attackLength = animator.GetCurrentAnimatorStateInfo(0).length;
-            yield return new WaitForSeconds(attackLength);
-            if (swordHitbox != null)
-            {
-                swordHitbox.SetActive(false);
-            }
-            SetAnimatorState(false, ((PlayerDirection)facing));
-            playerInputFrozen = false;
         }
 
-        private void ExecutePrimaryAttack(PlayerDirection dir)
+        if (chosenDirection == Vector2Int.zero)
         {
-            if (swordHitbox != null)
+            Debug.LogError("Enemy is starting outside of its boundary region");
+            walkTimeLeft = 10f;
+            moveDirection = chosenDirection;
+            return;
+        }
+
+        Vector2Int targetPositionTest = currentTilePosition + chosenDirection;
+        int maxDist;
+        for (maxDist = 1;
+             targetPositionTest.x >= 0 && targetPositionTest.x < walkableRegion.x && targetPositionTest.y >= 0 &&
+             targetPositionTest.y < walkableRegion.y && 
+             validTiles[targetPositionTest.y * walkableRegion.x + targetPositionTest.x];
+             targetPositionTest = currentTilePosition + chosenDirection * ++maxDist) ;
+        maxDist--;
+
+        moveAmount = Random.Range(1, maxDist) * 2;
+
+        float position = chosenDirection.x != 0
+            ? transform.position.x - walkableRegionOffset.x
+            : transform.position.y - walkableRegionOffset.y;
+
+        float remainder = Mathf.Repeat(position, 2f);
+
+        if (remainder > 0.001f)
+        {
+            float correction = 2f - remainder;
+            moveAmount += correction;
+            moveAmount -= 2f;
+        }
+        
+        moveDirection = chosenDirection;
+        walkTimeLeft = moveAmount / moveSpeed;
+    }
+
+
+    // Update is called once per frame
+    void FixedUpdate()
+    {
+        if (isActive)
+        {
+            if (knockedBack)
             {
-                Vector3 offsetVector = Vector3.zero;
-                switch (dir)
+                if (knockbackTimeLeft <= 0f)
                 {
-                    case PlayerDirection.DOWN:
-                        offsetVector = Vector3.down * swordOffset;
-                        animator.Play("link_down_attack", 0, 0f);
-                        break;
-                    case PlayerDirection.RIGHT:
-                        offsetVector = Vector3.right * swordOffset;
-                        animator.Play("link_right_attack", 0, 0f);
-                        break;
-                    case PlayerDirection.LEFT:
-                        offsetVector = Vector3.left * swordOffset;
-                        animator.Play("link_left_attack", 0, 0f);
-                        break;
-                    case PlayerDirection.UP:
-                        offsetVector = Vector3.up * swordOffset;
-                        animator.Play("link_up_attack", 0, 0f);
-                        break;
+                    transform.position = new Vector3(Mathf.Round(transform.position.x),
+                        Mathf.Round(transform.position.y),
+                        transform.position.z); // Grid snap
+                    PickDirection(); // Select new direction
+                    knockedBack = false;
+                }
+                MoveEntity(knockbackSpeed, moveDirection.x, moveDirection.y);
+                knockbackTimeLeft -= Time.fixedDeltaTime;
+            }
+            else
+            {
+                if (walkTimeLeft <= 0f)
+                {
+                    transform.position = new Vector3(Mathf.Round(transform.position.x),
+                        Mathf.Round(transform.position.y),
+                        transform.position.z); // Grid snap
+                    PickDirection(); // Select new direction
                 }
 
-                swordHitbox.transform.localPosition = offsetVector;
-                swordHitbox.SetActive(true);
+                MoveEntity(moveSpeed, moveDirection.x, moveDirection.y);
+                walkTimeLeft -= Time.fixedDeltaTime;
             }
         }
-        IEnumerator Secondary()
+    }
+
+    private float knockbackTimeLeft = 0f;
+    private bool knockedBack = false;
+    public void OnHit(Vector2Int direction, int damage)
+    {
+        if (knockedBack) return; // Still being knocked back so we still have iframes essentially
+        hp -= damage;
+        if (hp <= 0)
         {
-            Debug.Log("Secondary Attack Started!");
-            ExecuteSecondaryAttack((PlayerDirection)facing);
-            playerInputFrozen = false;
-            yield return null;
+            foreach(var gate in gates) DisconnectGate(gate);
+            Destroy(gameObject);
         }
-
-        private void ExecuteSecondaryAttack(PlayerDirection dir)
+        else
         {
-            if (arrowPrefab == null) return;
-
-            Vector2 fireDirection = Vector2.down;
-            float zRotation = 0f;
-
-            switch (dir)
-            {
-                case PlayerDirection.DOWN:
-                    fireDirection = Vector2.down;
-                    zRotation = 180f;
-                    break;
-                case PlayerDirection.RIGHT:
-                    fireDirection = Vector2.right;
-                    zRotation = -90f;
-                    break;
-                case PlayerDirection.LEFT:
-                    fireDirection = Vector2.left;
-                    zRotation = 90f;
-                    break;
-                case PlayerDirection.UP:
-                    fireDirection = Vector2.up;
-                    zRotation = 0f;
-                    break;
-            }
-
-            //Calculate spawn position in front of Link
-            Vector3 spawnPos = transform.position + (Vector3)(fireDirection * arrowSpawnOffset);
-
-            //Spawn arrow with correct rotation
-            Quaternion spawnRotation = Quaternion.Euler(0f, 0f, zRotation);
-            GameObject arrowObj = Instantiate(arrowPrefab, spawnPos, spawnRotation);
-
-            //
-            Arrow arrowScript = arrowObj.GetComponent<Arrow>();
-            if (arrowScript != null)
-            {
-                arrowScript.Initialize(fireDirection);
-            }
-
+            knockedBack = true;
+            moveDirection = direction;
+            knockbackTimeLeft = (float)knockbackAmount / knockbackSpeed;
         }
-        private void MovePlayer(float moveSpeed, int xIn, int yIn)
+    }
+
+
+    private void InitializeGate(RoomTransitionTrigger trigger)
+    {
+        trigger.OnTransitionBegin += OnGateTransitionBegin;
+        trigger.OnTransitionEnd += OnGateTransitionEnd;
+    }
+
+    private void DisconnectGate(RoomTransitionTrigger trigger)
+    {
+        trigger.OnTransitionBegin -= OnGateTransitionBegin;
+        trigger.OnTransitionEnd -= OnGateTransitionEnd;
+    }
+
+    private bool isActive = false;
+    
+    private void OnGateTransitionBegin(RoomTransitionTrigger performer, bool vertical, bool positionFlag)
+    {
+        if (isActive)
+        {
+            isActive = false;
+            sprite.enabled = false;
+        }
+    }
+
+    private void OnGateTransitionEnd(RoomTransitionTrigger performer, bool vertical, bool positionFlag)
+    {
+        if (!isActive)
+        {
+            isActive = true;
+            transform.position = startPosition;
+            StartCoroutine(SpawnStalfos());
+        }
+    }
+
+    private IEnumerator SpawnStalfos()
+    {
+        sprite.enabled = true;
+        PickDirection();
+        yield break;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        
+        if (other.CompareTag("Player"))
+        {
+            //OnHit(Vector2Int.left, 1);
+        }   
+    }
+
+private void MoveEntity(float moveSpeed, int xIn, int yIn)
         {
             /*
              * 1. Vertical movement evaluates before horizontal. If holding UP/LEFT you will go all the way up first and then when you collide with the wall you will start going left.
@@ -645,31 +603,4 @@ namespace Player
                 transform.position += Vector3.up * correctionDir * overlapY;
             }
         }
-
-        private void SetAnimatorState(bool walking, PlayerDirection direction)
-        {
-            animator.SetInteger(_animDirectionId, (int)direction);
-            animator.SetBool(_animMovingId, walking);
-        }
-
-        public Vector2Int GetFacingDirection()
-        {
-            switch ((PlayerDirection)facing)
-            {
-                case PlayerDirection.DOWN: return Vector2Int.down;
-                case PlayerDirection.UP: return Vector2Int.up;
-                case PlayerDirection.LEFT: return Vector2Int.left;
-                case PlayerDirection.RIGHT: return Vector2Int.right;
-                default: return Vector2Int.zero;
-            }
-        }
-
-        public void GameOver()
-        {
-            Debug.Log("Game Over!");
-            playerInputFrozen = true;
-            //animator.Play("link_die", 0, 0f);
-        }
-
-    }
 }

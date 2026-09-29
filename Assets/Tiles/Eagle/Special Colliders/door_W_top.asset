@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7fa6eda3087bdbf41896b7181d87e165, type: 3}
-  m_Name: door_N_left
+  m_Name: door_W_top
   m_EditorClassIdentifier: Assembly-CSharp::CollidingTile
-  m_Sprite: {fileID: -421540944, guid: 5818d2dda510f734d96e2935ad1956db, type: 3}
+  m_Sprite: {fileID: 2058020662, guid: 5818d2dda510f734d96e2935ad1956db, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1
@@ -35,5 +35,5 @@ MonoBehaviour:
   m_Flags: 1
   m_ColliderType: 1
   bounds:
-    m_Center: {x: -0.25, y: 0, z: 0}
-    m_Extent: {x: 0.24, y: 0.5, z: 0}
+    m_Center: {x: 0, y: -0.125, z: 0}
+    m_Extent: {x: 0.5, y: 0.75, z: 0}
