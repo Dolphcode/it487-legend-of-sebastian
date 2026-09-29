@@ -58,7 +58,7 @@ namespace Player
         private BoxCollider2D collider2D;
         private Animator animator;
         private SpriteRenderer sprite;
-
+        private PlayerInventory inventory;
         
         // Animator IDs
         private int _animMovingId, _animDirectionId;
@@ -79,6 +79,7 @@ namespace Player
             collider2D = GetComponent<BoxCollider2D>();
             animator = GetComponent<Animator>();
             sprite = GetComponent<SpriteRenderer>();
+            inventory = GetComponent<PlayerInventory>();
             
             // Get animator ids
             _animMovingId = Animator.StringToHash("Moving");
@@ -300,6 +301,11 @@ namespace Player
         {
             if (arrowPrefab == null) return;
 
+            if (inventory.GetConsumableAmount("rupee") > 0)
+                inventory.AccumulateConsumable("rupee", -1);
+            else
+                return;
+            
             Vector2 fireDirection = Vector2.down;
             float zRotation = 0f;
 

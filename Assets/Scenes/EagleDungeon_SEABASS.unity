@@ -14584,7 +14584,7 @@ MonoBehaviour:
   playerInputFrozen: 0
   swordHitbox: {fileID: 2114965208}
   swordOffset: 0.8
-  arrowPrefab: {fileID: 0}
+  arrowPrefab: {fileID: 5745978206075673744, guid: eee66bf0da13af54fa1c1cdb957eb2b8, type: 3}
   arrowSpawnOffset: 0.5
 --- !u!61 &1180830143
 BoxCollider2D:
@@ -15232,8 +15232,8 @@ MonoBehaviour:
   - {fileID: 729940872}
   - {fileID: 22279889}
   hp: 2
-  knockbackAmount: 10
-  knockbackSpeed: 20
+  knockbackAmount: 6
+  knockbackSpeed: 30
   walkableRegion: {x: 12, y: 7}
   walkableRegionOffset: {x: -50, y: -10}
   wallTilemaps:
@@ -15404,8 +15404,8 @@ MonoBehaviour:
   - {fileID: 729940872}
   - {fileID: 22279889}
   hp: 2
-  knockbackAmount: 10
-  knockbackSpeed: 20
+  knockbackAmount: 6
+  knockbackSpeed: 30
   walkableRegion: {x: 12, y: 7}
   walkableRegionOffset: {x: -50, y: -10}
   wallTilemaps:
@@ -16541,7 +16541,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &2114965209
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -30,6 +30,12 @@ namespace Player
             }
             else if (other.CompareTag("Enemy"))
             {
+                // I added it twin :>
+                //   ||
+                //  \ /
+                BaseEntityController ent = other.gameObject.GetComponent<BaseEntityController>();
+                ent.OnHit(new Vector2Int(Mathf.RoundToInt(moveDirection.x), Mathf.RoundToInt(moveDirection.y)), 1);
+                
                 Destroy(gameObject);
                 //add logic for hurting enemy here? idk lol
             }
