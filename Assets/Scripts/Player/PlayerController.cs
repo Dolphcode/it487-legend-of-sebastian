@@ -43,11 +43,16 @@ namespace Player
         [Header("Sword Config")]
         [SerializeField] private GameObject swordHitbox;
         [SerializeField] private float swordOffset = 0.8f;
+
+        [Header("Bow and Arrow Config")]
+        [SerializeField] private GameObject arrowPrefab;
+        [SerializeField] private float arrowSpawnOffset = 0.5f;
         
         // On Start actions
         private InputAction moveAction;
         private InputAction primaryAction;
         private InputAction secondaryAction;
+        private InputAction godAction;
         
         // On Start components
         private BoxCollider2D collider2D;
@@ -65,6 +70,7 @@ namespace Player
         private Vector3 lastPosition, deltaPosition;
         private bool vBlocked = false;
         private int facing = 0; // 0 = down, 1 = right, 2 = up, 3 = left
+        private bool godModeActive = false;
         
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
@@ -83,6 +89,7 @@ namespace Player
             moveAction = InputSystem.actions.FindAction("Move");
             primaryAction = InputSystem.actions.FindAction("PrimaryWeapon");
             secondaryAction = InputSystem.actions.FindAction("SecondaryWeapon");
+            godAction = InputSystem.actions.FindAction("GodMode");
             
             // Save the current y position
             currY = transform.position.y;
@@ -106,6 +113,11 @@ namespace Player
                 playerInputFrozen = true;
                 StartCoroutine(Secondary());
                 return;
+            }
+
+            if (godAction != null && godAction.WasPressedThisFrame())
+            {
+                ToggleGodMode();
             }
         }
         // Fixed Update is called once per physics frame
@@ -218,7 +230,22 @@ namespace Player
             SetAnimatorState(false, direction);
         }
 
+        private void ToggleGodMode()
+        {
+            godModeActive = !godModeActive;
 
+            if(godModeActive)
+            {
+                //Disable hurtbox and set items to max
+                Debug.Log("God Mode Enabled");
+            }
+            else
+            {
+                //Reenable hurtbox
+                Debug.Log("God Mode Disabled");
+            }
+            }
+            
         IEnumerator Primary()
         {
             Debug.Log("Primary Attack Started!");
@@ -266,8 +293,52 @@ namespace Player
         IEnumerator Secondary()
         {
             Debug.Log("Secondary Attack Started!");
+            ExecuteSecondaryAttack((PlayerDirection)facing);
             playerInputFrozen = false;
             yield return null;
+        }
+
+        private void ExecuteSecondaryAttack(PlayerDirection dir)
+        {
+            if (arrowPrefab == null) return;
+
+            Vector2 fireDirection = Vector2.down;
+            float zRotation = 0f;
+
+            switch (dir)
+            {
+                case PlayerDirection.DOWN:
+                    fireDirection = Vector2.down;
+                    zRotation = 180f;
+                    break;
+                case PlayerDirection.RIGHT:
+                    fireDirection = Vector2.right;
+                    zRotation = -90f;
+                    break;
+                case PlayerDirection.LEFT:
+                    fireDirection = Vector2.left;
+                    zRotation = 90f;
+                    break;
+                case PlayerDirection.UP:
+                    fireDirection = Vector2.up;
+                    zRotation = 0f;
+                    break;
+            }
+
+            //Calculate spawn position in front of Link
+            Vector3 spawnPos = transform.position + (Vector3)(fireDirection * arrowSpawnOffset);
+
+            //Spawn arrow with correct rotation
+            Quaternion spawnRotation = Quaternion.Euler(0f, 0f, zRotation);
+            GameObject arrowObj = Instantiate(arrowPrefab, spawnPos, spawnRotation);
+
+            //
+            Arrow arrowScript = arrowObj.GetComponent<Arrow>();
+            if (arrowScript != null)
+            {
+                arrowScript.Initialize(fireDirection);
+            }
+
         }
         private void MovePlayer(float moveSpeed, int xIn, int yIn)
         {
@@ -591,6 +662,13 @@ namespace Player
                 case PlayerDirection.RIGHT: return Vector2Int.right;
                 default: return Vector2Int.zero;
             }
+        }
+
+        public void GameOver()
+        {
+            Debug.Log("Game Over!");
+            playerInputFrozen = true;
+            //animator.Play("link_die", 0, 0f);
         }
 
     }

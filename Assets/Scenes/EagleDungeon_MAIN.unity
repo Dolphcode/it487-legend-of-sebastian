@@ -6490,7 +6490,7 @@ GameObject:
   - component: {fileID: 793351920}
   m_Layer: 6
   m_Name: Walls
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14958,6 +14958,8 @@ MonoBehaviour:
   playerInputFrozen: 0
   swordHitbox: {fileID: 1131572514}
   swordOffset: 0.8
+  arrowPrefab: {fileID: 5745978206075673744, guid: eee66bf0da13af54fa1c1cdb957eb2b8, type: 3}
+  arrowSpawnOffset: 0.5
 --- !u!61 &1632810237
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -15126,6 +15128,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
   currentHealth: 0
+  pcScript: {fileID: 1632810235}
   Heart1: {fileID: 4703339}
   Heart2: {fileID: 1388665537}
   Heart3: {fileID: 7918806}
