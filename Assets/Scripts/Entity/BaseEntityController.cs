@@ -32,6 +32,7 @@ public class BaseEntityController : MonoBehaviour
     private int hp = 2;
 
     [SerializeField] private int knockbackAmount = 10;
+    [SerializeField] private float knockbackSpeed = 20f;
 
     // On Start components
     private BoxCollider2D collider2D;
@@ -201,7 +202,16 @@ public class BaseEntityController : MonoBehaviour
         {
             if (knockedBack)
             {
-                
+                if (knockbackTimeLeft <= 0f)
+                {
+                    transform.position = new Vector3(Mathf.Round(transform.position.x),
+                        Mathf.Round(transform.position.y),
+                        transform.position.z); // Grid snap
+                    PickDirection(); // Select new direction
+                    knockedBack = false;
+                }
+                MoveEntity(knockbackSpeed, moveDirection.x, moveDirection.y);
+                knockbackTimeLeft -= Time.fixedDeltaTime;
             }
             else
             {
@@ -223,11 +233,14 @@ public class BaseEntityController : MonoBehaviour
     private bool knockedBack = false;
     public void OnHit(Vector2Int direction, int damage)
     {
+        if (knockedBack) return; // Still being knocked back so we still have iframes essentially
         hp -= damage;
         if (hp <= 0) Destroy(gameObject);
         else
         {
             knockedBack = true;
+            moveDirection = direction;
+            knockbackTimeLeft = (float)knockbackAmount / knockbackSpeed;
         }
     }
 
@@ -268,7 +281,10 @@ public class BaseEntityController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        
+        if (other.CompareTag("Player"))
+        {
+            OnHit(Vector2Int.left, 1);
+        }   
     }
 
 private void MoveEntity(float moveSpeed, int xIn, int yIn)
