@@ -7,6 +7,8 @@ using UnityEngine.Tilemaps;
 public class LockedGate : MonoBehaviour
 {
     [SerializeField] private Tilemap wallLayer;
+        
+        // Like there is 100% a better way to handle this
     [SerializeField] private List<TileSwapEntry> swapTiles;
     
     
