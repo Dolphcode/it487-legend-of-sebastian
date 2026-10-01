@@ -69,7 +69,7 @@ namespace Player
         private bool snappedToGridFlag = false;
         private Vector3 lastPosition, deltaPosition;
         private bool vBlocked = false;
-        private int facing = 0; // 0 = down, 1 = right, 2 = up, 3 = left
+        public int facing = 0; // 0 = down, 1 = right, 2 = up, 3 = left
         private bool godModeActive = false;
         
         // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -229,6 +229,9 @@ namespace Player
             
             // End idle
             SetAnimatorState(false, direction);
+            
+            // TODO: REMOVE LATER
+            playerInputFrozen = false;
         }
 
         private void ToggleGodMode()
