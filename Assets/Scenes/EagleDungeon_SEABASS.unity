@@ -6162,7 +6162,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   m_Size: {x: 4, y: 2}
-  m_EdgeRadius: 0.1
+  m_EdgeRadius: 0
 --- !u!4 &472599024
 Transform:
   m_ObjectHideFlags: 0
@@ -6295,9 +6295,9 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.20000002
+    x: 0
     y: 0
-    width: 0.6
+    width: 1
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
