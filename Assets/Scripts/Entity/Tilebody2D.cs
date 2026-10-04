@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -35,6 +36,11 @@ namespace SQZL.Entity {
         /// tiles
         /// </summary>
         protected const float TILE_COLLISION_EPSILON = 1e-1f;
+
+        /// <summary>
+        /// The minimum threshold of movement for us to determine if we moved cardinally or diagonally
+        /// </summary>
+        protected const float DIRECTION_DETECTION_EPSILON = 1e-1f;
         
         /// <summary>
         /// In case the tag for world objects that handle tilebody collisions changes.
@@ -71,7 +77,7 @@ namespace SQZL.Entity {
         #endregion
         
         // Properties
-        public TilebodyDirection Facing { protected set; get; } = TilebodyDirection.Down;
+        public TilebodyDirection LastMovedDirection { protected set; get; } = TilebodyDirection.Down;
 
         /// <summary>
         /// This function must be overridden if TileBody2D is being extended and components need to be pulled 
@@ -87,12 +93,31 @@ namespace SQZL.Entity {
         }
 
         #region COLLISION
+
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="newPosition"></param>
         /// <param name="filter"></param>
-        protected void ResolveCollisions(ContactFilter2D filter)
+        public void MoveAndCollide(Vector2 newPosition, ContactFilter2D filter)
         {
+            // Attempt movement and compute facing direction
+            // NOTE THIS CURRENTLY ONLY WORKS UNDER THE ASSUMPTION WE CAN ONLY MOVE IN ONE DIRECTION
+            Vector2 directionMoved =
+                new Vector2(newPosition.x - transform.position.x, newPosition.y - transform.position.y);
+            Vector2 absDirectionMoved = directionMoved.Abs();
+            if (absDirectionMoved.y < DIRECTION_DETECTION_EPSILON)
+            {
+                if (directionMoved.x > DIRECTION_DETECTION_EPSILON) LastMovedDirection = TilebodyDirection.Right;
+                else if (directionMoved.x < -DIRECTION_DETECTION_EPSILON) LastMovedDirection = TilebodyDirection.Left;
+            } else if (absDirectionMoved.x < DIRECTION_DETECTION_EPSILON)
+            {
+                if (directionMoved.y > DIRECTION_DETECTION_EPSILON) LastMovedDirection = TilebodyDirection.Up;
+                else if (directionMoved.y < -DIRECTION_DETECTION_EPSILON) LastMovedDirection = TilebodyDirection.Down;
+            }
+            else LastMovedDirection = TilebodyDirection.Diagonal;
+            transform.position = newPosition;
+            
             // Define our bounds
             Bounds ours = new Bounds(new Vector2(transform.position.x, transform.position.y) + _boxCollider2D.offset * transform.localScale,
                 (_boxCollider2D.size) * transform.localScale);
@@ -151,7 +176,7 @@ namespace SQZL.Entity {
         /// <param name="dir"></param>
         /// <param name="tmap"></param>
         /// <returns></returns>
-        private bool DetectTileOverlap(Bounds ours, TilebodyDirection dir, Tilemap tmap)
+        public bool DetectTileOverlap(Bounds ours, TilebodyDirection dir, Tilemap tmap)
         {
             // Get grid tiles
             Vector2 directionVector = Vector2.zero, pointA, pointB;
@@ -185,8 +210,8 @@ namespace SQZL.Entity {
             // then floor. So theoretically, adding 1 is equivalent to dividing by 2, adding 0.5, and then computing the floor. Note that
             // floor(x + 0.5) is functionally equivalent to round(x). So floor(0.5(2x + 1)) -> round(x) which is probably what we want for
             // collisions to function correctly. Otherwise we got some weeeeeird jank : (
-            Vector3Int tileA = tmap.WorldToCell(pointA + directionVector * TILE_COLLISION_EPSILON * Vector2.up + Vector2.one), 
-                tileB = tmap.WorldToCell(pointB + directionVector * TILE_COLLISION_EPSILON * Vector2.up + Vector2.one);
+            Vector3Int tileA = tmap.WorldToCell(pointA + directionVector * TILE_COLLISION_EPSILON + Vector2.one), 
+                tileB = tmap.WorldToCell(pointB + directionVector * TILE_COLLISION_EPSILON + Vector2.one);
             for (int i = Mathf.Min(tileA.x, tileB.x); i <= Mathf.Max(tileA.x, tileB.x); i++)
             {
                 Vector3Int checkLoc = new Vector3Int(i, tileA.y, 0);
@@ -246,10 +271,9 @@ namespace SQZL.Entity {
         {
             // Get grid tiles
             Vector2 direction = Vector2.zero, pointA, pointB;
-            switch (Facing)
+            switch (LastMovedDirection)
             {
                 case TilebodyDirection.Down:
-                default:
                     direction = Vector2.down;
                     pointA = ours.min;
                     pointB = new Vector2(ours.max.x, ours.min.y);
@@ -269,6 +293,11 @@ namespace SQZL.Entity {
                     pointA = new Vector2(ours.min.x, ours.max.y);
                     pointB = new Vector2(ours.max.x, ours.min.y);
                     break;
+                default:
+                    direction = Vector2.zero;
+                    pointA = ours.min;
+                    pointB = ours.max;
+                    break;
             }
             
             // So to compute world to cell, all Unity does is a simple floor operation
@@ -278,7 +307,7 @@ namespace SQZL.Entity {
             // collisions to function correctly. Otherwise we got some weeeeeird jank : (
             Vector3Int tileA = other.WorldToCell(pointA + direction * TILE_COLLISION_EPSILON + Vector2.one), 
                 tileB = other.WorldToCell(pointB + direction * TILE_COLLISION_EPSILON + Vector2.one);
-            if (tileA.x == tileB.x) // Vertical
+            if (tileA.x == tileB.x && LastMovedDirection != TilebodyDirection.Diagonal) // Vertical
             {
                 for (int i = Mathf.Min(tileA.y, tileB.y); i <= Mathf.Max(tileA.y, tileB.y); i++)
                 {
@@ -286,7 +315,7 @@ namespace SQZL.Entity {
                     CollectTileCollisionAtLocation(ours, checkLoc, other);
                 }
             }
-            else if (tileA.y == tileB.y) // Assume horizontal
+            else if (tileA.y == tileB.y && LastMovedDirection != TilebodyDirection.Diagonal) // Assume horizontal
             {
                 for (int i = Mathf.Min(tileA.x, tileB.x); i <= Mathf.Max(tileA.x, tileB.x); i++)
                 {
@@ -374,9 +403,11 @@ namespace SQZL.Entity {
     
     /// <summary>
     ///  An enumerator used to represent the direction of the tile body.
+    ///  Diagonal is a special case used for certain enemy types. This is predominantly used
+    ///  to optimize tile collision cehcks for entities that only move in the main cardinal directions.
     /// </summary>
     public enum TilebodyDirection
     {
-        Down, Right, Up, Left
+        Down, Right, Up, Left, Diagonal
     }
 }

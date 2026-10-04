@@ -6112,7 +6112,7 @@ GameObject:
   - component: {fileID: 472599025}
   m_Layer: 7
   m_Name: Gate_-1_0_Up
-  m_TagString: HandlesTilebodyCollisions
+  m_TagString: Untagged
   m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6295,9 +6295,9 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0
+    x: 0.20000002
     y: 0
-    width: 1
+    width: 0.6
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
@@ -14481,6 +14481,8 @@ GameObject:
   - component: {fileID: 1180830138}
   - component: {fileID: 1180830137}
   - component: {fileID: 1180830145}
+  - component: {fileID: 1180830146}
+  - component: {fileID: 1180830147}
   m_Layer: 3
   m_Name: Link
   m_TagString: Player
@@ -14648,7 +14650,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1180830136}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dd0f7ae1bb5d6554aadb1a8edf34ff6e, type: 3}
   m_Name: 
@@ -14662,7 +14664,7 @@ MonoBehaviour:
     useTriggers: 0
     useLayerMask: 1
     useDepth: 0
-    useOutsideDepth: 0
+    useOutsideDepth: 1
     useNormalAngle: 0
     useOutsideNormalAngle: 0
     layerMask:
@@ -14755,6 +14757,56 @@ MonoBehaviour:
   inv: {fileID: 1180830137}
   rupees: {fileID: 587971324}
   keys: {fileID: 1437916353}
+--- !u!114 &1180830146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1180830136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bff1fe938824ca942a9f888ba8382fea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SQZL.Entity.Player.PlayerEntityController
+  moveSpeed: 5
+  blockTestThreshold: 0.00001
+  motionBias: 0.1
+  contactFilter:
+    useTriggers: 0
+    useLayerMask: 1
+    useDepth: 0
+    useOutsideDepth: 0
+    useNormalAngle: 0
+    useOutsideNormalAngle: 0
+    layerMask:
+      serializedVersion: 2
+      m_Bits: 64
+    minDepth: 0
+    maxDepth: 0
+    minNormalAngle: 0
+    maxNormalAngle: 0
+  playerInputFrozen: 0
+  swordHitbox: {fileID: 0}
+  swordOffset: 0.8
+  arrowPrefab: {fileID: 0}
+  arrowSpawnOffset: 0.5
+  facing: 0
+--- !u!114 &1180830147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1180830136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 918e87f005dfcf84bbbb6b4a7cf66a74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SQZL.Entity.Tilebody2D
+  blockTestThreshold: 0.00001
+  positionSnapThreshold: 0.03125
+  overlapOvershootMax: 0.2
 --- !u!1 &1209471496
 GameObject:
   m_ObjectHideFlags: 0

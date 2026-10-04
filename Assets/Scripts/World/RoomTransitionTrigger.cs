@@ -2,7 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Player;
+using SQZL.Entity.Player;
 using System;
+using SQZL.Entity;
 using UnityEngine.Tilemaps;
 
 public class RoomTransitionTrigger : MonoBehaviour
@@ -68,7 +70,7 @@ public class RoomTransitionTrigger : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            PlayerController player = other.gameObject.GetComponent<PlayerController>();
+            PlayerEntityController player = other.gameObject.GetComponent<PlayerEntityController>();
             player.playerInputFrozen = true;
             OnTransitionBegin?.Invoke(this, vertical, positionFlag);
             StartCoroutine(CameraTransitionCoroutine(player));
@@ -90,7 +92,7 @@ public class RoomTransitionTrigger : MonoBehaviour
         }
     }
 
-    private IEnumerator CameraTransitionCoroutine(PlayerController player)
+    private IEnumerator CameraTransitionCoroutine(PlayerEntityController player)
     {
         // Set up starting and end position of camera
         Vector3 currPos = mainCamera2D.transform.position;
@@ -112,10 +114,10 @@ public class RoomTransitionTrigger : MonoBehaviour
         mainCamera2D.transform.position = nextPos;
         
         // Now move the player
-        PlayerController.PlayerDirection dir = PlayerController.PlayerDirection.DOWN;
-        if (vertical && positionFlag)  dir = PlayerController.PlayerDirection.UP;
-        else if (!vertical && positionFlag) dir = PlayerController.PlayerDirection.RIGHT;
-        else if (!vertical && !positionFlag) dir = PlayerController.PlayerDirection.LEFT;
+        TilebodyDirection dir = TilebodyDirection.Down;
+        if (vertical && positionFlag)  dir = TilebodyDirection.Up;
+        else if (!vertical && positionFlag) dir = TilebodyDirection.Right;
+        else if (!vertical && !positionFlag) dir = TilebodyDirection.Left;
         yield return player.ForcePlayerCoroutine(playerMoveTiles, playerMoveTime, dir, true);
         
         // And toggle the trigger's position        
