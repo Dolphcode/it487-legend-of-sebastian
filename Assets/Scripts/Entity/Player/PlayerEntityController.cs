@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 using SQZL.Entity;
+using Player;
 
 namespace SQZL.Entity.Player
 {
@@ -77,7 +78,26 @@ namespace SQZL.Entity.Player
         // Update is called once per frame
         void Update()
         {
+            if (playerInputFrozen) return;
 
+            if (primaryAction.WasPressedThisFrame())
+            {
+                playerInputFrozen = true;
+                StartCoroutine(Primary());
+                return;
+            }
+
+            if (secondaryAction.WasPressedThisFrame())
+            {
+                playerInputFrozen = true;
+                StartCoroutine(Secondary());
+                return;
+            }
+
+            if (godAction != null && godAction.WasPressedThisFrame())
+            {
+                ToggleGodMode();
+            }
         }
         
         void FixedUpdate()
@@ -138,7 +158,6 @@ namespace SQZL.Entity.Player
                     contactFilter,
                     vblockCheckArray);
                 
-                Debug.Log($"I'm tryna move {new Vector2(transform.position.x, transform.position.y + delta * yIn)} so let's just go ahead and see if we're being blocked");
                 for (int i = 0; i < vBlockCheckCount; i++)
                 {
                     if (vblockCheckArray[i] is TilemapCollider2D)
@@ -155,13 +174,11 @@ namespace SQZL.Entity.Player
                     }
                     else
                     {
-                        Debug.Log($"t'would appear we are being blocked by some regular thing in trying to go {new Vector2(transform.position.x, transform.position.y + delta * yIn)}");
                         vBlocked = true;
                         break;
                     }
                 }
                 
-                Debug.Log($"before we resolve collisions, im trying to go {new Vector2(transform.position.x, transform.position.y + delta * yIn)}, are we vblocked? {vBlocked} and are we not moving horizontally {xIn == 0}");
                 // If we are not blocked we can perform vertical motion as usual
                 if (!vBlocked || xIn == 0)
                 {
@@ -179,7 +196,6 @@ namespace SQZL.Entity.Player
                     if (Mathf.Abs(b) > 0f) Facing = (TilebodyDirection)(2 * ((b < 0f) ? 0 : 1));
                     else Facing = (TilebodyDirection)(1 + 2 * ((remainderMove > 0f) ? 0 : 1));
                 }
-                Debug.Log($"Okay I'm tryna move {newPosition}");
             } 
             
             if (xIn != 0 && (yIn == 0 || vBlocked)) // Then handle horizontal input (if we aren't pressing vertical input or vertical is blocked)
@@ -199,7 +215,7 @@ namespace SQZL.Entity.Player
             vBlocked = false;
             
             /* COLLISION SOLVING */
-            Debug.Log($"Here's the new position im moving into {newPosition}");
+            //Debug.Log($"Here's the new position im moving into {newPosition}");
             _tilebody2D.MoveAndCollide(newPosition, contactFilter);
         }
 
@@ -316,6 +332,123 @@ namespace SQZL.Entity.Player
 
         }
         #endregion
+        
+        
+        private void ToggleGodMode()
+        {
+            godModeActive = !godModeActive;
+
+            if(godModeActive)
+            {
+                //Disable hurtbox and set items to max
+                Debug.Log("God Mode Enabled");
+            }
+            else
+            {
+                //Reenable hurtbox
+                Debug.Log("God Mode Disabled");
+            }
+        }
+        
+        #region ATTACKS
+        IEnumerator Primary()
+        {
+            ExecutePrimaryAttack(Facing);
+            yield return null;
+            float attackLength = _animator.GetCurrentAnimatorStateInfo(0).length;
+            yield return new WaitForSeconds(attackLength);
+            if (swordHitbox != null)
+            {
+                swordHitbox.SetActive(false);
+            }
+            SetAnimatorState(false, Facing);
+            playerInputFrozen = false;
+        }
+
+        private void ExecutePrimaryAttack(TilebodyDirection dir)
+        {
+            if (swordHitbox != null)
+            {
+                Vector3 offsetVector = Vector3.zero;
+                _animator.SetTrigger("Attack");
+                _animator.SetInteger("Direction", (int)Facing);
+                switch (dir)
+                {
+                    case TilebodyDirection.Down:
+                        offsetVector = Vector3.down * swordOffset;
+                        break;
+                    case TilebodyDirection.Right:
+                        offsetVector = Vector3.right * swordOffset;
+                        break;
+                    case TilebodyDirection.Left:
+                        offsetVector = Vector3.left * swordOffset;
+                        break;
+                    case TilebodyDirection.Up:
+                        offsetVector = Vector3.up * swordOffset;
+                        break;
+                }
+
+                swordHitbox.transform.localPosition = offsetVector;
+                swordHitbox.SetActive(true);
+            }
+        }
+        IEnumerator Secondary()
+        {
+            Debug.Log("Secondary Attack Started!");
+            ExecuteSecondaryAttack(Facing);
+            playerInputFrozen = false;
+            yield return null;
+        }
+
+        private void ExecuteSecondaryAttack(TilebodyDirection dir)
+        {
+            if (arrowPrefab == null) return;
+
+            //if (inventory.GetConsumableAmount("rupee") > 0)
+            //    inventory.AccumulateConsumable("rupee", -1);
+            //else
+            //    return;
+            
+            Vector2 fireDirection = Vector2.down;
+            float zRotation = 0f;
+
+            switch (dir)
+            {
+                case TilebodyDirection.Down:
+                    fireDirection = Vector2.down;
+                    zRotation = 180f;
+                    break;
+                case TilebodyDirection.Right:
+                    fireDirection = Vector2.right;
+                    zRotation = -90f;
+                    break;
+                case TilebodyDirection.Left:
+                    fireDirection = Vector2.left;
+                    zRotation = 90f;
+                    break;
+                case TilebodyDirection.Up:
+                    fireDirection = Vector2.up;
+                    zRotation = 0f;
+                    break;
+            }
+
+            //Calculate spawn position in front of Link
+            Vector3 spawnPos = transform.position + (Vector3)(fireDirection * arrowSpawnOffset);
+
+            //Spawn arrow with correct rotation
+            Quaternion spawnRotation = Quaternion.Euler(0f, 0f, zRotation);
+            GameObject arrowObj = Instantiate(arrowPrefab, spawnPos, spawnRotation);
+
+            //
+            Arrow arrowScript = arrowObj.GetComponent<Arrow>();
+            if (arrowScript != null)
+            {
+                arrowScript.Initialize(fireDirection);
+            }
+
+        }
+        #endregion
+        
         
         private void SetAnimatorState(bool walking, TilebodyDirection direction)
         {

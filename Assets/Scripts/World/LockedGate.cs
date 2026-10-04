@@ -28,7 +28,7 @@ public class LockedGate : MonoBehaviour, ITilebodyCollisionHandler
 
     public void OnCollideWithTilebody(Tilebody2D other)
     {
-        Debug.Log(other);
+        //Debug.Log(other);
         if (other.gameObject.CompareTag("Player"))
         {
             PlayerInventory playerInventory = other.gameObject.GetComponent<PlayerInventory>();
