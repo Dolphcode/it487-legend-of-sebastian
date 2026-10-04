@@ -26,6 +26,12 @@ namespace SQZL.Entity.Player
         [Header("Bow and Arrow Config")]
         [SerializeField] private GameObject arrowPrefab;
         [SerializeField] private float arrowSpawnOffset = 0.5f;
+
+        [Header("Knockback Config")] [SerializeField]
+        private float knockbackTime = 0.5f;
+
+        [SerializeField] private int knockbackTilesMax = 6;
+        [SerializeField] private float iframeTime = 1f;
         
         // On Start actions
         private InputAction moveAction;
@@ -49,7 +55,9 @@ namespace SQZL.Entity.Player
         private bool godModeActive = false;
         
         // Properties
-        public TilebodyDirection Facing { protected set; get; } = TilebodyDirection.Down;
+        public TilebodyDirection Facing { private set; get; } = TilebodyDirection.Down;
+
+        internal float IFrames { private set; get; } = 0f;
         
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
@@ -98,10 +106,15 @@ namespace SQZL.Entity.Player
             {
                 ToggleGodMode();
             }
+
+            
         }
         
         void FixedUpdate()
         {
+            // Evalute iframes in fixed update
+            if (IFrames > 0f) IFrames -= Time.fixedDeltaTime;
+            
             // Check if player is frozen, skip if so
             if (playerInputFrozen) return;
 
@@ -119,7 +132,7 @@ namespace SQZL.Entity.Player
         }
         
         #region MOVEMENT
-        private void MovePlayer(float moveSpeed, int xIn, int yIn)
+        private void MovePlayer(float moveSpeed, int xIn, int yIn, bool lockFacing = false)
         {
             /*
              * 1. Vertical movement evaluates before horizontal. If holding UP/LEFT you will go all the way up first and then when you collide with the wall you will start going left.
@@ -193,8 +206,9 @@ namespace SQZL.Entity.Player
                     newPosition = transform.position + new Vector3(remainderMove, b, 0f);
                     
                     // NOTE: Set facing (0 is down, 1 is right, 2 is up, 3 is left)
-                    if (Mathf.Abs(b) > 0f) Facing = (TilebodyDirection)(2 * ((b < 0f) ? 0 : 1));
-                    else Facing = (TilebodyDirection)(1 + 2 * ((remainderMove > 0f) ? 0 : 1));
+                    if (!lockFacing)
+                        if (Mathf.Abs(b) > 0f) Facing = (TilebodyDirection)(2 * ((b < 0f) ? 0 : 1));
+                        else Facing = (TilebodyDirection)(1 + 2 * ((remainderMove > 0f) ? 0 : 1));
                 }
             } 
             
@@ -207,8 +221,9 @@ namespace SQZL.Entity.Player
                 newPosition = transform.position + new Vector3(b, remainderMove, 0f);
                 
                 // NOTE: Set facing (0 is down, 1 is right, 2 is up, 3 is left)
-                if (Mathf.Abs(b) > 0f) Facing = (TilebodyDirection)(1 + 2 * ((b > 0f) ? 0 : 1));
-                else Facing = (TilebodyDirection)(2 * ((remainderMove < 0f) ? 0 : 1));
+                if (!lockFacing)
+                    if (Mathf.Abs(b) > 0f) Facing = (TilebodyDirection)(1 + 2 * ((b > 0f) ? 0 : 1));
+                    else Facing = (TilebodyDirection)(2 * ((remainderMove < 0f) ? 0 : 1));
             }
            
             // Reset vblocked
@@ -228,8 +243,10 @@ namespace SQZL.Entity.Player
         /// <param name="time">Time to move, must be a positive value (will be clamped to 0 or more)</param>
         /// <param name="direction">The direction in which the player will move over the span of this coroutine. Defaults to right if invalid direction is provided</param>
         /// <param name="snapToGrid">Toggle this if you would like to automatically compute movement such that the player ends on a whole number tile</param>
+        /// <param name="endOnBlock">Prematurely ends the movement on block</param>
+        /// <param name="lockFacing">Toggle this if you want the player to appear to face the same direction while moving</param>
         /// <returns>IEnumerator to pass into <c>StartCoroutine</c></returns>
-        public IEnumerator ForcePlayerCoroutine(int tiles, float time, TilebodyDirection direction, bool snapToGrid)
+        public IEnumerator ForcePlayerCoroutine(int tiles, float time, TilebodyDirection direction, bool snapToGrid, bool endOnBlock, bool lockFacing)
         {
             // Back out if 0 time provided
             if (time <= 0f)
@@ -318,18 +335,78 @@ namespace SQZL.Entity.Player
             }
 
             // Set animator state
-            SetAnimatorState(true, direction);
+            SetAnimatorState(true, Facing);
 
             // Every physics frame
             for (; time > 0f; time -= Time.fixedDeltaTime)
             {
-                MovePlayer(compMoveSpeed, xIn, yIn);
+                // I'm too lazy to actually clean this up at all so
+                if (endOnBlock)
+                {
+                    // Perform a check but for ALL directions
+                    Vector2 newPosition = transform.position;
+                    float delta = moveSpeed * Time.fixedDeltaTime;
+                    Collider2D[] vblockCheckArray = new Collider2D[4];
+                    Bounds blockCheckBox = new Bounds(
+                        new Vector2(transform.position.x + delta * xIn, transform.position.y + delta * yIn) + _collider2D.offset * transform.localScale,
+                        (_collider2D.size - new Vector2(0.05f, 0.05f)) * transform.localScale);
+                    int vBlockCheckCount = Physics2D.OverlapBox(blockCheckBox.center, 
+                        blockCheckBox.size,
+                        0f,
+                        contactFilter,
+                        vblockCheckArray);
+                    bool forceMoveBlocked = false;
+                    for (int i = 0; i < vBlockCheckCount; i++)
+                    {
+                        if (vblockCheckArray[i] is TilemapCollider2D)
+                        {
+                            Tilemap tmap = vblockCheckArray[i].gameObject.GetComponent<Tilemap>();
+                            bool detected = _tilebody2D.DetectTileOverlap(blockCheckBox, 
+                                direction, 
+                                tmap);
+                            if (detected)
+                            {
+                                forceMoveBlocked = true;
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            forceMoveBlocked = true;
+                            break;
+                        }
+                    }
+
+                    // If we are stopping
+                    if (forceMoveBlocked) break;
+                }
+                
+                
+                MovePlayer(compMoveSpeed, xIn, yIn, lockFacing);
                 yield return new WaitForFixedUpdate();
             }
 
             // End idle
-            SetAnimatorState(false, direction);
+            SetAnimatorState(false, Facing);
 
+        }
+
+        /// <summary>
+        /// Call this coroutine to knock back the player
+        /// </summary>
+        public IEnumerator KnockbackCoroutine()
+        {
+            playerInputFrozen = true;
+            IFrames = iframeTime;
+            yield return StartCoroutine(ForcePlayerCoroutine(
+                knockbackTilesMax,
+                knockbackTime,
+                (TilebodyDirection)(((int)Facing + 2) % 4),
+                true,
+                true,
+                true
+                ));
+            playerInputFrozen = false;
         }
         #endregion
         

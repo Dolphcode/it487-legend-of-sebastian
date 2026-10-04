@@ -118,7 +118,7 @@ public class RoomTransitionTrigger : MonoBehaviour
         if (vertical && positionFlag)  dir = TilebodyDirection.Up;
         else if (!vertical && positionFlag) dir = TilebodyDirection.Right;
         else if (!vertical && !positionFlag) dir = TilebodyDirection.Left;
-        yield return player.ForcePlayerCoroutine(playerMoveTiles, playerMoveTime, dir, true);
+        yield return player.ForcePlayerCoroutine(playerMoveTiles, playerMoveTime, dir, true, false, false);
         
         // And toggle the trigger's position        
         ToggleTriggerPosition();

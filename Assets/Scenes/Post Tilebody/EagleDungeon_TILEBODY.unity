@@ -6506,9 +6506,9 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.20000002
+    x: 0
     y: 0
-    width: 0.6
+    width: 1
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
@@ -6904,9 +6904,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 634932822}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 300b67a077ce9fd42824ff53bd06053e, type: 3}
+  m_Script: {fileID: 11500000, guid: b731b8d5e045c2840b5e89015318d045, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyHurtbox
+  m_EditorClassIdentifier: Assembly-CSharp::SQZL.Entity.Hurtbox
+  targetTag: Player
+  damageAmount: 1
 --- !u!1 &729940870
 GameObject:
   m_ObjectHideFlags: 0
@@ -14815,7 +14817,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
   currentHealth: 6
-  pcScript: {fileID: 0}
+  pcScript: {fileID: 1180830146}
   Heart1: {fileID: 52701200}
   Heart2: {fileID: 1879458711}
   Heart3: {fileID: 2107633488}
@@ -15038,10 +15040,13 @@ MonoBehaviour:
     minNormalAngle: 0
     maxNormalAngle: 0
   playerInputFrozen: 0
-  swordHitbox: {fileID: 0}
+  swordHitbox: {fileID: 2114965208}
   swordOffset: 0.8
-  arrowPrefab: {fileID: 0}
+  arrowPrefab: {fileID: 5745978206075673744, guid: eee66bf0da13af54fa1c1cdb957eb2b8, type: 3}
   arrowSpawnOffset: 0.5
+  knockbackTime: 0.5
+  knockbackTilesMax: 6
+  iframeTime: 5
 --- !u!114 &1180830147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15895,9 +15900,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1794095476}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 300b67a077ce9fd42824ff53bd06053e, type: 3}
+  m_Script: {fileID: 11500000, guid: b731b8d5e045c2840b5e89015318d045, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyHurtbox
+  m_EditorClassIdentifier: Assembly-CSharp::SQZL.Entity.Hurtbox
+  targetTag: Player
+  damageAmount: 1
 --- !u!1 &1794831605
 GameObject:
   m_ObjectHideFlags: 0
@@ -17177,7 +17184,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2114965210}
   - component: {fileID: 2114965209}
-  - component: {fileID: 2114965211}
+  - component: {fileID: 2114965212}
   m_Layer: 3
   m_Name: SwordHitbox
   m_TagString: Untagged
@@ -17246,7 +17253,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1180830144}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2114965211
+--- !u!114 &2114965212
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -17255,9 +17262,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2114965208}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4189333eb19ab764fb3221e57cc06663, type: 3}
+  m_Script: {fileID: 11500000, guid: b731b8d5e045c2840b5e89015318d045, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Player.PlayerHitbox
+  m_EditorClassIdentifier: Assembly-CSharp::Hurtbox
+  targetTag: 
+  damageAmount: 0
 --- !u!1 &2137939791
 GameObject:
   m_ObjectHideFlags: 0

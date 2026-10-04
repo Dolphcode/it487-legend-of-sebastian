@@ -1,5 +1,7 @@
 using UnityEngine;
 using Player;
+using SQZL.Entity;
+using SQZL.Entity.Player;
 
 public class EnemyHurtbox : MonoBehaviour
 {
@@ -13,12 +15,9 @@ public class EnemyHurtbox : MonoBehaviour
         Debug.Log("player entered???");
         if (other.CompareTag("Player"))
         {
-            PlayerController ent = other.gameObject.GetComponent<PlayerController>();
-            if (ent.playerInputFrozen) return; // iframes
-            Health hp = other.gameObject.GetComponent<Health>();
-            hp.currentHealth--;
-            ent.playerInputFrozen = true;
-            StartCoroutine((ent.ForcePlayerCoroutine(6, 0.2f, (PlayerController.PlayerDirection)((ent.facing + 2) % 4), true)));
+            PlayerEntityController ent = other.gameObject.GetComponent<PlayerEntityController>();
+            PlayerHealthManager hp = other.gameObject.GetComponent<PlayerHealthManager>();
+            hp.TryDamage(1);
         }
     }
 }
