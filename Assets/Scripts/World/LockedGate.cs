@@ -1,10 +1,12 @@
+using SQZL.Entity.Player;
 using Player;
 using System.Collections.Generic;
+using SQZL.Entity;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class LockedGate : MonoBehaviour
+public class LockedGate : MonoBehaviour, ITilebodyCollisionHandler
 {
     [SerializeField] private Tilemap wallLayer;
         
@@ -24,7 +26,7 @@ public class LockedGate : MonoBehaviour
         
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    public void OnCollideWithTilebody(Tilebody2D other)
     {
         Debug.Log(other);
         if (other.gameObject.CompareTag("Player"))

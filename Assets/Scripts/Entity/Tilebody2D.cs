@@ -18,13 +18,13 @@ namespace SQZL.Entity {
         /// Dictates the maximum number of tile collisions. We can pretty much assume this is constant between every TileBody2D
         /// and adjust it as we need for the whole codebase
         /// </summary>
-        protected const int MAX_TILE_COLLISIONS = 4;
+        protected const int MAX_TILE_COLLISIONS = 8;
 
         /// <summary>
         /// This constant represents the maaximum bounds we can collect in order to resolve. Tweak this as needed for collision
         /// detection, resolution, and callbacks to resolve as necessary.
         /// </summary>
-        protected const int MAX_BOUNDS_TO_RESOLVE = 12;
+        protected const int MAX_BOUNDS_TO_RESOLVE = 16;
 
         /// <summary>
         /// Dictates the threshold of overlap allowed before collision is resolved
@@ -103,6 +103,7 @@ namespace SQZL.Entity {
         {
             // Attempt movement and compute facing direction
             // NOTE THIS CURRENTLY ONLY WORKS UNDER THE ASSUMPTION WE CAN ONLY MOVE IN ONE DIRECTION
+            //Debug.Log($"pre collision {newPosition}");
             Vector2 directionMoved =
                 new Vector2(newPosition.x - transform.position.x, newPosition.y - transform.position.y);
             Vector2 absDirectionMoved = directionMoved.Abs();
@@ -121,6 +122,7 @@ namespace SQZL.Entity {
             // Define our bounds
             Bounds ours = new Bounds(new Vector2(transform.position.x, transform.position.y) + _boxCollider2D.offset * transform.localScale,
                 (_boxCollider2D.size) * transform.localScale);
+            //Debug.Log($"bounds of ours being used in the check are {ours} derived from {transform.position}");
             
             // Overlap our box with any other box based on the filter and collider buffer size
             int overlapCount = Physics2D.OverlapBox(ours.center, 
@@ -128,14 +130,21 @@ namespace SQZL.Entity {
                 0f,
                 filter,
                 _colliderBuffer);
+            //Debug.Log($"Overlapping with {overlapCount} things");
 
             // Iterate based on # of collisions
             Collider2D other;
             int i;
-            for (other = _colliderBuffer[i = 0]; i < overlapCount; other = _colliderBuffer[i++])
-                if (other is TilemapCollider2D) CollectTileCollision(ours, other.gameObject.GetComponent<Tilemap>()); // If tilemap, get the tilemap and perform resolution
+            for (other = _colliderBuffer[i = 0]; i < overlapCount; i++)
+            {
+                other = _colliderBuffer[i];
+                //Debug.Log($"{other} and i is {i} and overlap count is {overlapCount}");
+                if (other is TilemapCollider2D)
+                    CollectTileCollision(ours,
+                        other.gameObject.GetComponent<Tilemap>()); // If tilemap, get the tilemap and perform resolution
                 else CollectBasicCollision(ours, other); // Otherwise resolve as basic collider
-            
+            }
+
             // After collecting, resolve
             // Resolve the smaller overlap
             // But prioritize horizontal over vertical
@@ -164,7 +173,8 @@ namespace SQZL.Entity {
                 transform.position += correctionVector;
                 ours.center += correctionVector;
             }
-            
+
+            //Debug.Log($"post collision {transform.position}");
             // Reset process index
             _boundsProcessIndex = 0;
         }
@@ -250,7 +260,7 @@ namespace SQZL.Entity {
         {
             // Grab bounds and determine signed overlap vector
             Bounds others = other.bounds;
-
+            //Debug.Log($"Colliding with a basic object called {other.gameObject.name} with bounds {other.bounds} while ours are {ours}");
             if (CollectBoundsCollision(others, ours) && other.gameObject.CompareTag(COLLISION_HANDLER_TAG))
             {
                 // TODO: Adapt this to work if multiple components implement ITilebodyCollisionHandler
@@ -378,6 +388,7 @@ namespace SQZL.Entity {
             float overlapY = Mathf.Min(ours.max.y, others.max.y) - Mathf.Max(ours.min.y, others.min.y);
             
             // Cut short if neither is overlapping
+            //Debug.Log($"{overlapX}, {overlapY}, {OVERLAP_THRESHOLD}, just verifying something");
             if (overlapX <= OVERLAP_THRESHOLD || overlapY <= OVERLAP_THRESHOLD) return false;
             
             // Collect to the buffer

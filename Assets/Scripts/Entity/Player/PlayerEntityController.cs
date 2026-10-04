@@ -98,6 +98,7 @@ namespace SQZL.Entity.Player
             SetAnimatorState(xIn != 0 || yIn != 0, Facing);
         }
         
+        #region MOVEMENT
         private void MovePlayer(float moveSpeed, int xIn, int yIn)
         {
             /*
@@ -136,6 +137,8 @@ namespace SQZL.Entity.Player
                     0f,
                     contactFilter,
                     vblockCheckArray);
+                
+                Debug.Log($"I'm tryna move {new Vector2(transform.position.x, transform.position.y + delta * yIn)} so let's just go ahead and see if we're being blocked");
                 for (int i = 0; i < vBlockCheckCount; i++)
                 {
                     if (vblockCheckArray[i] is TilemapCollider2D)
@@ -152,13 +155,15 @@ namespace SQZL.Entity.Player
                     }
                     else
                     {
+                        Debug.Log($"t'would appear we are being blocked by some regular thing in trying to go {new Vector2(transform.position.x, transform.position.y + delta * yIn)}");
                         vBlocked = true;
                         break;
                     }
                 }
-
+                
+                Debug.Log($"before we resolve collisions, im trying to go {new Vector2(transform.position.x, transform.position.y + delta * yIn)}, are we vblocked? {vBlocked} and are we not moving horizontally {xIn == 0}");
                 // If we are not blocked we can perform vertical motion as usual
-                if (!vBlocked)
+                if (!vBlocked || xIn == 0)
                 {
                     float a = Mathf.Round(transform.position.x + motionBias * Mathf.Sign(deltaPosition.x)) -
                               transform.position.x;
@@ -174,6 +179,7 @@ namespace SQZL.Entity.Player
                     if (Mathf.Abs(b) > 0f) Facing = (TilebodyDirection)(2 * ((b < 0f) ? 0 : 1));
                     else Facing = (TilebodyDirection)(1 + 2 * ((remainderMove > 0f) ? 0 : 1));
                 }
+                Debug.Log($"Okay I'm tryna move {newPosition}");
             } 
             
             if (xIn != 0 && (yIn == 0 || vBlocked)) // Then handle horizontal input (if we aren't pressing vertical input or vertical is blocked)
@@ -193,6 +199,7 @@ namespace SQZL.Entity.Player
             vBlocked = false;
             
             /* COLLISION SOLVING */
+            Debug.Log($"Here's the new position im moving into {newPosition}");
             _tilebody2D.MoveAndCollide(newPosition, contactFilter);
         }
 
@@ -308,6 +315,7 @@ namespace SQZL.Entity.Player
             SetAnimatorState(false, direction);
 
         }
+        #endregion
         
         private void SetAnimatorState(bool walking, TilebodyDirection direction)
         {
