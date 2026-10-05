@@ -1,8 +1,10 @@
+using System;
 using UnityEngine;
 using Player;
 using SQZL.Entity;
 using SQZL.Entity.Player;
 
+[Obsolete("Simply use the Hurtbox generic class from now on")]
 public class EnemyHurtbox : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
