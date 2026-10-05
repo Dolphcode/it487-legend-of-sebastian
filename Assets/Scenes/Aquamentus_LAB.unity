@@ -6732,9 +6732,9 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0
+    x: 0.20000002
     y: 0
-    width: 1
+    width: 0.6
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
@@ -15179,7 +15179,7 @@ MonoBehaviour:
   arrowSpawnOffset: 0.5
   knockbackTime: 0.25
   knockbackTilesMax: 6
-  iframeTime: 0.5
+  iframeTime: 1
 --- !u!114 &1180830147
 MonoBehaviour:
   m_ObjectHideFlags: 0

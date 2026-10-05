@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4302577816508979545}
   - component: {fileID: 4849309309111612815}
   - component: {fileID: 2497959319590386009}
+  - component: {fileID: 6257367187315436835}
   m_Layer: 8
   m_Name: AquamentusFball
   m_TagString: Untagged
@@ -48,6 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: SQZL.Entity.Enemy::SQZL.Entity.Enemy.AquamentusFireball
   targetTag: Player
   damageAmount: 2
+  doKnockback: 0
   spawnTime: 0.4
   totalLifeTime: 3
   separationVelocity: 2
@@ -158,3 +160,25 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
+--- !u!95 &6257367187315436835
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5807016222358984219}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 52d7b043748316e44a8ad6c6df7f531b, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
