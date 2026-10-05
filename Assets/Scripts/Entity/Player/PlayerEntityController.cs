@@ -517,10 +517,10 @@ namespace SQZL.Entity.Player
             GameObject arrowObj = Instantiate(arrowPrefab, spawnPos, spawnRotation);
 
             //
-            Arrow arrowScript = arrowObj.GetComponent<Arrow>();
-            if (arrowScript != null)
+            PlayerArrow playerArrowScript = arrowObj.GetComponent<PlayerArrow>();
+            if (playerArrowScript != null)
             {
-                arrowScript.Initialize(fireDirection);
+                playerArrowScript.Initialize(fireDirection);
             }
 
         }
