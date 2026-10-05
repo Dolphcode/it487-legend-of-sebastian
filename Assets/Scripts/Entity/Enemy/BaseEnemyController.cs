@@ -75,7 +75,9 @@ namespace SQZL.Entity.Enemy
         /// Basic try damage function, some enemies may need to override this to implement features i.e. Knockback
         /// </summary>
         /// <param name="amount"></param>
-        public override void TryDamage(int amount)
+        /// <param name="knockback"></param>
+        /// <param name="attackDir"></param>
+        public override void TryDamage(int amount, bool knockback, TilebodyDirection attackDir)
         {
             if (iframes > 0f)
             {

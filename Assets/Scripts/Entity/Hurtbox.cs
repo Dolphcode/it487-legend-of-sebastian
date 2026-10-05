@@ -9,6 +9,7 @@ namespace SQZL.Entity
         [SerializeField] private string targetTag;
         [SerializeField] private int damageAmount;
 
+        [SerializeField] private bool doKnockback = false;
         // Components
         private Collider2D _hurtboxCollider;
 
@@ -30,7 +31,7 @@ namespace SQZL.Entity
             BaseEntityDamageHandler hitbox;
             if (other.gameObject.CompareTag(targetTag) && other.TryGetComponent(out hitbox))
             {
-                hitbox.TryDamage(damageAmount);
+                hitbox.TryDamage(damageAmount, doKnockback, TilebodyDirection.Down);
             }
         }
     }

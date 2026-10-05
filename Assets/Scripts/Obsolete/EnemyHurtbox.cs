@@ -19,7 +19,7 @@ public class EnemyHurtbox : MonoBehaviour
         {
             PlayerEntityController ent = other.gameObject.GetComponent<PlayerEntityController>();
             PlayerHealthManager hp = other.gameObject.GetComponent<PlayerHealthManager>();
-            hp.TryDamage(1);
+            hp.TryDamage(1, false, TilebodyDirection.Down);
         }
     }
 }

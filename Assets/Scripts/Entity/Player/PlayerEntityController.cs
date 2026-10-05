@@ -395,7 +395,6 @@ namespace SQZL.Entity.Player
         public IEnumerator KnockbackCoroutine()
         {
             playerInputFrozen = true;
-            IFrames = iframeTime;
             yield return StartCoroutine(ForcePlayerCoroutine(
                 knockbackTilesMax,
                 knockbackTime,
@@ -407,7 +406,11 @@ namespace SQZL.Entity.Player
             playerInputFrozen = false;
         }
         #endregion
-        
+
+        internal void TriggerIframes()
+        {
+            IFrames = iframeTime;
+        }
         
         private void ToggleGodMode()
         {

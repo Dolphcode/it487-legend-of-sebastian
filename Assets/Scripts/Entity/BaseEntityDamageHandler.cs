@@ -9,6 +9,9 @@ namespace SQZL.Entity
         /// damage handling or a health system.
         /// </summary>
         /// <param name="amount">The amount of true damage to be dealt</param>
-        public abstract void TryDamage(int amount);
+        /// <param name="knockback"></param>
+        /// <param name="attackDir"></param>
+        public abstract void TryDamage(int amount, bool knockback, TilebodyDirection attackDir);
+
     }
 }

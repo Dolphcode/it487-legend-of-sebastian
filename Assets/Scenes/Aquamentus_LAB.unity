@@ -657,6 +657,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: SQZL.Entity::SQZL.Entity.Hurtbox
   targetTag: Player
   damageAmount: 6
+  doKnockback: 1
 --- !u!1 &275756289
 GameObject:
   m_ObjectHideFlags: 0
@@ -6731,9 +6732,9 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.20000002
+    x: 0
     y: 0
-    width: 0.6
+    width: 1
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
@@ -15869,6 +15870,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SQZL.Entity.Hurtbox
   targetTag: Player
   damageAmount: 1
+  doKnockback: 0
 --- !u!1 &1794831605
 GameObject:
   m_ObjectHideFlags: 0
@@ -17250,6 +17252,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Hurtbox
   targetTag: Enemy
   damageAmount: 1
+  doKnockback: 0
 --- !u!1 &2137939791
 GameObject:
   m_ObjectHideFlags: 0

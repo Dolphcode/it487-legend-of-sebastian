@@ -67,7 +67,7 @@ namespace SQZL.Entity.Enemy
             }
         }
 
-        public override void TryDamage(int amount)
+        public override void TryDamage(int amount, bool knockback, TilebodyDirection attackDir)
         {
             if (iframes <= 0f)
             {
