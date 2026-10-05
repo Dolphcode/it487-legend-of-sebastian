@@ -5,8 +5,6 @@ namespace SQZL.Entity.Enemy
 {
     public class StalfosController : TileEnemyController
     {
-        private SpriteRenderer _sprite;
-        
         protected override void Start()
         {
             base.Start();

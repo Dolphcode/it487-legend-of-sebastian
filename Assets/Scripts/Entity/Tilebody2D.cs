@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -54,6 +55,8 @@ namespace SQZL.Entity {
         [SerializeField] private float overlapOvershootMax = 0.2f;
         
         // References
+        [SerializeField] private bool doOverrideCollider = false;
+        [SerializeReference, AllowNull] private BoxCollider2D overrideBoxCollider = null;
         private BoxCollider2D _boxCollider2D;
         
         // Buffers
@@ -86,8 +89,11 @@ namespace SQZL.Entity {
         private void Awake()
         {
             // Get components needed by the TileBody2D in Awake
-            _boxCollider2D = GetComponent<BoxCollider2D>(); // This code is optimized somewhat by the assumption that every entity will have a BOX collider
-            
+            if (!doOverrideCollider)
+                _boxCollider2D =
+                    GetComponent<BoxCollider2D>(); // This code is optimized somewhat by the assumption that every entity will have a BOX collider
+            else _boxCollider2D = overrideBoxCollider;
+                
             #if DEBUG
             if (_boxCollider2D is null) Debug.LogError($"Could not find Collider2D component on {gameObject.name}");
             #endif
