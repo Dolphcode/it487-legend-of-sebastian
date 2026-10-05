@@ -1,5 +1,5 @@
 using System;
-using Player;
+using SQZL.Entity.Player;
 using UnityEngine;
 
 public class ItemPickup : MonoBehaviour

@@ -1,9 +1,10 @@
+using SQZL.Entity;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace Player
+namespace SQZL.Entity.Player
 {
-    public class Arrow : MonoBehaviour
+    public class PlayerArrow : MonoBehaviour
     {
         [SerializeField] private float speed = 10f;
         [SerializeField] private float lifeTime = 5f;
@@ -33,8 +34,8 @@ namespace Player
                 // I added it twin :>
                 //   ||
                 //  \ /
-                BaseEntityController ent = other.gameObject.GetComponent<BaseEntityController>();
-                ent.OnHit(new Vector2Int(Mathf.RoundToInt(moveDirection.x), Mathf.RoundToInt(moveDirection.y)), 1);
+                BaseEntityDamageHandler ent = other.gameObject.GetComponent<BaseEntityDamageHandler>();
+                ent.TryDamage(/*new Vector2Int(Mathf.RoundToInt(moveDirection.x), Mathf.RoundToInt(moveDirection.y)), */1);
                 
                 Destroy(gameObject);
                 //add logic for hurting enemy here? idk lol
