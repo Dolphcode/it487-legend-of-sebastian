@@ -6506,9 +6506,9 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0
+    x: 0.20000002
     y: 0
-    width: 1
+    width: 0.6
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
@@ -15993,10 +15993,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1830632384}
   - component: {fileID: 1830632386}
-  - component: {fileID: 1830632385}
   - component: {fileID: 1830632388}
   - component: {fileID: 1830632387}
   - component: {fileID: 1830632389}
+  - component: {fileID: 1830632390}
   m_Layer: 0
   m_Name: Stalfos
   m_TagString: Enemy
@@ -16020,48 +16020,6 @@ Transform:
   - {fileID: 1794095477}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1830632385
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1830632383}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e956328705f7034aa03ed242fba373a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BaseEntityController
-  moveSpeed: 5
-  blockTestThreshold: 0.00001
-  positionSnapThreshold: 0.03125
-  motionBias: 0.1
-  overlapOvershootMax: 0.2
-  contactFilter:
-    useTriggers: 0
-    useLayerMask: 1
-    useDepth: 0
-    useOutsideDepth: 0
-    useNormalAngle: 0
-    useOutsideNormalAngle: 0
-    layerMask:
-      serializedVersion: 2
-      m_Bits: 64
-    minDepth: 0
-    maxDepth: 0
-    minNormalAngle: 0
-    maxNormalAngle: 0
-  gates:
-  - {fileID: 729940872}
-  - {fileID: 22279889}
-  hp: 2
-  knockbackAmount: 6
-  knockbackSpeed: 30
-  walkableRegion: {x: 12, y: 7}
-  walkableRegionOffset: {x: -50, y: -10}
-  wallTilemaps:
-  - {fileID: 793351919}
-  - {fileID: 2058783542}
 --- !u!61 &1830632386
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -16092,7 +16050,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -16194,16 +16152,55 @@ MonoBehaviour:
   m_GameObject: {fileID: 1830632383}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7555fd714b7e4773804001e560e00c14, type: 3}
+  m_Script: {fileID: 11500000, guid: 0ffcb4f8a665429e8d63116c57e23017, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SQZL.Entity.Enemy.TileEnemyController
-  maxHP: 0
-  iframeTime: 0
-  walkableRegion: {x: 0, y: 0}
-  walkableRegionOffset: {x: 0, y: 0}
-  validTiles: 
-  wallTilemaps: []
-  preCached: 0
+  m_EditorClassIdentifier: Assembly-CSharp::SQZL.Entity.Enemy.StalfosController
+  moveSpeed: 5
+  blockTestThreshold: 0.00001
+  motionBias: 0.1
+  contactFilter:
+    useTriggers: 0
+    useLayerMask: 1
+    useDepth: 0
+    useOutsideDepth: 0
+    useNormalAngle: 0
+    useOutsideNormalAngle: 0
+    layerMask:
+      serializedVersion: 2
+      m_Bits: 64
+    minDepth: 0
+    maxDepth: 0
+    minNormalAngle: 0
+    maxNormalAngle: 0
+  gates:
+  - {fileID: 729940872}
+  - {fileID: 22279889}
+  maxHP: 2
+  iframeTime: 0.5
+  walkableRegion: {x: 12, y: 7}
+  walkableRegionOffset: {x: -50, y: -10}
+  validTiles: 010101010101010101010101010101010101010101010101010101010100000101010101010101010100000101010101010101010100000101010101010101010101010101010101010101010101010101010101y
+  wallTilemaps:
+  - {fileID: 2058783542}
+  - {fileID: 793351919}
+  preCached: 1
+  knockbackTilesMax: 6
+  knockbackSpeed: 30
+--- !u!114 &1830632390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1830632383}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 918e87f005dfcf84bbbb6b4a7cf66a74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SQZL.Entity.Tilebody2D
+  blockTestThreshold: 0.00001
+  positionSnapThreshold: 0.03125
+  overlapOvershootMax: 0.2
 --- !u!1 &1879458709
 GameObject:
   m_ObjectHideFlags: 0
