@@ -28,8 +28,15 @@ namespace SQZL.Entity.Enemy
             if (iframes <= 0f)
             {
                 currentHP -= amount;
-                if (currentHP <= 0f) Destroy(gameObject);
-                else StartCoroutine(base.KnockbackCoroutine());
+                if (currentHP <= 0f)
+                {
+                    Destroy(gameObject);
+                    foreach(RoomTransitionTrigger trigger in gates) base.DisconnectGate(trigger);
+                }
+                else
+                {
+                    StartCoroutine(base.KnockbackCoroutine());
+                }
             }
         }
 

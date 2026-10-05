@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Player {
+namespace SQZL.Entity.Player {
     public class PlayerInventory : MonoBehaviour
     {
         /// <summary>

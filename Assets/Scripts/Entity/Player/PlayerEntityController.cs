@@ -44,7 +44,7 @@ namespace SQZL.Entity.Player
         private Animator _animator;
         private SpriteRenderer _sprite;
         private Tilebody2D _tilebody2D;
-        // private PlayerInventory _inventory;
+        private PlayerInventory _inventory;
         
         // Animator IDs
         private int _animMovingId, _animDirectionId;
@@ -67,7 +67,7 @@ namespace SQZL.Entity.Player
             _animator = GetComponent<Animator>();
             _sprite = GetComponent<SpriteRenderer>();
             _tilebody2D = GetComponent<Tilebody2D>();
-            //inventory = GetComponent<PlayerInventory>();
+            _inventory = GetComponent<PlayerInventory>();
             
             // Get animator ids
             _animMovingId = Animator.StringToHash("Moving");
@@ -481,10 +481,10 @@ namespace SQZL.Entity.Player
         {
             if (arrowPrefab == null) return;
 
-            //if (inventory.GetConsumableAmount("rupee") > 0)
-            //    inventory.AccumulateConsumable("rupee", -1);
-            //else
-            //    return;
+            if (_inventory.GetConsumableAmount("rupee") > 0)
+                _inventory.AccumulateConsumable("rupee", -1);
+            else
+                return;
             
             Vector2 fireDirection = Vector2.down;
             float zRotation = 0f;

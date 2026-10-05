@@ -4,6 +4,7 @@ using MidpointRounding = System.MidpointRounding;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
+using SQZL.Entity.Player;
 
 namespace Player
 {

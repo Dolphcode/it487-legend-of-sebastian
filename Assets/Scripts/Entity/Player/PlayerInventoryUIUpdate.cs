@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace Player
+namespace SQZL.Entity.Player
 {
     public class PlayerInventoryUIUpdate : MonoBehaviour
     {

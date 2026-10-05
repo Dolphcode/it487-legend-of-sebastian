@@ -81,7 +81,11 @@ namespace SQZL.Entity.Enemy
             if (iframes > 0f)
             {
                 currentHP -= amount;
-                if (currentHP <= 0f) Destroy(gameObject);
+                if (currentHP <= 0f)
+                {
+                    Destroy(gameObject);
+                    foreach(RoomTransitionTrigger trigger in gates) DisconnectGate(trigger);
+                }
             }
         }
         
@@ -103,13 +107,13 @@ namespace SQZL.Entity.Enemy
             
         }
         
-        private void InitializeGate(RoomTransitionTrigger trigger)
+        protected void InitializeGate(RoomTransitionTrigger trigger)
         {
             trigger.OnTransitionBegin += OnGateTransitionBegin;
             trigger.OnTransitionEnd += OnGateTransitionEnd;
         }
 
-        private void DisconnectGate(RoomTransitionTrigger trigger)
+        protected void DisconnectGate(RoomTransitionTrigger trigger)
         {
             trigger.OnTransitionBegin -= OnGateTransitionBegin;
             trigger.OnTransitionEnd -= OnGateTransitionEnd;
