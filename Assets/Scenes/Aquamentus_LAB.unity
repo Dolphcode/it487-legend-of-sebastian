@@ -425,9 +425,11 @@ GameObject:
   - component: {fileID: 210850683}
   - component: {fileID: 210850682}
   - component: {fileID: 210850681}
-  m_Layer: 8
+  - component: {fileID: 210850686}
+  - component: {fileID: 210850687}
+  m_Layer: 0
   m_Name: Aquamentus
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -471,6 +473,14 @@ MonoBehaviour:
   preCached: 0
   knockbackTilesMax: 0
   knockbackSpeed: 0
+  unitsToWalk: 6
+  walkTime: 2
+  startUnit: 3
+  startLeft: 1
+  projectilePrefab: {fileID: 5807016222358984219, guid: b18fb21bb0706e44d893fcbf14452174, type: 3}
+  spawnPos: {fileID: 1311668753}
+  target: {fileID: 1180830136}
+  rechargeTime: 2
 --- !u!114 &210850682
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -578,7 +588,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -592,7 +602,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 2, y: 2}
+  m_Size: {x: 1.4, y: 1.6}
   m_EdgeRadius: 0
 --- !u!4 &210850685
 Transform:
@@ -608,8 +618,45 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 434382049}
+  - {fileID: 1311668754}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &210850686
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 210850680}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b1724535de5eb5c4e917fefff36254dd, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &210850687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 210850680}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b731b8d5e045c2840b5e89015318d045, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: SQZL.Entity::SQZL.Entity.Hurtbox
+  targetTag: Player
+  damageAmount: 6
 --- !u!1 &275756289
 GameObject:
   m_ObjectHideFlags: 0
@@ -15241,6 +15288,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1311668753
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1311668754}
+  m_Layer: 0
+  m_Name: SpawnPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1311668754
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1311668753}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.375, y: 1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 210850685}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1339992007
 GameObject:
   m_ObjectHideFlags: 0
@@ -15709,7 +15787,7 @@ GameObject:
   - component: {fileID: 1794095477}
   - component: {fileID: 1794095478}
   - component: {fileID: 1794095479}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Hurtbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}

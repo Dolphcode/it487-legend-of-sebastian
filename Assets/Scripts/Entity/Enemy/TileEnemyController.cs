@@ -31,7 +31,7 @@ namespace SQZL.Entity.Enemy
         }
 
         #region MOVEMENT_FUNCS
-        protected void MoveEntity(float moveSpeed, int xIn, int yIn, bool lockFacing = true)
+        protected void MoveEntity(float moveSpeed, int xIn, int yIn, bool lockFacing = false)
         {
 /*
              * 1. Vertical movement evaluates before horizontal. If holding UP/LEFT you will go all the way up first and then when you collide with the wall you will start going left.
