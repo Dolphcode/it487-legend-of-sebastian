@@ -8,7 +8,9 @@
         "SQZL.Entity.Enemy",
         "SQZL.World.Interactable"
     ],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
