@@ -15044,9 +15044,9 @@ MonoBehaviour:
   swordOffset: 0.8
   arrowPrefab: {fileID: 5745978206075673744, guid: eee66bf0da13af54fa1c1cdb957eb2b8, type: 3}
   arrowSpawnOffset: 0.5
-  knockbackTime: 0.5
+  knockbackTime: 0.1
   knockbackTilesMax: 6
-  iframeTime: 5
+  iframeTime: 1
 --- !u!114 &1180830147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15996,6 +15996,7 @@ GameObject:
   - component: {fileID: 1830632385}
   - component: {fileID: 1830632388}
   - component: {fileID: 1830632387}
+  - component: {fileID: 1830632389}
   m_Layer: 0
   m_Name: Stalfos
   m_TagString: Enemy
@@ -16184,6 +16185,25 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
+--- !u!114 &1830632389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1830632383}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7555fd714b7e4773804001e560e00c14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SQZL.Entity.Enemy.TileEnemyController
+  maxHP: 0
+  iframeTime: 0
+  walkableRegion: {x: 0, y: 0}
+  walkableRegionOffset: {x: 0, y: 0}
+  validTiles: 
+  wallTilemaps: []
+  preCached: 0
 --- !u!1 &1879458709
 GameObject:
   m_ObjectHideFlags: 0
@@ -17265,8 +17285,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b731b8d5e045c2840b5e89015318d045, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hurtbox
-  targetTag: 
-  damageAmount: 0
+  targetTag: Enemy
+  damageAmount: 1
 --- !u!1 &2137939791
 GameObject:
   m_ObjectHideFlags: 0
