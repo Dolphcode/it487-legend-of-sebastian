@@ -4,6 +4,8 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
+using SQZL.World.Interactable;
+using SQZL.World;
 
 [Obsolete("This class is obsolete, see SQZL.Entity.Enemy for new enemy implementation")]
 public class BaseEntityController : MonoBehaviour

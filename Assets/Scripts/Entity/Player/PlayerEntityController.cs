@@ -3,8 +3,6 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
-using SQZL.Entity;
-using Player;
 
 namespace SQZL.Entity.Player
 {

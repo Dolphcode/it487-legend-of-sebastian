@@ -1,0 +1,17 @@
+{
+    "name": "SQZL.Entity",
+    "rootNamespace": "SQZL",
+    "references": [
+        "GUID:3a9781db4804a9945b9883f3a7c46d45",
+        "GUID:092bb18b177b3784c9dbc37f40ae393c"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
