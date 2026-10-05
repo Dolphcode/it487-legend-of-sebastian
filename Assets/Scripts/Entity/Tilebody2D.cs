@@ -2,6 +2,7 @@ using System;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using SQZL.World;
 
 namespace SQZL.Entity {
     
@@ -106,7 +107,7 @@ namespace SQZL.Entity {
             //Debug.Log($"pre collision {newPosition}");
             Vector2 directionMoved =
                 new Vector2(newPosition.x - transform.position.x, newPosition.y - transform.position.y);
-            Vector2 absDirectionMoved = directionMoved.Abs();
+            Vector2 absDirectionMoved = new Vector2(Mathf.Abs(directionMoved.x), Mathf.Abs(directionMoved.y));
             if (absDirectionMoved.y < DIRECTION_DETECTION_EPSILON)
             {
                 if (directionMoved.x > DIRECTION_DETECTION_EPSILON) LastMovedDirection = TilebodyDirection.Right;

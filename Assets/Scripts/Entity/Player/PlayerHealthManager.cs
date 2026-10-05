@@ -1,7 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using Player;
-using SQZL.Entity;
 
 namespace SQZL.Entity.Player
 {

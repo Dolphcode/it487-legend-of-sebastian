@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using SQZL.Entity;
-using Unity.VisualScripting;
+using SQZL.World.Interactable;
 
 namespace SQZL.Entity.Enemy
 {
