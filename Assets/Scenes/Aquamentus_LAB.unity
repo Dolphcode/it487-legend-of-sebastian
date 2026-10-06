@@ -465,7 +465,7 @@ MonoBehaviour:
     maxNormalAngle: 0
   gates: []
   maxHP: 10
-  iframeTime: 0.5
+  iframeTime: 1
   walkableRegion: {x: 0, y: 0}
   walkableRegionOffset: {x: 0, y: 0}
   validTiles: 
@@ -6732,10 +6732,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.016666668
+    x: 0.20000002
     y: 0
-    width: 0.13333334
-    height: 0.22222222
+    width: 0.6
+    height: 1
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 34
