@@ -447,6 +447,9 @@ namespace SQZL.Entity.Player
         {
             if (swordHitbox != null)
             {
+                // TODO: Cache this, suboptimal but lazy
+                Hurtbox swordHurtbox = swordHitbox.GetComponent<Hurtbox>();
+                
                 Vector3 offsetVector = Vector3.zero;
                 _animator.SetTrigger("Attack");
                 _animator.SetInteger("Direction", (int)Facing);
@@ -466,6 +469,7 @@ namespace SQZL.Entity.Player
                         break;
                 }
 
+                swordHurtbox.AttackDirection = dir;
                 swordHitbox.transform.localPosition = offsetVector;
                 swordHitbox.SetActive(true);
             }

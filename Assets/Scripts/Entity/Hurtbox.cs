@@ -13,6 +13,13 @@ namespace SQZL.Entity
         // Components
         private Collider2D _hurtboxCollider;
 
+        private TilebodyDirection _attackDirection = TilebodyDirection.Down;
+        public TilebodyDirection AttackDirection
+        {
+            set { _attackDirection = (value != TilebodyDirection.Diagonal) ? value : _attackDirection;}
+            get { return _attackDirection; }
+        }
+
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
@@ -31,7 +38,7 @@ namespace SQZL.Entity
             BaseEntityDamageHandler hitbox;
             if (other.gameObject.CompareTag(targetTag) && other.TryGetComponent(out hitbox))
             {
-                hitbox.TryDamage(damageAmount, doKnockback, TilebodyDirection.Down);
+                hitbox.TryDamage(damageAmount, doKnockback, _attackDirection);
             }
         }
     }

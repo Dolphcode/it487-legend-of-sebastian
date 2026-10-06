@@ -248,14 +248,14 @@ namespace SQZL.Entity.Enemy
         /// Call this coroutine to knock back the entity
         /// Required by Goriya and Stalfos specifically iirc?
         /// </summary>
-        public IEnumerator KnockbackCoroutine()
+        public IEnumerator KnockbackCoroutine(TilebodyDirection attackDir)
         {
             ControllerIsActive = false;
             iframes = iframeTime;
             yield return StartCoroutine(ForceEntityCoroutine(
                 knockbackTilesMax,
                 knockbackSpeed,
-                (TilebodyDirection)(((int)Facing + 2) % 4),
+                attackDir,
                 true,
                 true,
                 true

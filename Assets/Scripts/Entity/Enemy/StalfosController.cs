@@ -34,7 +34,7 @@ namespace SQZL.Entity.Enemy
                 }
                 else
                 {
-                    StartCoroutine(base.KnockbackCoroutine());
+                    StartCoroutine(base.KnockbackCoroutine(attackDir));
                 }
             }
         }
