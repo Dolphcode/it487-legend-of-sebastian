@@ -1,5 +1,6 @@
 using UnityEngine;
 using SQZL.World.Interactable;
+using SQZL.Entity.VFX;
 
 namespace SQZL.Entity.Enemy
 {
@@ -25,6 +26,8 @@ namespace SQZL.Entity.Enemy
         private float rechargeTimeLeft;
         private int dX;
 
+        private int _a_Damaged;
+
         protected override void Start()
         {
             base.Start();
@@ -38,11 +41,16 @@ namespace SQZL.Entity.Enemy
             // References
             _sprite = GetComponent<SpriteRenderer>();
             _animator = GetComponent<Animator>();
+            
+            // get the animator
+            _a_Damaged = Animator.StringToHash("Damaged");
         }
         
         protected override void FixedUpdate()
         {
             base.FixedUpdate();
+            if (iframes <= 0f) _animator.SetBool(_a_Damaged, false);
+            
             if (ControllerIsActive)
             {
                 // Flip direction
@@ -77,6 +85,11 @@ namespace SQZL.Entity.Enemy
                     Destroy(gameObject);
                     foreach(RoomTransitionTrigger trigger in gates) base.DisconnectGate(trigger);
                 }
+                else
+                {
+                    _animator.SetBool(_a_Damaged, true);
+                    iframes = iframeTime;
+                }
             }
         }
 
@@ -104,6 +117,7 @@ namespace SQZL.Entity.Enemy
         {
             ControllerIsActive = false;
             _sprite.enabled = false;
+            _animator.SetBool(_a_Damaged, false);
         }
     }
 }

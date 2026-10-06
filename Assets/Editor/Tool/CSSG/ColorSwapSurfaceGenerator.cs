@@ -90,7 +90,6 @@ public class ColorSwapSurfaceGenerator : EditorWindow
             texPixels[i] = color32;
         }
 
-        Array.Reverse(texPixels);
         output.SetPixels32(texPixels);
         output.Apply();
         byte[] pngBin = output.EncodeToPNG();
