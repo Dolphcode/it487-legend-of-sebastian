@@ -83,7 +83,7 @@ namespace SQZL.Entity.Enemy
                 if (currentHP <= 0f)
                 {
                     Destroy(gameObject);
-                    foreach(RoomTransitionTrigger trigger in gates) base.DisconnectGate(trigger);
+                    base.DisconnectSpawnManager();
                 }
                 else
                 {
@@ -108,6 +108,7 @@ namespace SQZL.Entity.Enemy
 
         public override void OnSpawn()
         {
+            Debug.Log("We should be spawning right?");
             ControllerIsActive = true;
             _sprite.enabled = true;
             // TODO RAISE GATES/BLOCKERS?
