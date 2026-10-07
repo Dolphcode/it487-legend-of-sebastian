@@ -30,12 +30,17 @@ namespace SQZL.Entity.Player
 
         [SerializeField] private int knockbackTilesMax = 6;
         [SerializeField] private float iframeTime = 1f;
+
+        [Header ("Sounds")]
+        public AudioClip swordSound;
+        public AudioClip hurtSound;
         
         // On Start actions
         private InputAction moveAction;
         private InputAction primaryAction;
         private InputAction secondaryAction;
         private InputAction godAction;
+        private InputAction switchAction;
         
         // On Start components
         private BoxCollider2D _collider2D;
@@ -76,6 +81,7 @@ namespace SQZL.Entity.Player
             primaryAction = InputSystem.actions.FindAction("PrimaryWeapon");
             secondaryAction = InputSystem.actions.FindAction("SecondaryWeapon");
             godAction = InputSystem.actions.FindAction("GodMode");
+            switchAction = InputSystem.actions.FindAction("SwitchSecondary");
             
             // Save the current y position
             lastPosition = transform.position;
