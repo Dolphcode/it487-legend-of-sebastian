@@ -15,7 +15,7 @@ namespace SQZL.World.Interactable
         private float tileSize = 2f;
 
         [SerializeField] private Vector2Int roomSize = new Vector2Int(16, 11);
-
+        [SerializeField] private RoomSpawnManager associatedRoom;
         [SerializeField] private bool vertical = false;
 
         [Tooltip(
@@ -74,9 +74,11 @@ namespace SQZL.World.Interactable
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.gameObject.tag == "Player")
+            if (other.gameObject.CompareTag("Player"))
             {
                 PlayerEntityController player = other.gameObject.GetComponent<PlayerEntityController>();
+                if (player.playerInputFrozen) return; // If player is being moved right now don't do anything
+                if (RoomManager._Instance.CurrentRoomReference != associatedRoom) return;
                 player.playerInputFrozen = true;
                 RoomManager._Instance.UnloadRoom();
                 StartCoroutine(CameraTransitionCoroutine(player));
@@ -85,7 +87,8 @@ namespace SQZL.World.Interactable
 
         private void ToggleTriggerPosition()
         {
-            positionFlag = !positionFlag;
+            // TODO MAKE THIS SHIT BETTER PLEASE
+            //positionFlag = !positionFlag; (Basically don't toggle the position flag)
             if (vertical)
             {
                 if (positionFlag) boxCollider2D.offset = new Vector2(0f, tileSize * 0.5f);
@@ -136,7 +139,7 @@ namespace SQZL.World.Interactable
             player.playerInputFrozen = false;
 
             // Animation has ended
-            if (!positionFlag) RoomManager._Instance.LoadRoom(bRoom);
+            if (positionFlag) RoomManager._Instance.LoadRoom(bRoom);
             else RoomManager._Instance.LoadRoom(aRoom);
         }
     }

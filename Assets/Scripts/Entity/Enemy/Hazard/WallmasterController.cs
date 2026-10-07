@@ -84,7 +84,9 @@ namespace SQZL.Entity.Enemy.Hazard
 
         internal void TripHazard(HazardTripBox trigger)
         {
+            if (tripped) return;
             OnHazardTripped?.Invoke(this);
+            tripped = true;
             StartCoroutine(TripCoroutine());
         }
 
@@ -92,8 +94,7 @@ namespace SQZL.Entity.Enemy.Hazard
         {
             if (playerRef.playerInputFrozen) return; // i.e. someone else grabbed the player alr
             // TODO: Make this reflect in a coroutine
-            //RoomManager._Instance.UnloadRoom();
-            //RoomManager._Instance.LoadRoom(tpRoom);
+            RoomManager._Instance.UnloadRoom();
             playerRef.playerInputFrozen = true;
             grabbed = true;
         }
@@ -157,6 +158,7 @@ namespace SQZL.Entity.Enemy.Hazard
             grabbed = false; // Release here
             playerRef.TeleportPlayer(tpRoom.WarpPosition.position, tpRoom.CameraWarpPosition.position);
             playerRef.playerInputFrozen = false;
+            RoomManager._Instance.LoadRoom(tpRoom);
             
             // RECHARGE
             for (float x = lengthTime; x > MOTION_END_THRESHOLD; x -= Time.fixedDeltaTime)
@@ -170,6 +172,8 @@ namespace SQZL.Entity.Enemy.Hazard
                 Mathf.Round(transform.position.y),
                 transform.position.z
             );
+
+            tripped = false;
 
         }
     }
