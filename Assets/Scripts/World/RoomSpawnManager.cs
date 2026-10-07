@@ -13,6 +13,10 @@ namespace SQZL.World
 
         [SerializeField] private Transform warpPosition;
        
+        public Transform WarpPosition { get => warpPosition; private set => warpPosition = value; }
+        public Transform CameraWarpPosition { get => cameraPosition; private set => cameraPosition = value; }
+        
+        
         public event Action<RoomSpawnManager> OnLoaded;
         public event Action<RoomSpawnManager> OnUnloaded;
 
