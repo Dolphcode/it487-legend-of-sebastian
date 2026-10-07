@@ -1,7 +1,9 @@
+using System;
 using UnityEngine;
 
 namespace Player
 {
+    [Obsolete("See SQZL.Entity.Player for new implementation of Player")]
     public class PlayerHitbox : MonoBehaviour
     {
         private PlayerController player;

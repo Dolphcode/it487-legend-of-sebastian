@@ -1,0 +1,14 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/Editor/Entity/Enemy/BaseEnemyControllerEditor.uss?fileID=7433441132597879392&amp;guid=b997f217624ced340bf0664f10a6eccd&amp;type=3#BaseEnemyControllerEditor"/>
+    <ui:VisualElement name="default_inspector" style="flex-grow: 1;"/>
+    <ui:VisualElement name="region_cache" class="region_cache" style="flex-grow: 1;">
+        <ui:Label text="Walkable Area Config" name="region_label" class="region_cache_label"/>
+        <ui:Label text="This section is responsible for configuring the walkable region of this entity. It is recommended to cache the walkable region if possible, as to avoid generating that at runtime. Simply click the button at the bottom of this section to cache given parameters. If not cached, the walkable region will be generated at runtime on Start." name="region_desc" style="white-space: normal;"/>
+        <uie:PropertyField name="walkable_region" binding-path="walkableRegion" label="Walkable Region"/>
+        <uie:PropertyField name="walkable_offset" binding-path="walkableRegionOffset" label="Region Offset"/>
+        <uie:PropertyField name="wall_tilemaps" binding-path="wallTilemaps" label="List of Unwalkable Tilemaps"/>
+        <ui:VisualElement name="grid_draw_area" style="flex-grow: 1; aspect-ratio: 2.7; max-width: 100%; max-height: none; padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px;"/>
+        <ui:Button text="Cache Region" name="cache_button"/>
+        <ui:Label text="This region has not been cached!" name="warn" enabled="true" class="region_cache_warn"/>
+    </ui:VisualElement>
+</ui:UXML>

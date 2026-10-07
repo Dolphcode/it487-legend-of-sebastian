@@ -4,6 +4,7 @@ using MidpointRounding = System.MidpointRounding;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
+using SQZL.Entity.Player;
 
 namespace Player
 {
@@ -58,7 +59,7 @@ namespace Player
         private BoxCollider2D collider2D;
         private Animator animator;
         private SpriteRenderer sprite;
-
+        private PlayerInventory inventory;
         
         // Animator IDs
         private int _animMovingId, _animDirectionId;
@@ -69,7 +70,7 @@ namespace Player
         private bool snappedToGridFlag = false;
         private Vector3 lastPosition, deltaPosition;
         private bool vBlocked = false;
-        private int facing = 0; // 0 = down, 1 = right, 2 = up, 3 = left
+        public int facing = 0; // 0 = down, 1 = right, 2 = up, 3 = left
         private bool godModeActive = false;
         
         // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -79,6 +80,7 @@ namespace Player
             collider2D = GetComponent<BoxCollider2D>();
             animator = GetComponent<Animator>();
             sprite = GetComponent<SpriteRenderer>();
+            inventory = GetComponent<PlayerInventory>();
             
             // Get animator ids
             _animMovingId = Animator.StringToHash("Moving");
@@ -228,6 +230,9 @@ namespace Player
             
             // End idle
             SetAnimatorState(false, direction);
+            
+            // TODO: REMOVE LATER
+            playerInputFrozen = false;
         }
 
         private void ToggleGodMode()
@@ -266,23 +271,21 @@ namespace Player
             if (swordHitbox != null)
             {
                 Vector3 offsetVector = Vector3.zero;
+                animator.SetTrigger("Attack");
+                animator.SetInteger("Direction", facing);
                 switch (dir)
                 {
                     case PlayerDirection.DOWN:
                         offsetVector = Vector3.down * swordOffset;
-                        animator.Play("link_down_attack", 0, 0f);
                         break;
                     case PlayerDirection.RIGHT:
                         offsetVector = Vector3.right * swordOffset;
-                        animator.Play("link_right_attack", 0, 0f);
                         break;
                     case PlayerDirection.LEFT:
                         offsetVector = Vector3.left * swordOffset;
-                        animator.Play("link_left_attack", 0, 0f);
                         break;
                     case PlayerDirection.UP:
                         offsetVector = Vector3.up * swordOffset;
-                        animator.Play("link_up_attack", 0, 0f);
                         break;
                 }
 
@@ -302,6 +305,11 @@ namespace Player
         {
             if (arrowPrefab == null) return;
 
+            if (inventory.GetConsumableAmount("rupee") > 0)
+                inventory.AccumulateConsumable("rupee", -1);
+            else
+                return;
+            
             Vector2 fireDirection = Vector2.down;
             float zRotation = 0f;
 
@@ -333,10 +341,10 @@ namespace Player
             GameObject arrowObj = Instantiate(arrowPrefab, spawnPos, spawnRotation);
 
             //
-            Arrow arrowScript = arrowObj.GetComponent<Arrow>();
-            if (arrowScript != null)
+            PlayerArrow playerArrowScript = arrowObj.GetComponent<PlayerArrow>();
+            if (playerArrowScript != null)
             {
-                arrowScript.Initialize(fireDirection);
+                playerArrowScript.Initialize(fireDirection);
             }
 
         }
