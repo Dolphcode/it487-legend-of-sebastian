@@ -68,7 +68,7 @@ Shader "Custom/ColorSwappableTex"
                 uint colorMod = colorVal % (uint)_SwapMap_TexelSize.w;
                 half2 sampleUV = half2((half)_SwapIdx + (half)0.5, (half)colorMod + half(0.5)) * _SwapMap_TexelSize.xy;
                 half3 mappedColor = SAMPLE_TEXTURE2D(_SwapMap, swapmap_point_clamp_sampler, sampleUV);
-                //half4 outColor = half4((half)colorMod / _SwapMap_TexelSize.w, (half)colorMod / _SwapMap_TexelSize.w, (half)colorMod / _SwapMap_TexelSize.w, color.a);
+                half4 outColor = half4((half)colorMod / _SwapMap_TexelSize.w, (half)colorMod / _SwapMap_TexelSize.w, (half)colorMod / _SwapMap_TexelSize.w, color.a);
                 return half4(mappedColor, color.a);
             }
             ENDHLSL

@@ -79,7 +79,7 @@ namespace SQZL.Entity.Enemy
         /// <param name="attackDir"></param>
         public override void TryDamage(int amount, bool knockback, TilebodyDirection attackDir)
         {
-            if (iframes > 0f)
+            if (iframes <= 0f)
             {
                 currentHP -= amount;
                 if (currentHP <= 0f)
