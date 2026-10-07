@@ -3,6 +3,7 @@ using UnityEngine;
 using SQZL.Entity.Player;
 using System;
 using SQZL.Entity;
+using SQZL.World;
 
 namespace SQZL.World.Interactable
 {
@@ -32,9 +33,12 @@ namespace SQZL.World.Interactable
 
         [SerializeField] private float cameraMoveTime = 2f;
 
-        public event Action<RoomTransitionTrigger, bool, bool> OnTransitionBegin;
-        public event Action<RoomTransitionTrigger, bool, bool> OnTransitionEnd;
+        [Header("Connected Rooms")] [SerializeField] [Tooltip("The room to the left or below")]
+        private RoomSpawnManager aRoom;
 
+        [SerializeField] [Tooltip("The room to the right or above")]
+        private RoomSpawnManager bRoom;
+        
         // Components
         private BoxCollider2D boxCollider2D;
 
@@ -74,7 +78,7 @@ namespace SQZL.World.Interactable
             {
                 PlayerEntityController player = other.gameObject.GetComponent<PlayerEntityController>();
                 player.playerInputFrozen = true;
-                OnTransitionBegin?.Invoke(this, vertical, positionFlag);
+                RoomManager._Instance.UnloadRoom();
                 StartCoroutine(CameraTransitionCoroutine(player));
             }
         }
@@ -132,7 +136,8 @@ namespace SQZL.World.Interactable
             player.playerInputFrozen = false;
 
             // Animation has ended
-            OnTransitionEnd?.Invoke(this, vertical, positionFlag);
+            if (!positionFlag) RoomManager._Instance.LoadRoom(bRoom);
+            else RoomManager._Instance.LoadRoom(aRoom);
         }
     }
 }
