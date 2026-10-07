@@ -7077,9 +7077,9 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0
+    x: 0.20000002
     y: 0
-    width: 1
+    width: 0.6
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
@@ -18501,15 +18501,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6428675686490230310, guid: 6382c41d23cd16245a1c8bd9ef80c374, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6428675686490230310, guid: 6382c41d23cd16245a1c8bd9ef80c374, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6428675686490230310, guid: 6382c41d23cd16245a1c8bd9ef80c374, type: 3}
       propertyPath: m_SizeDelta.x
-      value: -170.66666
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6428675686490230310, guid: 6382c41d23cd16245a1c8bd9ef80c374, type: 3}
       propertyPath: m_SizeDelta.y
@@ -18521,7 +18521,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6450106679707885394, guid: 6382c41d23cd16245a1c8bd9ef80c374, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

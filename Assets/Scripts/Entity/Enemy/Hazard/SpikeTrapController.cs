@@ -66,7 +66,7 @@ namespace SQZL.Entity.Enemy.Hazard
 
         public override void TryDamage(int amount, bool knockback, TilebodyDirection attackDir)
         {
-           
+            // Spike trap does not damage 
         }
         
         [System.Serializable]
