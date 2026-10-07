@@ -5,12 +5,18 @@ using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 using SQZL.UI;
 using SQZL.World;
+using System.Collections.Generic;
 
 namespace SQZL.Entity.Player
 {
     public class PlayerEntityController : MonoBehaviour
     {
-        
+        public enum SecondaryType
+        {
+            Bomb,
+            Bow,
+            Boomerang,
+        }
         [Header("Player Movement & Collision Config")] [SerializeField] private float moveSpeed = 5f;
         [SerializeField] [Range(0f, 1.0e-4f)] private float blockTestThreshold = 1.0e-5f;
         [SerializeField] private float motionBias = 0.1f;
@@ -26,6 +32,15 @@ namespace SQZL.Entity.Player
         [Header("Bow and Arrow Config")]
         [SerializeField] private GameObject arrowPrefab;
         [SerializeField] private float arrowSpawnOffset = 0.5f;
+
+
+        [Header("Secondaries Unlocked")]
+        public bool hasBomb = true;
+        public bool hasBow = false;
+        public bool hasBoomerang = false;
+        private List<SecondaryType> unlockedSecondaries = new List<SecondaryType>();
+        private int currentSecondaryIndex;
+
 
         [Header("Knockback Config")] [SerializeField]
         private float knockbackTime = 0.5f;
@@ -54,6 +69,7 @@ namespace SQZL.Entity.Player
         private Tilebody2D _tilebody2D;
         private PlayerInventory _inventory;
         private Camera _camera2D;
+        private AudioSource _audioSource;
         
         // Animator IDs
         private int _animMovingId, _animDirectionId;
@@ -78,6 +94,7 @@ namespace SQZL.Entity.Player
             _tilebody2D = GetComponent<Tilebody2D>();
             _inventory = GetComponent<PlayerInventory>();
             _camera2D = Camera.main;
+            _audioSource = GetComponent<AudioSource>();
             
             // Get animator ids
             _animMovingId = Animator.StringToHash("Moving");
@@ -118,6 +135,14 @@ namespace SQZL.Entity.Player
                 ToggleGodMode();
             }
 
+            if (switchAction.WasPressedThisFrame())
+            {
+                CycleSecondaryItem();
+            }
+        }
+
+        private void CycleSecondaryItem()
+        {
             
         }
         
@@ -469,6 +494,7 @@ namespace SQZL.Entity.Player
         #region ATTACKS
         IEnumerator Primary()
         {
+            _audioSource.PlayOneShot(swordSound);
             ExecutePrimaryAttack(Facing);
             yield return null;
             float attackLength = _animator.GetCurrentAnimatorStateInfo(0).length;

@@ -7074,9 +7074,9 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.20000002
+    x: 0
     y: 0
-    width: 0.6
+    width: 1
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
@@ -18103,6 +18103,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Link
       objectReference: {fileID: 0}
+    - target: {fileID: 7462067368277283565, guid: 6382c41d23cd16245a1c8bd9ef80c374, type: 3}
+      propertyPath: swordSound
+      value: 
+      objectReference: {fileID: 8300000, guid: f9205f122fd728843ae80513e89157dc, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
