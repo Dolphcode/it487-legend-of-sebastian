@@ -7077,9 +7077,9 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.20000002
+    x: 0
     y: 0
-    width: 0.6
+    width: 1
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
@@ -16557,7 +16557,7 @@ GameObject:
   - component: {fileID: 1459426803}
   - component: {fileID: 1459426802}
   m_Layer: 0
-  m_Name: Grab Trigger (2)
+  m_Name: Right Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17625,7 +17625,7 @@ GameObject:
   - component: {fileID: 1976440841}
   - component: {fileID: 1976440840}
   m_Layer: 0
-  m_Name: Grab Trigger (1)
+  m_Name: Bottom Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
