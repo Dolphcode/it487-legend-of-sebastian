@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: a58f79794cb4bd64eb94dfa2060d2032
+guid: f7c4b358b15802644ba337c11a07a7f6
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 9207347778235213735
-    second: link_color_0
+      213: -2240483929916361728
+    second: stalfos_colort_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -102,13 +102,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: link_color_0
+      name: stalfos_colort_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 4
-        height: 5
+        height: 7
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -117,8 +117,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 7a7213d850217cf70800000000000000
-      internalID: 9207347778235213735
+      spriteID: 0043d508cb338e0e0800000000000000
+      internalID: -2240483929916361728
       vertices: []
       indices: 
       edges: []
@@ -137,7 +137,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      link_color_0: 9207347778235213735
+      stalfos_colort_0: -2240483929916361728
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

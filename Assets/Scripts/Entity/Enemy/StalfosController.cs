@@ -5,15 +5,21 @@ namespace SQZL.Entity.Enemy
 {
     public class StalfosController : TileEnemyController
     {
+        private Animator _animator;
+        private int _a_Damaged;
+        
         protected override void Start()
         {
             base.Start();
             _sprite = GetComponent<SpriteRenderer>();
+            _animator = GetComponent<Animator>();
+            _a_Damaged = Animator.StringToHash("Damaged");
         }
         
         protected override void FixedUpdate()
         {
             base.FixedUpdate();
+            if (iframes <= 0f) _animator.SetBool(_a_Damaged, false);
             if (ControllerIsActive)
             {
                 if (walkTimeLeft <= 0f) base.PickDirection();
@@ -34,7 +40,9 @@ namespace SQZL.Entity.Enemy
                 }
                 else
                 {
-                    StartCoroutine(base.KnockbackCoroutine(attackDir));
+                    iframes = iframeTime;
+                    _animator.SetBool(_a_Damaged, true);
+                    if (knockback) StartCoroutine(base.KnockbackCoroutine(attackDir));
                 }
             }
         }

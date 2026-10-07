@@ -1432,7 +1432,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Hurtbox
   targetTag: Enemy
   damageAmount: 1
-  doKnockback: 0
+  doKnockback: 1
 --- !u!1 &8250976676185244053
 GameObject:
   m_ObjectHideFlags: 0

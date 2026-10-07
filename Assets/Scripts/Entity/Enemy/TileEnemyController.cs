@@ -268,7 +268,7 @@ namespace SQZL.Entity.Enemy
         /// A common pick direction functionality
         /// TODO: hasMaxTiles and maxTiles do nothing atm
         /// </summary>
-        protected void PickDirection()
+        protected void PickDirection(int walkLimit = 999)
         {
             Vector2Int currentTilePosition = new Vector2Int(Mathf.RoundToInt(transform.position.x - walkableRegionOffset.x),
                 Mathf.RoundToInt(transform.position.y - walkableRegionOffset.y)) / 2;
@@ -336,7 +336,7 @@ namespace SQZL.Entity.Enemy
                  targetPositionTest = currentTilePosition + chosenDirection * ++maxDist) ;
             maxDist--;
 
-            moveAmount = Random.Range(1, maxDist) * 2;
+            moveAmount = Random.Range(1, Mathf.Min(maxDist, walkLimit)) * 2;
 
             float position = chosenDirection.x != 0
                 ? transform.position.x - walkableRegionOffset.x

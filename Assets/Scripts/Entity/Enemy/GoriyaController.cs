@@ -80,7 +80,7 @@ namespace SQZL.Entity.Enemy
                 {
                     iframes = iframeTime;
                     _animator.SetBool(_a_Damaged, true);
-                    StartCoroutine(base.KnockbackCoroutine(attackDir));
+                    if (knockback) StartCoroutine(base.KnockbackCoroutine(attackDir));
                 }
             }
         }
