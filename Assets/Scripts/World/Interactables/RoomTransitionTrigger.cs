@@ -3,6 +3,7 @@ using UnityEngine;
 using SQZL.Entity.Player;
 using System;
 using SQZL.Entity;
+using SQZL.World;
 
 namespace SQZL.World.Interactable
 {
@@ -14,7 +15,7 @@ namespace SQZL.World.Interactable
         private float tileSize = 2f;
 
         [SerializeField] private Vector2Int roomSize = new Vector2Int(16, 11);
-
+        [SerializeField] private RoomSpawnManager associatedRoom;
         [SerializeField] private bool vertical = false;
 
         [Tooltip(
@@ -32,9 +33,12 @@ namespace SQZL.World.Interactable
 
         [SerializeField] private float cameraMoveTime = 2f;
 
-        public event Action<RoomTransitionTrigger, bool, bool> OnTransitionBegin;
-        public event Action<RoomTransitionTrigger, bool, bool> OnTransitionEnd;
+        [Header("Connected Rooms")] [SerializeField] [Tooltip("The room to the left or below")]
+        private RoomSpawnManager aRoom;
 
+        [SerializeField] [Tooltip("The room to the right or above")]
+        private RoomSpawnManager bRoom;
+        
         // Components
         private BoxCollider2D boxCollider2D;
 
@@ -70,18 +74,21 @@ namespace SQZL.World.Interactable
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.gameObject.tag == "Player")
+            if (other.gameObject.CompareTag("Player"))
             {
                 PlayerEntityController player = other.gameObject.GetComponent<PlayerEntityController>();
+                if (player.playerInputFrozen) return; // If player is being moved right now don't do anything
+                if (RoomManager._Instance.CurrentRoomReference != associatedRoom) return;
                 player.playerInputFrozen = true;
-                OnTransitionBegin?.Invoke(this, vertical, positionFlag);
+                RoomManager._Instance.UnloadRoom();
                 StartCoroutine(CameraTransitionCoroutine(player));
             }
         }
 
         private void ToggleTriggerPosition()
         {
-            positionFlag = !positionFlag;
+            // TODO MAKE THIS SHIT BETTER PLEASE
+            //positionFlag = !positionFlag; (Basically don't toggle the position flag)
             if (vertical)
             {
                 if (positionFlag) boxCollider2D.offset = new Vector2(0f, tileSize * 0.5f);
@@ -132,7 +139,8 @@ namespace SQZL.World.Interactable
             player.playerInputFrozen = false;
 
             // Animation has ended
-            OnTransitionEnd?.Invoke(this, vertical, positionFlag);
+            if (positionFlag) RoomManager._Instance.LoadRoom(bRoom);
+            else RoomManager._Instance.LoadRoom(aRoom);
         }
     }
 }

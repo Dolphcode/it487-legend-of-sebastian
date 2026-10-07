@@ -168,6 +168,36 @@ namespace SQZL.Entity.Enemy
             {
                 float dx = speed * Time.fixedDeltaTime;
                 localRoomPosition += direction * dx;
+                
+                // Correct
+                Vector2 tempRoomPosition = localRoomPosition + direction * dx;
+                float corrFrac = 0f;
+                bool overshot = false;
+                if (tempRoomPosition.x < 0f)
+                {
+                    overshot = true;
+                    corrFrac = (localRoomPosition.x) / dx;
+                } else if (tempRoomPosition.x > boundsSize.x)
+                {
+                    overshot = true;
+                    corrFrac = (localRoomPosition.x - boundsSize.x) / dx;
+                } else if (tempRoomPosition.y < 0f)
+                {
+                    overshot = true;
+                    corrFrac = (localRoomPosition.y) / dx;
+                } else if (tempRoomPosition.y > boundsSize.y)
+                {
+                    overshot = true;
+                    corrFrac = (localRoomPosition.y - boundsSize.y) / dx;
+                }
+
+                if (overshot)
+                {
+                    localRoomPosition += direction * dx * corrFrac;
+                    direction = -direction;
+                    localRoomPosition += direction * dx * (1f - corrFrac);
+                } else localRoomPosition += direction * dx;
+                
                 yield return new WaitForFixedUpdate();
             }
             
@@ -228,8 +258,8 @@ namespace SQZL.Entity.Enemy
                 currentHP -= amount;
                 if (currentHP <= 0f)
                 {
+                    base.DisconnectSpawnManager();
                     Destroy(gameObject);
-                    foreach(RoomTransitionTrigger trigger in gates) base.DisconnectGate(trigger);
                 }
                 else
                 {

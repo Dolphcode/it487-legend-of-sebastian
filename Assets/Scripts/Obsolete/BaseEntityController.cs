@@ -261,14 +261,14 @@ public class BaseEntityController : MonoBehaviour
 
     private void InitializeGate(RoomTransitionTrigger trigger)
     {
-        trigger.OnTransitionBegin += OnGateTransitionBegin;
-        trigger.OnTransitionEnd += OnGateTransitionEnd;
+        //trigger.OnTransitionBegin += OnGateTransitionBegin;
+        //trigger.OnTransitionEnd += OnGateTransitionEnd;
     }
 
     private void DisconnectGate(RoomTransitionTrigger trigger)
     {
-        trigger.OnTransitionBegin -= OnGateTransitionBegin;
-        trigger.OnTransitionEnd -= OnGateTransitionEnd;
+        //trigger.OnTransitionBegin -= OnGateTransitionBegin;
+        //trigger.OnTransitionEnd -= OnGateTransitionEnd;
     }
 
     private bool isActive = false;

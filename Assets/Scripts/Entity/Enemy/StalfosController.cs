@@ -29,8 +29,8 @@ namespace SQZL.Entity.Enemy
                 currentHP -= amount;
                 if (currentHP <= 0f)
                 {
+                    base.DisconnectSpawnManager();
                     Destroy(gameObject);
-                    foreach(RoomTransitionTrigger trigger in gates) base.DisconnectGate(trigger);
                 }
                 else
                 {

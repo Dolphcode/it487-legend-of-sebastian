@@ -7,7 +7,7 @@ namespace SQZL.Entity.Enemy
     public class AquamentusController : TileEnemyController
     {
         [Header("Aquamentus Walking Config")] [SerializeField] private int unitsToWalk = 6;
-        [SerializeField] private float walkTime = 2f;
+        [SerializeField] private float walkOscillateTime = 2f;
         [SerializeField] private int startUnit = 3;
         [SerializeField] private bool startLeft;
 
@@ -33,9 +33,9 @@ namespace SQZL.Entity.Enemy
             base.Start();
             
             // Setup
-            walkTimeLeft = ((float)startUnit / (float)unitsToWalk) * walkTime;
+            walkTimeLeft = ((float)startUnit / (float)unitsToWalk) * walkOscillateTime;
             dX = (startLeft) ? -1 : 1;
-            moveSpeed = (unitsToWalk / 2) / walkTime;
+            moveSpeed = (unitsToWalk / 2) / walkOscillateTime;
             rechargeTimeLeft = rechargeTime;
             
             // References
@@ -57,7 +57,7 @@ namespace SQZL.Entity.Enemy
                 if (walkTimeLeft <= 0f)
                 {
                     dX = (dX == -1) ? 1 : -1;
-                    walkTimeLeft = walkTime;
+                    walkTimeLeft = walkOscillateTime;
                 }
                 
                 // Fire projectile
@@ -83,7 +83,7 @@ namespace SQZL.Entity.Enemy
                 if (currentHP <= 0f)
                 {
                     Destroy(gameObject);
-                    foreach(RoomTransitionTrigger trigger in gates) base.DisconnectGate(trigger);
+                    base.DisconnectSpawnManager();
                 }
                 else
                 {
@@ -108,6 +108,7 @@ namespace SQZL.Entity.Enemy
 
         public override void OnSpawn()
         {
+            Debug.Log("We should be spawning right?");
             ControllerIsActive = true;
             _sprite.enabled = true;
             // TODO RAISE GATES/BLOCKERS?

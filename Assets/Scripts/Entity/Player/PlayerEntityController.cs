@@ -3,6 +3,8 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
+using SQZL.UI;
+using SQZL.World;
 
 namespace SQZL.Entity.Player
 {
@@ -34,6 +36,9 @@ namespace SQZL.Entity.Player
         [Header ("Sounds")]
         public AudioClip swordSound;
         public AudioClip hurtSound;
+
+        [Header("Transition")] [SerializeField]
+        private TransitionHandler _transitionHandler;
         
         // On Start actions
         private InputAction moveAction;
@@ -48,6 +53,7 @@ namespace SQZL.Entity.Player
         private SpriteRenderer _sprite;
         private Tilebody2D _tilebody2D;
         private PlayerInventory _inventory;
+        private Camera _camera2D;
         
         // Animator IDs
         private int _animMovingId, _animDirectionId;
@@ -71,6 +77,7 @@ namespace SQZL.Entity.Player
             _sprite = GetComponent<SpriteRenderer>();
             _tilebody2D = GetComponent<Tilebody2D>();
             _inventory = GetComponent<PlayerInventory>();
+            _camera2D = Camera.main;
             
             // Get animator ids
             _animMovingId = Animator.StringToHash("Moving");
@@ -411,6 +418,8 @@ namespace SQZL.Entity.Player
                 ));
             playerInputFrozen = false;
         }
+
+        
         #endregion
 
         internal void TriggerIframes()
@@ -433,6 +442,29 @@ namespace SQZL.Entity.Player
                 Debug.Log("God Mode Disabled");
             }
         }
+
+        #region EXTERNAL_CONTROL
+        /// <summary>
+        /// Used to teleport the player. Best used when the player controller is fully disabled
+        /// </summary>
+        public void TeleportPlayer(Vector3 position, Vector3 camPos)
+        {
+            transform.position = position;
+            lastPosition = position;
+            deltaPosition = Vector3.zero;
+            _camera2D.gameObject.transform.position = camPos;
+        }
+
+        /// <summary>
+        /// Used to set the player's full visual state. Best used when the player
+        /// controller is fully disabled if being called externally
+        /// </summary>
+        public void SetAnimatorState(bool walking, TilebodyDirection direction)
+        {
+            _animator.SetInteger(_animDirectionId, (int)direction);
+            _animator.SetBool(_animMovingId, walking);
+        }
+        #endregion
         
         #region ATTACKS
         IEnumerator Primary()
@@ -537,11 +569,23 @@ namespace SQZL.Entity.Player
         }
         #endregion
         
-        
-        private void SetAnimatorState(bool walking, TilebodyDirection direction)
+        #region TRANSITION
+
+        private RoomSpawnManager tpRoom;
+        public void WarpWithSlide(RoomSpawnManager to)
         {
-            _animator.SetInteger(_animDirectionId, (int)direction);
-            _animator.SetBool(_animMovingId, walking);
+            _transitionHandler.OnSlideTransitionEnd += OnSlideFinished;
+            _transitionHandler.TriggerSlide();
+            tpRoom = to;
+            TeleportPlayer(to.WarpPosition.position, to.CameraWarpPosition.position); 
         }
+
+        public void OnSlideFinished()
+        {
+            _transitionHandler.OnSlideTransitionEnd -= OnSlideFinished;
+            RoomManager._Instance.LoadRoom(tpRoom);
+            if (playerInputFrozen) playerInputFrozen = false;
+        }
+        #endregion
     }
 }
