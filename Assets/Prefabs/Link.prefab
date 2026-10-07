@@ -790,6 +790,9 @@ MonoBehaviour:
   knockbackTime: 0.25
   knockbackTilesMax: 6
   iframeTime: 0.5
+  swordSound: {fileID: 0}
+  hurtSound: {fileID: 0}
+  _transitionHandler: {fileID: 4411489700460924941}
 --- !u!114 &7879077194045855388
 MonoBehaviour:
   m_ObjectHideFlags: 0

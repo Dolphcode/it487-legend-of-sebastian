@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 namespace SQZL.UI
 {
@@ -7,6 +8,8 @@ namespace SQZL.UI
         private Animator _animator;
 
         private int _a_TriggerSlide;
+
+        public event Action OnSlideTransitionEnd;
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
@@ -22,7 +25,7 @@ namespace SQZL.UI
 
         void OnSlideEnd()
         {
-
+            OnSlideTransitionEnd?.Invoke();
         }
 
 

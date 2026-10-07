@@ -3,6 +3,8 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
+using SQZL.UI;
+using SQZL.World;
 
 namespace SQZL.Entity.Player
 {
@@ -34,6 +36,9 @@ namespace SQZL.Entity.Player
         [Header ("Sounds")]
         public AudioClip swordSound;
         public AudioClip hurtSound;
+
+        [Header("Transition")] [SerializeField]
+        private TransitionHandler _transitionHandler;
         
         // On Start actions
         private InputAction moveAction;
@@ -564,7 +569,23 @@ namespace SQZL.Entity.Player
         }
         #endregion
         
-        
-        
+        #region TRANSITION
+
+        private RoomSpawnManager tpRoom;
+        public void WarpWithSlide(RoomSpawnManager to)
+        {
+            _transitionHandler.OnSlideTransitionEnd += OnSlideFinished;
+            _transitionHandler.TriggerSlide();
+            tpRoom = to;
+            TeleportPlayer(to.WarpPosition.position, to.CameraWarpPosition.position); 
+        }
+
+        public void OnSlideFinished()
+        {
+            _transitionHandler.OnSlideTransitionEnd -= OnSlideFinished;
+            RoomManager._Instance.LoadRoom(tpRoom);
+            if (playerInputFrozen) playerInputFrozen = false;
+        }
+        #endregion
     }
 }

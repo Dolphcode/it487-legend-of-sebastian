@@ -156,9 +156,10 @@ namespace SQZL.Entity.Enemy.Hazard
             
             // Check if we grabbed something, teleport accordingly
             grabbed = false; // Release here
-            playerRef.TeleportPlayer(tpRoom.WarpPosition.position, tpRoom.CameraWarpPosition.position);
-            playerRef.playerInputFrozen = false;
-            RoomManager._Instance.LoadRoom(tpRoom);
+            playerRef.WarpWithSlide(tpRoom);
+            //playerRef.TeleportPlayer(tpRoom.WarpPosition.position, tpRoom);
+            //playerRef.playerInputFrozen = false;
+            //RoomManager._Instance.LoadRoom(tpRoom);
             
             // RECHARGE
             for (float x = lengthTime; x > MOTION_END_THRESHOLD; x -= Time.fixedDeltaTime)
