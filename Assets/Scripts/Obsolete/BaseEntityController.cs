@@ -38,10 +38,14 @@ public class BaseEntityController : MonoBehaviour
     [SerializeField] private int knockbackAmount = 10;
     [SerializeField] private float knockbackSpeed = 20f;
 
+    [Header("Sounds")]
+    public AudioClip hurtSound;
+
     // On Start components
     private BoxCollider2D collider2D;
     private Animator animator;
     private SpriteRenderer sprite;
+    private AudioSource audioSource;
 
     // State Variables
     private float currY = 0f, expectedY = 0f;
@@ -69,6 +73,7 @@ public class BaseEntityController : MonoBehaviour
         collider2D = GetComponent<BoxCollider2D>();
         animator = GetComponent<Animator>();
         sprite = GetComponent<SpriteRenderer>();
+        audioSource = GetComponent<AudioSource>();
 
         // Save the current y position
         currY = transform.position.y;
@@ -239,6 +244,7 @@ public class BaseEntityController : MonoBehaviour
     {
         if (knockedBack) return; // Still being knocked back so we still have iframes essentially
         hp -= damage;
+        audioSource.PlayOneShot(hurtSound);
         if (hp <= 0)
         {
             foreach(var gate in gates) DisconnectGate(gate);

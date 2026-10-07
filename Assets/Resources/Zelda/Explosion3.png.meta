@@ -1,10 +1,13 @@
 fileFormatVersion: 2
-guid: 3d2a3108b1d8eb443b4679d61c4b4ee6
+guid: ccf895a1c05d2b6488c9b00cb416be0b
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4522948531182026233
-    second: stalfos_0
+      213: -9040920300506575328
+    second: Explosion3_0
+  - first:
+      213: 3645771445882501160
+    second: Explosion3_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,12 +49,12 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 16
+  spritePixelsToUnits: 39
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -76,7 +79,7 @@ TextureImporter:
     buildTarget: DefaultTexturePlatform
     maxTextureSize: 2048
     resizeAlgorithm: 0
-    textureFormat: 4
+    textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
@@ -102,7 +105,7 @@ TextureImporter:
     buildTarget: WebGL
     maxTextureSize: 2048
     resizeAlgorithm: 0
-    textureFormat: 4
+    textureFormat: -1
     textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
@@ -115,13 +118,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: stalfos_0
+      name: Explosion3_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 16
-        height: 16
+        width: 39
+        height: 38
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -130,8 +133,30 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 9fdba7ab9bdb4ce30800000000000000
-      internalID: 4522948531182026233
+      spriteID: 02e00b533e2388280800000000000000
+      internalID: -9040920300506575328
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Explosion3_1
+      rect:
+        serializedVersion: 2
+        x: 4
+        y: 7
+        width: 10
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 828b61c50d1689230800000000000000
+      internalID: 3645771445882501160
       vertices: []
       indices: 
       edges: []
@@ -140,7 +165,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -150,7 +175,8 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      stalfos_0: 4522948531182026233
+      Explosion3_0: -9040920300506575328
+      Explosion3_1: 3645771445882501160
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

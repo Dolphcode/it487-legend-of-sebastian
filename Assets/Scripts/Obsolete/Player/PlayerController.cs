@@ -49,18 +49,25 @@ namespace Player
         [Header("Bow and Arrow Config")]
         [SerializeField] private GameObject arrowPrefab;
         [SerializeField] private float arrowSpawnOffset = 0.5f;
+
+        [Header ("Sounds")]
+        public AudioClip swordSound;
+        public AudioClip hurtSound;
+        public AudioClip hitSound;
         
         // On Start actions
         private InputAction moveAction;
         private InputAction primaryAction;
         private InputAction secondaryAction;
         private InputAction godAction;
+        private InputAction switchAction;
         
         // On Start components
         private BoxCollider2D collider2D;
         private Animator animator;
         private SpriteRenderer sprite;
         private PlayerInventory inventory;
+        private AudioSource audioSource;
         
         // Animator IDs
         private int _animMovingId, _animDirectionId;
@@ -82,6 +89,7 @@ namespace Player
             animator = GetComponent<Animator>();
             sprite = GetComponent<SpriteRenderer>();
             inventory = GetComponent<PlayerInventory>();
+            audioSource = GetComponent<AudioSource>();
             
             // Get animator ids
             _animMovingId = Animator.StringToHash("Moving");
@@ -93,6 +101,7 @@ namespace Player
             primaryAction = InputSystem.actions.FindAction("PrimaryWeapon");
             secondaryAction = InputSystem.actions.FindAction("SecondaryWeapon");
             godAction = InputSystem.actions.FindAction("GodMode");
+            switchAction = InputSystem.actions.FindAction("SwitchSecondary");
             
             // Save the current y position
             currY = transform.position.y;
@@ -255,6 +264,7 @@ namespace Player
         IEnumerator Primary()
         {
             Debug.Log("Primary Attack Started!");
+            audioSource.PlayOneShot(swordSound);
             ExecutePrimaryAttack((PlayerDirection)facing);
             yield return null;
             float attackLength = animator.GetCurrentAnimatorStateInfo(0).length;
