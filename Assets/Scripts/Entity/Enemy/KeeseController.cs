@@ -167,7 +167,7 @@ namespace SQZL.Entity.Enemy
             for (float i = timePerTile; i > END_MOVEMENT_THRESHOLD; i -= Time.fixedDeltaTime)
             {
                 float dx = speed * Time.fixedDeltaTime;
-                localRoomPosition += direction * dx;
+                //localRoomPosition += direction * dx;
                 
                 // Correct
                 Vector2 tempRoomPosition = localRoomPosition + direction * dx;
