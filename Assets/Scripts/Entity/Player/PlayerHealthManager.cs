@@ -1,7 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using Player;
-using SQZL.Entity;
 
 namespace SQZL.Entity.Player
 {
@@ -31,12 +29,14 @@ namespace SQZL.Entity.Player
             currentHealth = maxHealth;
         }
 
-        public override void TryDamage(int amount)
+        public override void TryDamage(int amount, bool knockback, TilebodyDirection attackDir)
         {
             if (pcScript.IFrames <= 0f)
             {
                 currentHealth -= amount;
-                pcScript.StartCoroutine(pcScript.KnockbackCoroutine());
+
+                pcScript.TriggerIframes();
+                if (knockback) pcScript.StartCoroutine(pcScript.KnockbackCoroutine());
             }
         }
 

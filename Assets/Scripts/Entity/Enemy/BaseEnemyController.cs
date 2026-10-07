@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using SQZL.Entity;
-using Unity.VisualScripting;
+using SQZL.World.Interactable;
+using SQZL.World;
 
 namespace SQZL.Entity.Enemy
 {
@@ -17,8 +17,8 @@ namespace SQZL.Entity.Enemy
         [Header("Collision Config")] [SerializeField]
         protected ContactFilter2D contactFilter;
 
-        [Header("Spawn Config")] [SerializeField]
-        protected List<RoomTransitionTrigger> gates;
+        [Header("Spawn Config")]
+        [SerializeField] protected bool startActive = false;
 
         [Header("Entity Health Config")] [SerializeField]
         protected float maxHP;
@@ -41,6 +41,7 @@ namespace SQZL.Entity.Enemy
         protected Tilebody2D _tilebody2D;
         protected BoxCollider2D _collider2D;
         protected SpriteRenderer _sprite;
+        private RoomSpawnManager _spawnManager;
 
         public bool ControllerIsActive { protected set; get; } = true;
 
@@ -55,12 +56,21 @@ namespace SQZL.Entity.Enemy
             _tilebody2D = GetComponent<Tilebody2D>();
             _collider2D = GetComponent<BoxCollider2D>();
             _sprite = GetComponent<SpriteRenderer>();
+            
+            // Should we start active
+            ControllerIsActive = startActive;
         }
 
         protected virtual void Start()
         {
-            foreach(RoomTransitionTrigger trigger in gates)
-                InitializeGate(trigger);
+            if (!transform.parent.TryGetComponent<RoomSpawnManager>(out _spawnManager))
+            {
+                Debug.LogError($"An enemy was created that was not a child of a spawn manager: {gameObject.name}");
+            }
+            
+            Debug.Log($"I am connecting my functions to {_spawnManager.gameObject.name}");
+            _spawnManager.OnLoaded += OnRoomLoad;
+            _spawnManager.OnUnloaded += OnRoomUnload;
         }
 
         protected virtual void FixedUpdate()
@@ -76,15 +86,17 @@ namespace SQZL.Entity.Enemy
         /// Basic try damage function, some enemies may need to override this to implement features i.e. Knockback
         /// </summary>
         /// <param name="amount"></param>
-        public override void TryDamage(int amount)
+        /// <param name="knockback"></param>
+        /// <param name="attackDir"></param>
+        public override void TryDamage(int amount, bool knockback, TilebodyDirection attackDir)
         {
-            if (iframes > 0f)
+            if (iframes <= 0f)
             {
                 currentHP -= amount;
                 if (currentHP <= 0f)
                 {
+                    DisconnectSpawnManager();
                     Destroy(gameObject);
-                    foreach(RoomTransitionTrigger trigger in gates) DisconnectGate(trigger);
                 }
             }
         }
@@ -106,21 +118,14 @@ namespace SQZL.Entity.Enemy
         {
             
         }
+
+        protected void DisconnectSpawnManager()
+        {
+            _spawnManager.OnLoaded -= OnRoomLoad;
+            _spawnManager.OnUnloaded -= OnRoomUnload;
+        }
         
-        protected void InitializeGate(RoomTransitionTrigger trigger)
-        {
-            trigger.OnTransitionBegin += OnGateTransitionBegin;
-            trigger.OnTransitionEnd += OnGateTransitionEnd;
-        }
-
-        protected void DisconnectGate(RoomTransitionTrigger trigger)
-        {
-            trigger.OnTransitionBegin -= OnGateTransitionBegin;
-            trigger.OnTransitionEnd -= OnGateTransitionEnd;
-        }
-
-    
-        private void OnGateTransitionBegin(RoomTransitionTrigger performer, bool vertical, bool positionFlag)
+        private void OnRoomUnload(RoomSpawnManager roomSpawnManager)
         {
             if (ControllerIsActive)
             {
@@ -129,7 +134,7 @@ namespace SQZL.Entity.Enemy
             }
         }
 
-        private void OnGateTransitionEnd(RoomTransitionTrigger performer, bool vertical, bool positionFlag)
+        private void OnRoomLoad(RoomSpawnManager roomSpawnManager)
         {
             if (!ControllerIsActive)
             {

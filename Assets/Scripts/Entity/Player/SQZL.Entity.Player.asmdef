@@ -1,0 +1,22 @@
+{
+    "name": "SQZL.Entity.Player",
+    "rootNamespace": "SQZL",
+    "references": [
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:2bafac87e7f4b9b418d9448d219b01ab",
+        "GUID:3a9781db4804a9945b9883f3a7c46d45",
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:70086e4082df6c2439f3937141cf17f7",
+        "GUID:c4b26c7b53037eb47b0b71d33e00677b",
+        "GUID:092bb18b177b3784c9dbc37f40ae393c"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

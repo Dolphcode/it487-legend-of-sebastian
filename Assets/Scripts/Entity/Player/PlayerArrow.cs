@@ -35,7 +35,7 @@ namespace SQZL.Entity.Player
                 //   ||
                 //  \ /
                 BaseEntityDamageHandler ent = other.gameObject.GetComponent<BaseEntityDamageHandler>();
-                ent.TryDamage(/*new Vector2Int(Mathf.RoundToInt(moveDirection.x), Mathf.RoundToInt(moveDirection.y)), */1);
+                ent.TryDamage(/*new Vector2Int(Mathf.RoundToInt(moveDirection.x), Mathf.RoundToInt(moveDirection.y)), */1, false, TilebodyDirection.Down);
                 
                 Destroy(gameObject);
                 //add logic for hurting enemy here? idk lol

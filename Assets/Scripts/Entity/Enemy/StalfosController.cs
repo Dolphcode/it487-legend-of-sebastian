@@ -1,11 +1,10 @@
 ﻿using UnityEngine;
+using SQZL.World.Interactable;
 
 namespace SQZL.Entity.Enemy
 {
     public class StalfosController : TileEnemyController
     {
-        private SpriteRenderer _sprite;
-        
         protected override void Start()
         {
             base.Start();
@@ -23,19 +22,19 @@ namespace SQZL.Entity.Enemy
             }
         }
 
-        public override void TryDamage(int amount)
+        public override void TryDamage(int amount, bool knockback, TilebodyDirection attackDir)
         {
             if (iframes <= 0f)
             {
                 currentHP -= amount;
                 if (currentHP <= 0f)
                 {
+                    base.DisconnectSpawnManager();
                     Destroy(gameObject);
-                    foreach(RoomTransitionTrigger trigger in gates) base.DisconnectGate(trigger);
                 }
                 else
                 {
-                    StartCoroutine(base.KnockbackCoroutine());
+                    StartCoroutine(base.KnockbackCoroutine(attackDir));
                 }
             }
         }

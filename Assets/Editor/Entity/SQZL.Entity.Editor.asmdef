@@ -1,0 +1,22 @@
+{
+    "name": "SQZL.Entity.Editor",
+    "rootNamespace": "SQZL",
+    "references": [
+        "UnityEditor.UI",
+        "UnityEngine.UI",
+        "SQZL.Entity",
+        "SQZL.Entity.Enemy",
+        "SQZL.World.Interactable"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using SQZL.Entity.Player;
 
 namespace SQZL.Entity
 {
@@ -10,8 +9,16 @@ namespace SQZL.Entity
         [SerializeField] private string targetTag;
         [SerializeField] private int damageAmount;
 
+        [SerializeField] private bool doKnockback = false;
         // Components
         private Collider2D _hurtboxCollider;
+
+        private TilebodyDirection _attackDirection = TilebodyDirection.Down;
+        public TilebodyDirection AttackDirection
+        {
+            set { _attackDirection = (value != TilebodyDirection.Diagonal) ? value : _attackDirection;}
+            get { return _attackDirection; }
+        }
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
@@ -31,7 +38,7 @@ namespace SQZL.Entity
             BaseEntityDamageHandler hitbox;
             if (other.gameObject.CompareTag(targetTag) && other.TryGetComponent(out hitbox))
             {
-                hitbox.TryDamage(damageAmount);
+                hitbox.TryDamage(damageAmount, doKnockback, _attackDirection);
             }
         }
     }

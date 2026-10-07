@@ -1,0 +1,25 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/Editor/Tool/CSSG/ColorSwapSurfaceGenerator.uss?fileID=7433441132597879392&amp;guid=56efbfd94cba68c41bca7adef0069996&amp;type=3#ColorSwapSurfaceGenerator"/>
+    <ui:VisualElement name="root" style="flex-grow: 1;">
+        <ui:TwoPaneSplitView name="tool-view" style="flex-grow: 1;">
+            <ui:ListView name="left-pane"/>
+            <ui:TwoPaneSplitView name="right-pane" orientation="Vertical" style="flex-grow: 1;">
+                <ui:VisualElement name="control-panel" style="flex-direction: row;">
+                    <ui:Image name="swap-asset-sprite"/>
+                    <ui:VisualElement name="asset-info" style="flex-grow: 1;">
+                        <ui:Label text="Asset Info" name="asset-info-label"/>
+                        <ui:Label text="None Selected" name="bin-count-label"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="control-buttons" style="flex-grow: 1; align-content: flex-start; align-items: stretch; justify-content: flex-start; align-self: auto; flex-wrap: nowrap;">
+                        <ui:Label text="Swap Asset Manager" name="control-label" style="flex-shrink: 1;"/>
+                        <ui:Label text="Path Goes Here" name="path-selected" style="flex-grow: 1; flex-shrink: 1;"/>
+                        <ui:Button text="Select File" name="select-file" style="flex-grow: 0; flex-shrink: 1;"/>
+                        <ui:Button text="Generate" name="generate" style="flex-shrink: 1;"/>
+                        <ui:Button text="Apply&#10;" name="apply" style="align-self: auto; flex-grow: 1; flex-shrink: 1;"/>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:Image name="sprite-preview" source="project://database/Assets/Resources/Zelda/UI%20Stuffs/LIFE.png?fileID=2800000&amp;guid=0d045e97fee48124ebabeb39d2f7664f&amp;type=3#LIFE"/>
+            </ui:TwoPaneSplitView>
+        </ui:TwoPaneSplitView>
+    </ui:VisualElement>
+</ui:UXML>
