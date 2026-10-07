@@ -355,7 +355,7 @@ GameObject:
   m_Layer: 0
   m_Name: Aquamentus
   m_TagString: Enemy
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 2800000, guid: 5c88edcefd180194e9b578f20faf08f0, type: 3}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -6657,10 +6657,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.20000002
+    x: 0.13984376
     y: 0
-    width: 0.6
-    height: 1
+    width: 0.09750001
+    height: 0.1625
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 34
