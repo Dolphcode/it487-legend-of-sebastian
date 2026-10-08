@@ -708,6 +708,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
   currentHealth: 6
+  hurtSound: {fileID: 8300000, guid: 147e0be3070c3a44ca1cdcb740970691, type: 3}
   pcScript: {fileID: 7462067368277283565}
   Heart1: {fileID: 8502029282719762369}
   Heart2: {fileID: 1002205975303250779}
@@ -788,11 +789,13 @@ MonoBehaviour:
   swordOffset: 0.8
   arrowPrefab: {fileID: 5745978206075673744, guid: eee66bf0da13af54fa1c1cdb957eb2b8, type: 3}
   arrowSpawnOffset: 0.5
+  hasBomb: 1
+  hasBow: 0
+  hasBoomerang: 0
   knockbackTime: 0.25
   knockbackTilesMax: 6
   iframeTime: 0.5
   swordSound: {fileID: 8300000, guid: 3cb2a9dada3b6a9438e3e2e5a2d3d4a9, type: 3}
-  hurtSound: {fileID: 0}
   _transitionHandler: {fileID: 4411489700460924941}
 --- !u!114 &7879077194045855388
 MonoBehaviour:

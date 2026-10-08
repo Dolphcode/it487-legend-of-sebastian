@@ -9,6 +9,8 @@ namespace SQZL.Entity.Player
         //This means that half a heart = 1 health and 1 full heart = 2 health. Keep this in mind when doing damage values.
         private int maxHealth;
         public int currentHealth;
+        [SerializeField] public AudioClip hurtSound;
+        private AudioSource audioSource;
         [SerializeField] private PlayerEntityController pcScript;
 
         [Header("Heart UI")] [SerializeField] Image Heart1;
@@ -27,6 +29,7 @@ namespace SQZL.Entity.Player
             //so it's best to create a max health and current health variable.
             maxHealth = 6;
             currentHealth = maxHealth;
+            audioSource = GetComponent<AudioSource>();
         }
 
         public override void TryDamage(int amount, bool knockback, TilebodyDirection attackDir)
@@ -34,6 +37,7 @@ namespace SQZL.Entity.Player
             if (pcScript.IFrames <= 0f)
             {
                 currentHealth -= amount;
+                audioSource.PlayOneShot(hurtSound);
 
                 pcScript.TriggerIframes();
                 if (knockback) pcScript.StartCoroutine(pcScript.KnockbackCoroutine());

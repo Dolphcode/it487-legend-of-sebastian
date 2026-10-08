@@ -39,8 +39,10 @@ namespace SQZL.Entity.Player
         public bool hasBow = false;
         public bool hasBoomerang = false;
         private List<SecondaryType> unlockedSecondaries = new List<SecondaryType>();
-        private int currentSecondaryIndex;
-
+        private int currentSecondaryIndex = 0;
+        public SecondaryType CurrentSecondary => unlockedSecondaries.Count > 0
+            ? unlockedSecondaries [currentSecondaryIndex]
+            : SecondaryType.Bomb;
 
         [Header("Knockback Config")] [SerializeField]
         private float knockbackTime = 0.5f;
@@ -50,7 +52,6 @@ namespace SQZL.Entity.Player
 
         [Header ("Sounds")]
         public AudioClip swordSound;
-        public AudioClip hurtSound;
 
         [Header("Transition")] [SerializeField]
         private TransitionHandler _transitionHandler;
@@ -109,6 +110,9 @@ namespace SQZL.Entity.Player
             
             // Save the current y position
             lastPosition = transform.position;
+
+            //Get the initial list of unlocked secondaries
+            RefreshUnlockedSecondaries();
         }
 
         // Update is called once per frame
@@ -143,7 +147,7 @@ namespace SQZL.Entity.Player
 
         private void CycleSecondaryItem()
         {
-            
+            Debug.Log("Swapping to" /*+ item name*/);
         }
         
         void FixedUpdate()
@@ -490,7 +494,45 @@ namespace SQZL.Entity.Player
             _animator.SetBool(_animMovingId, walking);
         }
         #endregion
+    
+        #region UNLOCKS
+        /// <summary>
+        /// Methods to unlock different secondaries, can call these whenever picking up the Boomerang from the Goriya and the Bow from the 2D Room.
+        /// </summary>
+        public void UnlockBoomerang()
+        {
+            hasBow = true;
+            RefreshUnlockedSecondaries();
+            currentSecondaryIndex = unlockedSecondaries.IndexOf(SecondaryType.Boomerang);
+            Debug.Log("Boomerang Unlocked");
+        }
+
+        public void UnlockBow()
+        {
+            hasBoomerang = true;
+            RefreshUnlockedSecondaries();
+            currentSecondaryIndex = unlockedSecondaries.IndexOf(SecondaryType.Boomerang);
+            Debug.Log("Bow Unlocked!");
+        }
         
+        public void RefreshUnlockedSecondaries()
+        {
+            unlockedSecondaries.Clear();
+
+            if (hasBomb) unlockedSecondaries.Add(SecondaryType.Bomb);
+            if (hasBow) unlockedSecondaries.Add(SecondaryType.Bow);
+            if (hasBoomerang) unlockedSecondaries.Add(SecondaryType.Boomerang);
+
+            if (unlockedSecondaries.Count == 0)
+            {
+                currentSecondaryIndex = 0;
+                return;
+            }
+
+            //Keep index within ranges if size changes  
+            currentSecondaryIndex = currentSecondaryIndex % unlockedSecondaries.Count;
+        }
+        #endregion
         #region ATTACKS
         IEnumerator Primary()
         {
@@ -548,6 +590,26 @@ namespace SQZL.Entity.Player
 
         private void ExecuteSecondaryAttack(TilebodyDirection dir)
         {
+            if (unlockedSecondaries.Count == 0) return;
+
+            switch (CurrentSecondary)
+            {
+                case SecondaryType.Bomb:
+                    //Spawn le bomb
+                    Debug.Log("Used Bomb");
+                    break;
+                case SecondaryType.Bow:
+                    FireArrow(dir);
+                    break;
+                case SecondaryType.Boomerang:
+                    //Spawn le boomerang
+                    Debug.Log("Used Boomerang");
+                    break;
+            }
+        }
+
+        private void FireArrow(TilebodyDirection dir)
+        {
             if (arrowPrefab == null) return;
 
             if (_inventory.GetConsumableAmount("rupee") > 0)
@@ -591,7 +653,6 @@ namespace SQZL.Entity.Player
             {
                 playerArrowScript.Initialize(fireDirection);
             }
-
         }
         #endregion
         
