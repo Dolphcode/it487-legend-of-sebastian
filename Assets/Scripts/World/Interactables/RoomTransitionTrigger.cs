@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -52,6 +53,9 @@ namespace SQZL.World.Interactable
         private Camera mainCamera2D;
         private bool positionFlag;
 
+        public event Action PreTransition;
+        public event Action PostTransition;
+
 
         private void Start()
         {
@@ -87,6 +91,7 @@ namespace SQZL.World.Interactable
                 if (player.playerInputFrozen) return; // If player is being moved right now don't do anything
                 if (RoomManager._Instance.CurrentRoomReference != associatedRoom) return;
                 player.playerInputFrozen = true;
+                PreTransition?.Invoke();
                 RoomManager._Instance.UnloadRoom();
                 StartCoroutine(CameraTransitionCoroutine(player));
             }
@@ -158,6 +163,7 @@ namespace SQZL.World.Interactable
             // Animation has ended
             if (positionFlag) RoomManager._Instance.LoadRoom(bRoom);
             else RoomManager._Instance.LoadRoom(aRoom);
+            PostTransition?.Invoke();
         }
         
         [System.Serializable]
