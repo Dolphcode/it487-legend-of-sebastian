@@ -452,7 +452,7 @@ namespace SQZL.Entity.Player
             transform.position = position;
             lastPosition = position;
             deltaPosition = Vector3.zero;
-            _camera2D.gameObject.transform.position = camPos;
+            _camera2D.gameObject.transform.position = new Vector3(camPos.x, camPos.y, _camera2D.gameObject.transform.position.z);
         }
 
         /// <summary>

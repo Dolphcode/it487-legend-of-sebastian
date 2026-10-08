@@ -785,7 +785,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &271422627
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5149,8 +5149,10 @@ MonoBehaviour:
   swapTiles:
   - tileToSwap: {x: -20, y: 2, z: 0}
     swapTo: {fileID: 11400000, guid: c02c5ff2007ed454f9646bd70bd52815, type: 2}
+    clearTile: 0
   - tileToSwap: {x: -19, y: 2, z: 0}
     swapTo: {fileID: 11400000, guid: 2f51d79b82941744c8912c699baaed2f, type: 2}
+    clearTile: 0
 --- !u!61 &1092198369
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5216,7 +5218,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1139989464
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6021,8 +6023,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LockedGate
   wallLayer: {fileID: 1892601857}
   swapTiles:
-  - tileToSwap: {x: 3, y: -2, z: 0}
+  - tileToSwap: {x: 3, y: 9, z: 0}
     swapTo: {fileID: 0}
+    clearTile: 1
 --- !u!61 &1277143175
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -6895,8 +6898,10 @@ MonoBehaviour:
   swapTiles:
   - tileToSwap: {x: -4, y: -20, z: 0}
     swapTo: {fileID: 11400000, guid: c02c5ff2007ed454f9646bd70bd52815, type: 2}
+    clearTile: 0
   - tileToSwap: {x: -3, y: -20, z: 0}
     swapTo: {fileID: 11400000, guid: 2f51d79b82941744c8912c699baaed2f, type: 2}
+    clearTile: 0
 --- !u!61 &1392426313
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -29996,10 +30001,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.033333335
+    x: 0.20000002
     y: 0
-    width: 0.26666668
-    height: 0.44444445
+    width: 0.6
+    height: 1
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 34
