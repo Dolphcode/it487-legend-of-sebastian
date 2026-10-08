@@ -14,6 +14,9 @@ namespace SQZL.Entity.Enemy
             _sprite = GetComponent<SpriteRenderer>();
             _animator = GetComponent<Animator>();
             _a_Damaged = Animator.StringToHash("Damaged");
+
+            _sprite.enabled = false;
+            ControllerIsActive = false;
         }
 
         private float waitTime = 0f;
@@ -70,12 +73,14 @@ namespace SQZL.Entity.Enemy
         public override void OnSpawn()
         {
             base.OnSpawn();
+            ControllerIsActive = true;
             _sprite.enabled = true;
         }
 
         public override void OnDespawn()
         {
             base.OnDespawn();
+            ControllerIsActive = false;
             _sprite.enabled = false;
         }
 
