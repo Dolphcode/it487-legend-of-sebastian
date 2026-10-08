@@ -23,12 +23,14 @@ namespace SQZL.Entity.Player
             Destroy(gameObject, explosionDuration);
         }
 
-        private void OEnter2D(Collider2D other)
+        private void OnTriggerEnter2D(Collider2D other)
         {
+            Debug.Log("Detected" + other.gameObject.name);
             if (other.CompareTag("Enemy"))
             {
                 BaseEntityDamageHandler ent = other.gameObject.GetComponent<BaseEntityDamageHandler>();
                 ent.TryDamage(4, false, TilebodyDirection.Down);
+                Debug.Log("Thingy is an enemy");
             }
         }
     }
