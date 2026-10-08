@@ -6,6 +6,7 @@ using UnityEngine.Tilemaps;
 using SQZL.UI;
 using SQZL.World;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 namespace SQZL.Entity.Player
 {
@@ -34,10 +35,14 @@ namespace SQZL.Entity.Player
         [SerializeField] private float arrowSpawnOffset = 0.5f;
 
 
-        [Header("Secondaries Unlocked")]
+        [Header("Secondary Stuff")]
         public bool hasBomb = true;
         public bool hasBow = false;
         public bool hasBoomerang = false;
+        [SerializeField] Image SecondaryImage;
+        [SerializeField] Sprite bowSprite;
+        [SerializeField] Sprite bombSprite;
+        [SerializeField] Sprite boomerangSprite;
         private List<SecondaryType> unlockedSecondaries = new List<SecondaryType>();
         private int currentSecondaryIndex = 0;
         public SecondaryType CurrentSecondary => unlockedSecondaries.Count > 0
@@ -143,11 +148,28 @@ namespace SQZL.Entity.Player
             {
                 CycleSecondaryItem();
             }
+
+            switch (CurrentSecondary)
+            {
+                //Updates the UI to account for what weapon we currently have
+                case SecondaryType.Bomb:
+                    SecondaryImage.sprite = bombSprite;
+                    break;
+                case SecondaryType.Boomerang:
+                    SecondaryImage.sprite = boomerangSprite;
+                    break;
+                case SecondaryType.Bow:
+                    SecondaryImage.sprite = bowSprite;
+                    break;
+            }
         }
 
         private void CycleSecondaryItem()
         {
-            Debug.Log("Swapping to" /*+ item name*/);
+            //if (unlockedSecondaries.Count <= 1) return;
+
+            currentSecondaryIndex = (currentSecondaryIndex + 1) % unlockedSecondaries.Count;
+            Debug.Log($"Swapped to: {CurrentSecondary}");
         }
         
         void FixedUpdate()
