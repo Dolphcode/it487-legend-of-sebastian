@@ -30,6 +30,8 @@ namespace SQZL.Entity.Enemy
             _a_Damaged = Animator.StringToHash("Damaged");
             
             timeToNextFire = Random.Range(minTimeToFire, maxTimeToFire);
+            _sprite.enabled = false;
+            ControllerIsActive = false;
         }
 
         protected override void FixedUpdate()
@@ -88,6 +90,7 @@ namespace SQZL.Entity.Enemy
         public override void OnSpawn()
         {
             base.OnSpawn();
+            ControllerIsActive = true;
             _sprite.enabled = true;
         }
 
@@ -95,6 +98,7 @@ namespace SQZL.Entity.Enemy
         {
             base.OnDespawn();
             _sprite.enabled = false;
+            ControllerIsActive = false;
             _animator.SetBool(_a_Damaged, false);
         }
     }
