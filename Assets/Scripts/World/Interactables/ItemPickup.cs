@@ -11,11 +11,10 @@ namespace SQZL.World.Interactable
 
         [SerializeField] private string identifier;
         [SerializeField] private int amount;
-
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
-
+            
         }
 
         // Update is called once per frame
@@ -34,6 +33,10 @@ namespace SQZL.World.Interactable
                 if (isCollectible)
                 {
                     inv.AccumulateConsumable(identifier, amount);
+                    if (identifier == "rupee")
+                    {
+                        Debug.Log("Rupee");
+                    }
                 }
                 else
                 {

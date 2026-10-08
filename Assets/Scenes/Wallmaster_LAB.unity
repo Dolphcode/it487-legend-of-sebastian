@@ -18039,6 +18039,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1672063891142741221, guid: 6382c41d23cd16245a1c8bd9ef80c374, type: 3}
+      propertyPath: rupeeSound
+      value: 
+      objectReference: {fileID: 8300000, guid: dd25a98812327754abd8243646fad5b2, type: 3}
     - target: {fileID: 1930358375876782323, guid: 6382c41d23cd16245a1c8bd9ef80c374, type: 3}
       propertyPath: m_Camera
       value: 

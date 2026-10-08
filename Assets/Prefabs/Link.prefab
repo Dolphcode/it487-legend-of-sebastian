@@ -907,6 +907,7 @@ MonoBehaviour:
   inv: {fileID: 575397331308366522}
   rupees: {fileID: 466648016625930635}
   keys: {fileID: 1374805773002788729}
+  rupeeSound: {fileID: 8300000, guid: dd25a98812327754abd8243646fad5b2, type: 3}
 --- !u!114 &7462067368277283565
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -951,7 +952,7 @@ MonoBehaviour:
   knockbackTime: 0.25
   knockbackTilesMax: 6
   iframeTime: 0.5
-  swordSound: {fileID: 8300000, guid: 3cb2a9dada3b6a9438e3e2e5a2d3d4a9, type: 3}
+  swordSound: {fileID: 8300000, guid: f9205f122fd728843ae80513e89157dc, type: 3}
   _transitionHandler: {fileID: 4411489700460924941}
 --- !u!114 &7879077194045855388
 MonoBehaviour:
