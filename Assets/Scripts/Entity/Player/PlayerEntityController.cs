@@ -464,6 +464,18 @@ namespace SQZL.Entity.Player
             _animator.SetInteger(_animDirectionId, (int)direction);
             _animator.SetBool(_animMovingId, walking);
         }
+
+        public void WaitForTime(float waitTime)
+        {
+            StartCoroutine(FreezeEnumerator(waitTime));
+        }
+
+        private IEnumerator FreezeEnumerator(float waitTime)
+        {
+            playerInputFrozen = true;
+            yield return new WaitForSeconds(waitTime);
+            playerInputFrozen = false;
+        }
         #endregion
         
         #region ATTACKS

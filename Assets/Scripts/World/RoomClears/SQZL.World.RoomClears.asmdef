@@ -3,7 +3,9 @@
     "rootNamespace": "SQZL",
     "references": [
         "GUID:fb55f41e2825b2e41afe13ac737911d0",
-        "GUID:3a9781db4804a9945b9883f3a7c46d45"
+        "GUID:3a9781db4804a9945b9883f3a7c46d45",
+        "GUID:70086e4082df6c2439f3937141cf17f7",
+        "GUID:922909577fe620a47a82cd85e080c815"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
