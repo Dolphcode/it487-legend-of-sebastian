@@ -1,9 +1,9 @@
 using System.Collections;
-using NUnit.Framework.Constraints;
 using SQZL.Entity;
 using SQZL.Entity.Player;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using SQZL.World.Interactable;
 
 namespace SQZL.World.RoomClears
 {
@@ -19,9 +19,30 @@ namespace SQZL.World.RoomClears
         private bool swapsTiles;
         [SerializeField] private Tilemap wallLayer;
         [SerializeField] private TileSwapEntry[] tileSwapEntries;
+
+        [Header("Reset Config")] [SerializeField]
+        private bool resetWithTransition;
+
+        [SerializeField] private RoomTransitionTrigger trigger;
         
         private bool triggered = false;
         private bool canBeTriggered = false;
+        private Vector3 originalPosition;
+
+        protected override void Start()
+        {
+            base.Start();
+            originalPosition = transform.position;
+            if (resetWithTransition)
+            {
+                trigger.PreTransition += ResetTile;
+            }
+        }
+
+        private void ResetTile()
+        {
+            transform.position = originalPosition;
+        }
         
         public override void OnRoomClear()
         {

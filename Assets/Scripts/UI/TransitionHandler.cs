@@ -14,7 +14,7 @@ namespace SQZL.UI
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
-            _animator = GetComponent<Animator>();
+            _animator = gameObject.GetComponent<Animator>();
             _a_TriggerSlide = Animator.StringToHash("TriggerSlide");
         }
 

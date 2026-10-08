@@ -271,6 +271,7 @@ MonoBehaviour:
   displayToggleTrigger: {fileID: 1024168487}
   textDisplay: {fileID: 450190993}
   timePerChar: 0.1
+  playerRef: {fileID: 286294496}
 --- !u!1 &72112367
 GameObject:
   m_ObjectHideFlags: 0
@@ -6526,15 +6527,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6428675686490230310, guid: 6382c41d23cd16245a1c8bd9ef80c374, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6428675686490230310, guid: 6382c41d23cd16245a1c8bd9ef80c374, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6428675686490230310, guid: 6382c41d23cd16245a1c8bd9ef80c374, type: 3}
       propertyPath: m_SizeDelta.x
-      value: -170.66666
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6445059896691141926, guid: 6382c41d23cd16245a1c8bd9ef80c374, type: 3}
       propertyPath: m_Name
@@ -6542,7 +6543,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6450106679707885394, guid: 6382c41d23cd16245a1c8bd9ef80c374, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -10343,7 +10344,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b65850c5e85d4634b92a14e0a531ab41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: SQZL.World.RoomClears::SQZL.World.RoomClears.PushableBlock
-  pushDirection: 0
+  pushDirection: 1
   unitsToMove: 2
   timeToMove: 0.5
   swapsTiles: 1
@@ -10352,6 +10353,8 @@ MonoBehaviour:
   - tileToSwap: {x: -26, y: 9, z: 0}
     swapTo: {fileID: 0}
     clearTile: 1
+  resetWithTransition: 1
+  trigger: {fileID: 1153632455}
 --- !u!61 &1693972344
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -8,7 +8,7 @@ namespace SQZL.World.RoomClears
         private RoomEntityTracker tracker;
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
+        protected virtual void Start()
         {
             if (!transform.parent.TryGetComponent<RoomEntityTracker>(out tracker))
             {
