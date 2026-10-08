@@ -888,9 +888,11 @@ MonoBehaviour:
   - name: bomb
     startingCount: 0
   unlockableEntries:
-  - name: sword
+  - name: Bomb
+    startsWith: 1
+  - name: Bow
     startsWith: 0
-  - name: bow
+  - name: Boomerang
     startsWith: 0
 --- !u!114 &1672063891142741221
 MonoBehaviour:
@@ -942,9 +944,6 @@ MonoBehaviour:
   swordOffset: 0.8
   arrowPrefab: {fileID: 5745978206075673744, guid: eee66bf0da13af54fa1c1cdb957eb2b8, type: 3}
   arrowSpawnOffset: 0.5
-  hasBomb: 1
-  hasBow: 0
-  hasBoomerang: 0
   SecondaryImage: {fileID: 6350862045700796130}
   bowSprite: {fileID: 21300326, guid: 45afd34443b96473598b76e2b1778b4e, type: 3}
   bombSprite: {fileID: 21300292, guid: 45afd34443b96473598b76e2b1778b4e, type: 3}

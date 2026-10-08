@@ -35,19 +35,20 @@ namespace SQZL.Entity.Player
         [SerializeField] private float arrowSpawnOffset = 0.5f;
 
 
-        [Header("Secondary Stuff")]
-        public bool hasBomb = true;
-        public bool hasBow = false;
-        public bool hasBoomerang = false;
+        [Header("Secondary UI")]
         [SerializeField] Image SecondaryImage;
         [SerializeField] Sprite bowSprite;
         [SerializeField] Sprite bombSprite;
         [SerializeField] Sprite boomerangSprite;
+
+        //Secondary things
         private List<SecondaryType> unlockedSecondaries = new List<SecondaryType>();
         private int currentSecondaryIndex = 0;
+
         public SecondaryType CurrentSecondary => unlockedSecondaries.Count > 0
             ? unlockedSecondaries [currentSecondaryIndex]
             : SecondaryType.Bomb;
+
 
         [Header("Knockback Config")] [SerializeField]
         private float knockbackTime = 0.5f;
@@ -115,9 +116,18 @@ namespace SQZL.Entity.Player
             
             // Save the current y position
             lastPosition = transform.position;
+            
+            if (_inventory != null)
+            {
+                _inventory.OnUnlockableUpdated += OnInventoryUnlockableUpdated;
+            }
 
             //Get the initial list of unlocked secondaries
             RefreshUnlockedSecondaries();
+
+            //Testing these to make sure that weapon swapping works, delete them or turn them back into comments in the final build.
+            UnlockBow();
+            UnlockBoomerang();
         }
 
         // Update is called once per frame
@@ -148,28 +158,6 @@ namespace SQZL.Entity.Player
             {
                 CycleSecondaryItem();
             }
-
-            switch (CurrentSecondary)
-            {
-                //Updates the UI to account for what weapon we currently have
-                case SecondaryType.Bomb:
-                    SecondaryImage.sprite = bombSprite;
-                    break;
-                case SecondaryType.Boomerang:
-                    SecondaryImage.sprite = boomerangSprite;
-                    break;
-                case SecondaryType.Bow:
-                    SecondaryImage.sprite = bowSprite;
-                    break;
-            }
-        }
-
-        private void CycleSecondaryItem()
-        {
-            //if (unlockedSecondaries.Count <= 1) return;
-
-            currentSecondaryIndex = (currentSecondaryIndex + 1) % unlockedSecondaries.Count;
-            Debug.Log($"Swapped to: {CurrentSecondary}");
         }
         
         void FixedUpdate()
@@ -192,7 +180,15 @@ namespace SQZL.Entity.Player
             
             SetAnimatorState(xIn != 0 || yIn != 0, Facing);
         }
-        
+
+        private void ODestroy()
+        {
+            if (_inventory != null)
+            {
+                _inventory.OnUnlockableUpdated -= OnInventoryUnlockableUpdated;
+            }
+        }
+
         #region MOVEMENT
         private void MovePlayer(float moveSpeed, int xIn, int yIn, bool lockFacing = false)
         {
@@ -521,29 +517,41 @@ namespace SQZL.Entity.Player
         /// <summary>
         /// Methods to unlock different secondaries, can call these whenever picking up the Boomerang from the Goriya and the Bow from the 2D Room.
         /// </summary>
+        
+        private void OnInventoryUnlockableUpdated(string itemKey, bool state)
+        {
+            RefreshUnlockedSecondaries();
+
+            if (state && Enum.TryParse<SecondaryType>(itemKey, true, out var newType))
+            {
+                int index = unlockedSecondaries.IndexOf(newType);
+                if (index != -1) currentSecondaryIndex = index;
+            }
+
+            UpdateSecondaryUI();
+        }
+
+
         public void UnlockBoomerang()
         {
-            hasBow = true;
-            RefreshUnlockedSecondaries();
-            currentSecondaryIndex = unlockedSecondaries.IndexOf(SecondaryType.Boomerang);
-            Debug.Log("Boomerang Unlocked");
+            _inventory?.ToggleUnlockable("Boomerang", true);
         }
 
         public void UnlockBow()
         {
-            hasBoomerang = true;
-            RefreshUnlockedSecondaries();
-            currentSecondaryIndex = unlockedSecondaries.IndexOf(SecondaryType.Boomerang);
-            Debug.Log("Bow Unlocked!");
+            _inventory?.ToggleUnlockable("Bow", true);
         }
         
         public void RefreshUnlockedSecondaries()
         {
             unlockedSecondaries.Clear();
-
-            if (hasBomb) unlockedSecondaries.Add(SecondaryType.Bomb);
-            if (hasBow) unlockedSecondaries.Add(SecondaryType.Bow);
-            if (hasBoomerang) unlockedSecondaries.Add(SecondaryType.Boomerang);
+            
+            if (_inventory != null)
+            {
+                if (_inventory.HasUnlockable("Bomb")) unlockedSecondaries.Add(SecondaryType.Bomb);
+                if (_inventory.HasUnlockable("Bow")) unlockedSecondaries.Add(SecondaryType.Bow);
+                if (_inventory.HasUnlockable("Boomerang")) unlockedSecondaries.Add(SecondaryType.Boomerang);
+            }
 
             if (unlockedSecondaries.Count == 0)
             {
@@ -551,8 +559,43 @@ namespace SQZL.Entity.Player
                 return;
             }
 
-            //Keep index within ranges if size changes  
-            currentSecondaryIndex = currentSecondaryIndex % unlockedSecondaries.Count;
+            currentSecondaryIndex %= unlockedSecondaries.Count;
+            UpdateSecondaryUI();
+        }
+
+        private void CycleSecondaryItem()
+        {
+            if (unlockedSecondaries.Count <= 1) return;
+
+            currentSecondaryIndex = (currentSecondaryIndex + 1) % unlockedSecondaries.Count;
+            UpdateSecondaryUI();
+            Debug.Log($"Swapped to: {CurrentSecondary}");
+        }
+
+        private void UpdateSecondaryUI()
+        {
+            if (SecondaryImage == null) return;
+
+            if (unlockedSecondaries.Count == 0)
+            {
+                //No secondaries, no image.
+                SecondaryImage.enabled = false;
+                return;
+            }
+
+            SecondaryImage.enabled = true;
+            switch(CurrentSecondary)
+            {
+                case SecondaryType.Bomb:
+                    SecondaryImage.sprite = bombSprite;
+                    break;
+                case SecondaryType.Bow:
+                    SecondaryImage.sprite = bowSprite;
+                    break;
+                case SecondaryType.Boomerang:
+                    SecondaryImage.sprite = boomerangSprite;
+                    break;
+            }
         }
         #endregion
         #region ATTACKS
