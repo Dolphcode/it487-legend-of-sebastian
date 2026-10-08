@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
-using SQZL.World.Interactable;
 
 namespace SQZL.Entity.Enemy
 {
@@ -48,33 +47,27 @@ namespace SQZL.Entity.Enemy
             boundsMin = new Vector2(walkableRegionOffset.x, walkableRegionOffset.y - (0.5f * _collider2D.bounds.size.y));
             boundsSize = new Vector2(walkableRegion.x * 2f - _collider2D.bounds.size.x,
                 walkableRegion.y * 2f - _collider2D.bounds.size.y);
-            Debug.Log($"Bounds Min: {boundsMin}, Bounds Size: {boundsSize}, Bounds Max: {boundsMin + boundsSize}, Walkable Region: {walkableRegionOffset}, Bounds: {_collider2D.bounds.size}, LocalScale: {transform.localScale}");
            
-            // Initialize State
-            localRoomPosition = new Vector2(transform.position.x - boundsMin.x, 
-                transform.position.y - boundsMin.y);
-            Debug.Log($"Starting position = {localRoomPosition}");
-            currentState = KeeseState.SPEEDING;
-            speed = 0f;
-            direction = Vector2.zero;
-            SelectDirection(); 
-            
             //  Initialize Random Weights
-           float[] flightStateRandomInit = { stayWeight, stayWeight + redirectWeight, stayWeight + redirectWeight + accelWeight };
-           this.flightStateRandom = flightStateRandomInit;
+            float[] flightStateRandomInit = { stayWeight, stayWeight + redirectWeight, stayWeight + redirectWeight + accelWeight };
+            this.flightStateRandom = flightStateRandomInit;
            
-           // Animator
-           _animator = GetComponent<Animator>();
+            // Animator
+            _animator = GetComponent<Animator>();
            
-           // Start Keese state machine
-           StartCoroutine(AccelerateState());
+            // Starting Keese state
+            _sprite.enabled = false;
+            ControllerIsActive = false;
         }
 
         protected override void FixedUpdate()
         {
+            if (!ControllerIsActive) return;
             transform.position = localRoomPosition + boundsMin;
             _animator.speed = Mathf.Clamp(speed / maxSpeed, 0f, 1f);
         }
+
+        private IEnumerator ActiveStateCoroutine;
 
         private IEnumerator AccelerateState()
         {
@@ -146,7 +139,8 @@ namespace SQZL.Entity.Enemy
                 
                 // Then select next state
                 currentState = KeeseState.SPEEDING;
-                StartCoroutine(AccelerateState());
+                ActiveStateCoroutine = AccelerateState();
+                StartCoroutine(ActiveStateCoroutine);
 
             } else if (currentState == KeeseState.SPEEDING)
             {
@@ -158,7 +152,8 @@ namespace SQZL.Entity.Enemy
                 }
                 
                 currentState = KeeseState.FLYING;
-                StartCoroutine(MoveState());
+                ActiveStateCoroutine = MoveState();
+                StartCoroutine(ActiveStateCoroutine);
             }
         }
 
@@ -213,16 +208,19 @@ namespace SQZL.Entity.Enemy
                 {
                     direction = -direction;
                 }
-                StartCoroutine(MoveState());
+                ActiveStateCoroutine = MoveState();
+                StartCoroutine(ActiveStateCoroutine);
             } else if (randValue < flightStateRandom[1])
             {
                 SelectDirection();
-                StartCoroutine(MoveState());
+                ActiveStateCoroutine = MoveState();
+                StartCoroutine(ActiveStateCoroutine);
             }
             else
             {
                 currentState = KeeseState.SLOWING;
-                StartCoroutine(AccelerateState());
+                ActiveStateCoroutine = AccelerateState();
+                StartCoroutine(ActiveStateCoroutine);
             }
 
         }
@@ -259,6 +257,7 @@ namespace SQZL.Entity.Enemy
                 if (currentHP <= 0f)
                 {
                     base.DisconnectSpawnManager();
+                    base.InvokeEnemyDeath();
                     Destroy(gameObject);
                 }
                 else
@@ -272,12 +271,28 @@ namespace SQZL.Entity.Enemy
         {
             base.OnSpawn();
             _sprite.enabled = true;
+            ControllerIsActive = true;
+            
+            localRoomPosition = new Vector2(transform.position.x - boundsMin.x, 
+                transform.position.y - boundsMin.y);
+            currentState = KeeseState.SPEEDING;
+            speed = 0f;
+            direction = Vector2.zero;
+            SelectDirection();
+
+            ActiveStateCoroutine = AccelerateState();
+            StartCoroutine(ActiveStateCoroutine);
         }
 
         public override void OnDespawn()
         {
             base.OnDespawn();
             _sprite.enabled = false;
+            ControllerIsActive = false;
+            if (!(ActiveStateCoroutine is null))
+            {
+                StopCoroutine(ActiveStateCoroutine);
+            }
         }
     }
 }

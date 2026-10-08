@@ -11,6 +11,8 @@ namespace SQZL.World
         [Header("Positional Config")] [SerializeField]
         private Transform cameraPosition;
 
+        
+        
         [SerializeField] private Transform warpPosition;
        
         public Transform WarpPosition { get => warpPosition; private set => warpPosition = value; }

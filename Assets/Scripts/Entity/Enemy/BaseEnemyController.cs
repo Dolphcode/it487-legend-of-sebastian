@@ -1,7 +1,7 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using SQZL.World.Interactable;
 using SQZL.World;
 
 namespace SQZL.Entity.Enemy
@@ -44,6 +44,16 @@ namespace SQZL.Entity.Enemy
         private RoomSpawnManager _spawnManager;
 
         public bool ControllerIsActive { protected set; get; } = true;
+
+        public event Action<BaseEnemyController> OnEnemyDeath;
+
+        /// <summary>
+        /// So that derived classes can invoke on enemy death
+        /// </summary>
+        protected void InvokeEnemyDeath()
+        {
+            OnEnemyDeath?.Invoke(this);
+        }
 
         /// <summary>
         /// PLEASE DO NOT OVERRIDE AWAKE. THIS WILL BE USED BY THE BASE ENEMY CONTROLLER TO SET UP BASE ENEMY STUFF

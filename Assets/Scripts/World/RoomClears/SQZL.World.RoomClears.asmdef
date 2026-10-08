@@ -1,0 +1,17 @@
+{
+    "name": "SQZL.World.RoomClears",
+    "rootNamespace": "SQZL",
+    "references": [
+        "GUID:fb55f41e2825b2e41afe13ac737911d0",
+        "GUID:3a9781db4804a9945b9883f3a7c46d45"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
