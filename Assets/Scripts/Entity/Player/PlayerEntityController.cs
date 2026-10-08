@@ -30,9 +30,11 @@ namespace SQZL.Entity.Player
         [SerializeField] private GameObject swordHitbox;
         [SerializeField] private float swordOffset = 0.8f;
 
-        [Header("Bow and Arrow Config")]
+        [Header("Secondary Config")]
         [SerializeField] private GameObject arrowPrefab;
         [SerializeField] private float arrowSpawnOffset = 0.5f;
+        [SerializeField] private GameObject bombPrefab;
+        [SerializeField] private GameObject boomerangPrefab;
 
 
         [Header("Secondary UI")]
@@ -124,10 +126,6 @@ namespace SQZL.Entity.Player
 
             //Get the initial list of unlocked secondaries
             RefreshUnlockedSecondaries();
-
-            //Testing these to make sure that weapon swapping works, delete them or turn them back into comments in the final build.
-            UnlockBow();
-            UnlockBoomerang();
         }
 
         // Update is called once per frame
@@ -661,6 +659,7 @@ namespace SQZL.Entity.Player
             {
                 case SecondaryType.Bomb:
                     //Spawn le bomb
+                    FireBomb(dir);
                     Debug.Log("Used Bomb");
                     break;
                 case SecondaryType.Bow:
@@ -672,7 +671,38 @@ namespace SQZL.Entity.Player
                     break;
             }
         }
+        private void FireBomb(TilebodyDirection dir)
+        {
+            if (bombPrefab == null) return;
 
+            if (_inventory.GetConsumableAmount("bomb") > 0)
+                _inventory.AccumulateConsumable("bomb", - 1);
+            else
+                return;
+            
+            Vector2 fireDirection = Vector2.down;
+
+            switch (dir)
+            {
+                case TilebodyDirection.Down:
+                    fireDirection = Vector2.down;
+                    break;
+                case TilebodyDirection.Right:
+                    fireDirection = Vector2.right;
+                    break;
+                case TilebodyDirection.Left:
+                    fireDirection = Vector2.left;
+                    break;
+                case TilebodyDirection.Up:
+                    fireDirection = Vector2.up;
+                    break;
+            }
+
+            Vector3 spawnPos = transform.position + (Vector3)(fireDirection * arrowSpawnOffset);
+
+            Quaternion spawnRotation = Quaternion.Euler(0f, 0f, 0f);
+            GameObject bombObj = Instantiate(bombPrefab, spawnPos, spawnRotation);
+        }
         private void FireArrow(TilebodyDirection dir)
         {
             if (arrowPrefab == null) return;
@@ -712,7 +742,7 @@ namespace SQZL.Entity.Player
             Quaternion spawnRotation = Quaternion.Euler(0f, 0f, zRotation);
             GameObject arrowObj = Instantiate(arrowPrefab, spawnPos, spawnRotation);
 
-            //
+            
             PlayerArrow playerArrowScript = arrowObj.GetComponent<PlayerArrow>();
             if (playerArrowScript != null)
             {

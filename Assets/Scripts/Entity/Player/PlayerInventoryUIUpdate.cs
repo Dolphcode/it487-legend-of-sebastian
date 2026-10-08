@@ -1,3 +1,4 @@
+using Codice.Client.BaseCommands;
 using TMPro;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ namespace SQZL.Entity.Player
         public PlayerInventory inv;
         public TextMeshProUGUI rupees;
         public TextMeshProUGUI keys;
+        public TextMeshProUGUI bombs;
         private AudioSource audioSource;
         public AudioClip rupeeSound;
 
@@ -20,18 +22,18 @@ namespace SQZL.Entity.Player
 
         private void UpdateConsumable(string name, int curr, int change)
         {
-            if (name == "rupee")
+            switch (name)
             {
-                rupees.text = $"{curr}";
-                Debug.Log("Updated Rupee Value. Change Value: " + change);
-                if (change > 0)
-                {
-                    audioSource.PlayOneShot(rupeeSound);
-                }
-            }
-            else if (name == "key")
-            {
-                keys.text = $"{curr}";
+                case "rupee":
+                    rupees.text = $"{curr}";
+                    if (change > 0) audioSource.PlayOneShot(rupeeSound);
+                    break;
+                case "key":
+                    keys.text = $"{curr}";
+                    break;
+                case "bomb":
+                    bombs.text =$"{curr}";
+                    break;
             }
         }
 

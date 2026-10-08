@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SQZL
+namespace SQZL.Entity.Player
 {
     public class Explosion : MonoBehaviour
     {
@@ -21,6 +21,15 @@ namespace SQZL
             explosionDuration = animator.GetCurrentAnimatorClipInfo(0).Length;
             audioSource.PlayOneShot(boomSound);
             Destroy(gameObject, explosionDuration);
+        }
+
+        private void OEnter2D(Collider2D other)
+        {
+            if (other.CompareTag("Enemy"))
+            {
+                BaseEntityDamageHandler ent = other.gameObject.GetComponent<BaseEntityDamageHandler>();
+                ent.TryDamage(4, false, TilebodyDirection.Down);
+            }
         }
     }
 }

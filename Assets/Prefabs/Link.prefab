@@ -909,6 +909,7 @@ MonoBehaviour:
   inv: {fileID: 575397331308366522}
   rupees: {fileID: 466648016625930635}
   keys: {fileID: 1374805773002788729}
+  bombs: {fileID: 7322597437966214205}
   rupeeSound: {fileID: 8300000, guid: dd25a98812327754abd8243646fad5b2, type: 3}
 --- !u!114 &7462067368277283565
 MonoBehaviour:
@@ -944,6 +945,8 @@ MonoBehaviour:
   swordOffset: 0.8
   arrowPrefab: {fileID: 5745978206075673744, guid: eee66bf0da13af54fa1c1cdb957eb2b8, type: 3}
   arrowSpawnOffset: 0.5
+  bombPrefab: {fileID: 8096689150842380967, guid: 556ca44617e32c74e92daa92133aab40, type: 3}
+  boomerangPrefab: {fileID: 0}
   SecondaryImage: {fileID: 6350862045700796130}
   bowSprite: {fileID: 21300326, guid: 45afd34443b96473598b76e2b1778b4e, type: 3}
   bombSprite: {fileID: 21300292, guid: 45afd34443b96473598b76e2b1778b4e, type: 3}
