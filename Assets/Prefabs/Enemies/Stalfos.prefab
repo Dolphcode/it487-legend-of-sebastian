@@ -316,4 +316,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SQZL.Entity.Hurtbox
   targetTag: Player
   damageAmount: 1
-  doKnockback: 0
+  doKnockback: 1

@@ -270,8 +270,8 @@ namespace SQZL.Entity.Enemy
         /// </summary>
         protected void PickDirection(int walkLimit = 999)
         {
-            Vector2Int currentTilePosition = new Vector2Int(Mathf.RoundToInt(transform.position.x - walkableRegionOffset.x),
-                Mathf.RoundToInt(transform.position.y - walkableRegionOffset.y)) / 2;
+            Vector2Int currentTilePosition = new Vector2Int(Mathf.FloorToInt((transform.position.x - walkableRegionOffset.x) / 2f),
+                Mathf.FloorToInt((transform.position.y - walkableRegionOffset.y) / 2f)) ;
             List<TilebodyDirection> validDirections = new List<TilebodyDirection>() {TilebodyDirection.Left, TilebodyDirection.Down, TilebodyDirection.Right, TilebodyDirection.Up};
             
             // Check alignment to restrict movement
