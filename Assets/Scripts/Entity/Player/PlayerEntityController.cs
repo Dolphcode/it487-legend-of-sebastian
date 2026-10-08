@@ -5,12 +5,19 @@ using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 using SQZL.UI;
 using SQZL.World;
+using System.Collections.Generic;
+using UnityEngine.UI;
 
 namespace SQZL.Entity.Player
 {
     public class PlayerEntityController : MonoBehaviour
     {
-        
+        public enum SecondaryType
+        {
+            Bomb,
+            Bow,
+            Boomerang,
+        }
         [Header("Player Movement & Collision Config")] [SerializeField] private float moveSpeed = 5f;
         [SerializeField] [Range(0f, 1.0e-4f)] private float blockTestThreshold = 1.0e-5f;
         [SerializeField] private float motionBias = 0.1f;
@@ -27,6 +34,22 @@ namespace SQZL.Entity.Player
         [SerializeField] private GameObject arrowPrefab;
         [SerializeField] private float arrowSpawnOffset = 0.5f;
 
+
+        [Header("Secondary UI")]
+        [SerializeField] Image SecondaryImage;
+        [SerializeField] Sprite bowSprite;
+        [SerializeField] Sprite bombSprite;
+        [SerializeField] Sprite boomerangSprite;
+
+        //Secondary things
+        private List<SecondaryType> unlockedSecondaries = new List<SecondaryType>();
+        private int currentSecondaryIndex = 0;
+
+        public SecondaryType CurrentSecondary => unlockedSecondaries.Count > 0
+            ? unlockedSecondaries [currentSecondaryIndex]
+            : SecondaryType.Bomb;
+
+
         [Header("Knockback Config")] [SerializeField]
         private float knockbackTime = 0.5f;
 
@@ -35,7 +58,6 @@ namespace SQZL.Entity.Player
 
         [Header ("Sounds")]
         public AudioClip swordSound;
-        public AudioClip hurtSound;
 
         [Header("Transition")] [SerializeField]
         private TransitionHandler _transitionHandler;
@@ -54,6 +76,7 @@ namespace SQZL.Entity.Player
         private Tilebody2D _tilebody2D;
         private PlayerInventory _inventory;
         private Camera _camera2D;
+        private AudioSource _audioSource;
         
         // Animator IDs
         private int _animMovingId, _animDirectionId;
@@ -78,6 +101,7 @@ namespace SQZL.Entity.Player
             _tilebody2D = GetComponent<Tilebody2D>();
             _inventory = GetComponent<PlayerInventory>();
             _camera2D = Camera.main;
+            _audioSource = GetComponent<AudioSource>();
             
             // Get animator ids
             _animMovingId = Animator.StringToHash("Moving");
@@ -92,6 +116,18 @@ namespace SQZL.Entity.Player
             
             // Save the current y position
             lastPosition = transform.position;
+            
+            if (_inventory != null)
+            {
+                _inventory.OnUnlockableUpdated += OnInventoryUnlockableUpdated;
+            }
+
+            //Get the initial list of unlocked secondaries
+            RefreshUnlockedSecondaries();
+
+            //Testing these to make sure that weapon swapping works, delete them or turn them back into comments in the final build.
+            UnlockBow();
+            UnlockBoomerang();
         }
 
         // Update is called once per frame
@@ -118,7 +154,10 @@ namespace SQZL.Entity.Player
                 ToggleGodMode();
             }
 
-            
+            if (switchAction.WasPressedThisFrame())
+            {
+                CycleSecondaryItem();
+            }
         }
         
         void FixedUpdate()
@@ -141,7 +180,15 @@ namespace SQZL.Entity.Player
             
             SetAnimatorState(xIn != 0 || yIn != 0, Facing);
         }
-        
+
+        private void ODestroy()
+        {
+            if (_inventory != null)
+            {
+                _inventory.OnUnlockableUpdated -= OnInventoryUnlockableUpdated;
+            }
+        }
+
         #region MOVEMENT
         private void MovePlayer(float moveSpeed, int xIn, int yIn, bool lockFacing = false)
         {
@@ -477,10 +524,96 @@ namespace SQZL.Entity.Player
             playerInputFrozen = false;
         }
         #endregion
+    
+        #region UNLOCKS
+        /// <summary>
+        /// Methods to unlock different secondaries, can call these whenever picking up the Boomerang from the Goriya and the Bow from the 2D Room.
+        /// </summary>
         
+        private void OnInventoryUnlockableUpdated(string itemKey, bool state)
+        {
+            RefreshUnlockedSecondaries();
+
+            if (state && Enum.TryParse<SecondaryType>(itemKey, true, out var newType))
+            {
+                int index = unlockedSecondaries.IndexOf(newType);
+                if (index != -1) currentSecondaryIndex = index;
+            }
+
+            UpdateSecondaryUI();
+        }
+
+
+        public void UnlockBoomerang()
+        {
+            _inventory?.ToggleUnlockable("Boomerang", true);
+        }
+
+        public void UnlockBow()
+        {
+            _inventory?.ToggleUnlockable("Bow", true);
+        }
+        
+        public void RefreshUnlockedSecondaries()
+        {
+            unlockedSecondaries.Clear();
+            
+            if (_inventory != null)
+            {
+                if (_inventory.HasUnlockable("Bomb")) unlockedSecondaries.Add(SecondaryType.Bomb);
+                if (_inventory.HasUnlockable("Bow")) unlockedSecondaries.Add(SecondaryType.Bow);
+                if (_inventory.HasUnlockable("Boomerang")) unlockedSecondaries.Add(SecondaryType.Boomerang);
+            }
+
+            if (unlockedSecondaries.Count == 0)
+            {
+                currentSecondaryIndex = 0;
+                return;
+            }
+
+            currentSecondaryIndex %= unlockedSecondaries.Count;
+            UpdateSecondaryUI();
+        }
+
+        private void CycleSecondaryItem()
+        {
+            if (unlockedSecondaries.Count <= 1) return;
+
+            currentSecondaryIndex = (currentSecondaryIndex + 1) % unlockedSecondaries.Count;
+            UpdateSecondaryUI();
+            Debug.Log($"Swapped to: {CurrentSecondary}");
+        }
+
+        private void UpdateSecondaryUI()
+        {
+            if (SecondaryImage == null) return;
+
+            if (unlockedSecondaries.Count == 0)
+            {
+                //No secondaries, no image.
+                SecondaryImage.enabled = false;
+                return;
+            }
+
+            SecondaryImage.enabled = true;
+            switch(CurrentSecondary)
+            {
+                case SecondaryType.Bomb:
+                    SecondaryImage.sprite = bombSprite;
+                    break;
+                case SecondaryType.Bow:
+                    SecondaryImage.sprite = bowSprite;
+                    break;
+                case SecondaryType.Boomerang:
+                    SecondaryImage.sprite = boomerangSprite;
+                    break;
+            }
+        }
+        #endregion
         #region ATTACKS
         IEnumerator Primary()
         {
+            _audioSource.PlayOneShot(swordSound);
             ExecutePrimaryAttack(Facing);
             yield return null;
             float attackLength = _animator.GetCurrentAnimatorStateInfo(0).length;
@@ -534,6 +667,26 @@ namespace SQZL.Entity.Player
 
         private void ExecuteSecondaryAttack(TilebodyDirection dir)
         {
+            if (unlockedSecondaries.Count == 0) return;
+
+            switch (CurrentSecondary)
+            {
+                case SecondaryType.Bomb:
+                    //Spawn le bomb
+                    Debug.Log("Used Bomb");
+                    break;
+                case SecondaryType.Bow:
+                    FireArrow(dir);
+                    break;
+                case SecondaryType.Boomerang:
+                    //Spawn le boomerang
+                    Debug.Log("Used Boomerang");
+                    break;
+            }
+        }
+
+        private void FireArrow(TilebodyDirection dir)
+        {
             if (arrowPrefab == null) return;
 
             if (_inventory.GetConsumableAmount("rupee") > 0)
@@ -577,7 +730,6 @@ namespace SQZL.Entity.Player
             {
                 playerArrowScript.Initialize(fireDirection);
             }
-
         }
         #endregion
         
