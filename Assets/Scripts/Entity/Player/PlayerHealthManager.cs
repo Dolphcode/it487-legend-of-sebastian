@@ -1,7 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using Player;
-using SQZL.Entity;
 
 namespace SQZL.Entity.Player
 {
@@ -23,25 +21,38 @@ namespace SQZL.Entity.Player
         [SerializeField] Sprite halfHeart;
         [SerializeField] Sprite fullHeart;
 
+        private Animator _animator;
+        private int _a_Damaged;
+        
         void Start()
         {
+            _animator = GetComponent<Animator>();
+            _a_Damaged = Animator.StringToHash("Damaged");
+            
             //Planning ahead since max health can be increased later via heart containers,
             //so it's best to create a max health and current health variable.
             maxHealth = 6;
             currentHealth = maxHealth;
         }
 
-        public override void TryDamage(int amount)
+        public override void TryDamage(int amount, bool knockback, TilebodyDirection attackDir)
         {
             if (pcScript.IFrames <= 0f)
             {
                 currentHealth -= amount;
-                pcScript.StartCoroutine(pcScript.KnockbackCoroutine());
+                _animator.SetBool(_a_Damaged, true);
+
+                pcScript.TriggerIframes();
+                if (knockback) pcScript.StartCoroutine(pcScript.KnockbackCoroutine());
             }
         }
 
         void Update()
         {
+            if (pcScript.IFrames <= 0f)
+            {
+                _animator.SetBool(_a_Damaged, false);
+            }
             //Updates the Heart UI to reflect the current health.
             //May need to be updated down the line to account for increases in max health.
             switch (currentHealth)

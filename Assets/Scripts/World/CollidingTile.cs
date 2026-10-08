@@ -1,13 +1,16 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-[CreateAssetMenu(fileName = "New Colliding Tile", menuName = "Tiles/Colliding Tile")]
-public class CollidingTile : Tile
+namespace SQZL.World
 {
-    [SerializeField] private Bounds bounds;
-
-    public Bounds GetBounds()
+    [CreateAssetMenu(fileName = "New Colliding Tile", menuName = "Tiles/Colliding Tile")]
+    public class CollidingTile : Tile
     {
-        return bounds;
+        [SerializeField] private Bounds bounds;
+
+        public Bounds GetBounds()
+        {
+            return bounds;
+        }
     }
 }

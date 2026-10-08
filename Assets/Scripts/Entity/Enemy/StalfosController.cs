@@ -1,41 +1,58 @@
 ﻿using UnityEngine;
+using SQZL.World.Interactable;
 
 namespace SQZL.Entity.Enemy
 {
     public class StalfosController : TileEnemyController
     {
-        private SpriteRenderer _sprite;
+        private Animator _animator;
+        private int _a_Damaged;
         
         protected override void Start()
         {
             base.Start();
             _sprite = GetComponent<SpriteRenderer>();
+            _animator = GetComponent<Animator>();
+            _a_Damaged = Animator.StringToHash("Damaged");
+
+            _sprite.enabled = false;
+            ControllerIsActive = false;
         }
         
         protected override void FixedUpdate()
         {
             base.FixedUpdate();
+            if (iframes <= 0f) _animator.SetBool(_a_Damaged, false);
             if (ControllerIsActive)
             {
-                if (walkTimeLeft <= 0f) base.PickDirection();
+                if (walkTimeLeft <= 0f)
+                {
+                    transform.position = new Vector3(Mathf.Round(transform.position.x),
+                        Mathf.Round(transform.position.y),
+                        transform.position.z);
+                    base.PickDirection();
+                }
                 MoveEntity(moveSpeed, moveDirection.x, moveDirection.y, true);
                 walkTimeLeft -= Time.fixedDeltaTime;
+                Debug.Log($"{gameObject.name}, {walkTimeLeft}, {Facing}");
             }
         }
 
-        public override void TryDamage(int amount)
+        public override void TryDamage(int amount, bool knockback, TilebodyDirection attackDir)
         {
             if (iframes <= 0f)
             {
                 currentHP -= amount;
                 if (currentHP <= 0f)
                 {
+                    base.DisconnectSpawnManager();
                     Destroy(gameObject);
-                    foreach(RoomTransitionTrigger trigger in gates) base.DisconnectGate(trigger);
                 }
                 else
                 {
-                    StartCoroutine(base.KnockbackCoroutine());
+                    iframes = iframeTime;
+                    _animator.SetBool(_a_Damaged, true);
+                    if (knockback) StartCoroutine(base.KnockbackCoroutine(attackDir));
                 }
             }
         }
@@ -44,12 +61,14 @@ namespace SQZL.Entity.Enemy
         {
             base.OnSpawn();
             _sprite.enabled = true;
+            ControllerIsActive = true;
         }
 
         public override void OnDespawn()
         {
             base.OnDespawn();
             _sprite.enabled = false;
+            ControllerIsActive = false;
         }
     }
 }

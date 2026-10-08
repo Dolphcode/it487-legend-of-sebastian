@@ -31,7 +31,7 @@ namespace SQZL.Entity.Enemy
         }
 
         #region MOVEMENT_FUNCS
-        protected void MoveEntity(float moveSpeed, int xIn, int yIn, bool lockFacing = true)
+        protected void MoveEntity(float moveSpeed, int xIn, int yIn, bool lockFacing = false)
         {
 /*
              * 1. Vertical movement evaluates before horizontal. If holding UP/LEFT you will go all the way up first and then when you collide with the wall you will start going left.
@@ -248,14 +248,14 @@ namespace SQZL.Entity.Enemy
         /// Call this coroutine to knock back the entity
         /// Required by Goriya and Stalfos specifically iirc?
         /// </summary>
-        public IEnumerator KnockbackCoroutine()
+        public IEnumerator KnockbackCoroutine(TilebodyDirection attackDir)
         {
             ControllerIsActive = false;
             iframes = iframeTime;
             yield return StartCoroutine(ForceEntityCoroutine(
                 knockbackTilesMax,
                 knockbackSpeed,
-                (TilebodyDirection)(((int)Facing + 2) % 4),
+                attackDir,
                 true,
                 true,
                 true
@@ -268,10 +268,10 @@ namespace SQZL.Entity.Enemy
         /// A common pick direction functionality
         /// TODO: hasMaxTiles and maxTiles do nothing atm
         /// </summary>
-        protected void PickDirection()
+        protected void PickDirection(int walkLimit = 999)
         {
-            Vector2Int currentTilePosition = new Vector2Int(Mathf.RoundToInt(transform.position.x - walkableRegionOffset.x),
-                Mathf.RoundToInt(transform.position.y - walkableRegionOffset.y)) / 2;
+            Vector2Int currentTilePosition = new Vector2Int(Mathf.FloorToInt((transform.position.x - walkableRegionOffset.x) / 2f),
+                Mathf.FloorToInt((transform.position.y - walkableRegionOffset.y) / 2f)) ;
             List<TilebodyDirection> validDirections = new List<TilebodyDirection>() {TilebodyDirection.Left, TilebodyDirection.Down, TilebodyDirection.Right, TilebodyDirection.Up};
             
             // Check alignment to restrict movement
@@ -336,7 +336,7 @@ namespace SQZL.Entity.Enemy
                  targetPositionTest = currentTilePosition + chosenDirection * ++maxDist) ;
             maxDist--;
 
-            moveAmount = Random.Range(1, maxDist) * 2;
+            moveAmount = Random.Range(1, Mathf.Min(maxDist, walkLimit)) * 2;
 
             float position = chosenDirection.x != 0
                 ? transform.position.x - walkableRegionOffset.x

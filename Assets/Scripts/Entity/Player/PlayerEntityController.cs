@@ -3,8 +3,8 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
-using SQZL.Entity;
-using Player;
+using SQZL.UI;
+using SQZL.World;
 
 namespace SQZL.Entity.Player
 {
@@ -32,12 +32,20 @@ namespace SQZL.Entity.Player
 
         [SerializeField] private int knockbackTilesMax = 6;
         [SerializeField] private float iframeTime = 1f;
+
+        [Header ("Sounds")]
+        public AudioClip swordSound;
+        public AudioClip hurtSound;
+
+        [Header("Transition")] [SerializeField]
+        private TransitionHandler _transitionHandler;
         
         // On Start actions
         private InputAction moveAction;
         private InputAction primaryAction;
         private InputAction secondaryAction;
         private InputAction godAction;
+        private InputAction switchAction;
         
         // On Start components
         private BoxCollider2D _collider2D;
@@ -45,6 +53,7 @@ namespace SQZL.Entity.Player
         private SpriteRenderer _sprite;
         private Tilebody2D _tilebody2D;
         private PlayerInventory _inventory;
+        private Camera _camera2D;
         
         // Animator IDs
         private int _animMovingId, _animDirectionId;
@@ -68,6 +77,7 @@ namespace SQZL.Entity.Player
             _sprite = GetComponent<SpriteRenderer>();
             _tilebody2D = GetComponent<Tilebody2D>();
             _inventory = GetComponent<PlayerInventory>();
+            _camera2D = Camera.main;
             
             // Get animator ids
             _animMovingId = Animator.StringToHash("Moving");
@@ -78,6 +88,7 @@ namespace SQZL.Entity.Player
             primaryAction = InputSystem.actions.FindAction("PrimaryWeapon");
             secondaryAction = InputSystem.actions.FindAction("SecondaryWeapon");
             godAction = InputSystem.actions.FindAction("GodMode");
+            switchAction = InputSystem.actions.FindAction("SwitchSecondary");
             
             // Save the current y position
             lastPosition = transform.position;
@@ -397,7 +408,6 @@ namespace SQZL.Entity.Player
         public IEnumerator KnockbackCoroutine()
         {
             playerInputFrozen = true;
-            IFrames = iframeTime;
             yield return StartCoroutine(ForcePlayerCoroutine(
                 knockbackTilesMax,
                 knockbackTime,
@@ -408,8 +418,14 @@ namespace SQZL.Entity.Player
                 ));
             playerInputFrozen = false;
         }
-        #endregion
+
         
+        #endregion
+
+        internal void TriggerIframes()
+        {
+            IFrames = iframeTime;
+        }
         
         private void ToggleGodMode()
         {
@@ -426,6 +442,29 @@ namespace SQZL.Entity.Player
                 Debug.Log("God Mode Disabled");
             }
         }
+
+        #region EXTERNAL_CONTROL
+        /// <summary>
+        /// Used to teleport the player. Best used when the player controller is fully disabled
+        /// </summary>
+        public void TeleportPlayer(Vector3 position, Vector3 camPos)
+        {
+            transform.position = position;
+            lastPosition = position;
+            deltaPosition = Vector3.zero;
+            _camera2D.gameObject.transform.position = camPos;
+        }
+
+        /// <summary>
+        /// Used to set the player's full visual state. Best used when the player
+        /// controller is fully disabled if being called externally
+        /// </summary>
+        public void SetAnimatorState(bool walking, TilebodyDirection direction)
+        {
+            _animator.SetInteger(_animDirectionId, (int)direction);
+            _animator.SetBool(_animMovingId, walking);
+        }
+        #endregion
         
         #region ATTACKS
         IEnumerator Primary()
@@ -446,6 +485,9 @@ namespace SQZL.Entity.Player
         {
             if (swordHitbox != null)
             {
+                // TODO: Cache this, suboptimal but lazy
+                Hurtbox swordHurtbox = swordHitbox.GetComponent<Hurtbox>();
+                
                 Vector3 offsetVector = Vector3.zero;
                 _animator.SetTrigger("Attack");
                 _animator.SetInteger("Direction", (int)Facing);
@@ -465,6 +507,7 @@ namespace SQZL.Entity.Player
                         break;
                 }
 
+                swordHurtbox.AttackDirection = dir;
                 swordHitbox.transform.localPosition = offsetVector;
                 swordHitbox.SetActive(true);
             }
@@ -526,11 +569,23 @@ namespace SQZL.Entity.Player
         }
         #endregion
         
-        
-        private void SetAnimatorState(bool walking, TilebodyDirection direction)
+        #region TRANSITION
+
+        private RoomSpawnManager tpRoom;
+        public void WarpWithSlide(RoomSpawnManager to)
         {
-            _animator.SetInteger(_animDirectionId, (int)direction);
-            _animator.SetBool(_animMovingId, walking);
+            _transitionHandler.OnSlideTransitionEnd += OnSlideFinished;
+            _transitionHandler.TriggerSlide();
+            tpRoom = to;
+            TeleportPlayer(to.WarpPosition.position, to.CameraWarpPosition.position); 
         }
+
+        public void OnSlideFinished()
+        {
+            _transitionHandler.OnSlideTransitionEnd -= OnSlideFinished;
+            RoomManager._Instance.LoadRoom(tpRoom);
+            if (playerInputFrozen) playerInputFrozen = false;
+        }
+        #endregion
     }
 }
