@@ -1,6 +1,6 @@
 {
-    "name": "SQZL.Tool",
-    "rootNamespace": "",
+    "name": "SQZL.Tool.Editor",
+    "rootNamespace": "SQZL",
     "references": [],
     "includePlatforms": [
         "Editor"
