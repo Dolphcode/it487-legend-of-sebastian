@@ -5,7 +5,7 @@ namespace SQZL.World.RoomClears
 {
     public abstract class BaseRoomClearHandler : MonoBehaviour
     {
-        private RoomEntityTracker tracker;
+        protected RoomEntityTracker tracker;
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         protected virtual void Start()

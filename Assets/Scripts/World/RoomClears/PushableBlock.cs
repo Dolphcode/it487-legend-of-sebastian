@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using SQZL.Entity;
 using SQZL.Entity.Player;
 using UnityEngine;
@@ -12,6 +13,7 @@ namespace SQZL.World.RoomClears
         public const float STOP_MOVEMENT_THRESHOLD = 1e-2f;
         
         [SerializeField] private TilebodyDirection pushDirection;
+        [SerializeField] private List<TilebodyDirection> pushableDirections;
         [SerializeField] private int unitsToMove;
         [SerializeField] private float timeToMove;
 
@@ -31,7 +33,17 @@ namespace SQZL.World.RoomClears
 
         protected override void Start()
         {
-            base.Start();
+            if (!transform.parent.TryGetComponent<RoomEntityTracker>(out tracker))
+            {
+                // Set can be triggered to true by default, no room clear req
+                canBeTriggered = true;
+            }
+            else
+            {
+                tracker.OnRoomClearedEvent += OnRoomClear;
+            }
+            
+
             originalPosition = transform.position;
             if (resetWithTransition)
             {
@@ -54,17 +66,47 @@ namespace SQZL.World.RoomClears
         {
             Debug.Log("BLOCK: I am colliding with something?");
             if (canBeTriggered && !triggered && 
-                body.LastMovedDirection == pushDirection &&
                 body.gameObject.CompareTag("Player"))
             {
                 PlayerEntityController e = body.gameObject.GetComponent<PlayerEntityController>();
-                triggered = true;
-                e.WaitForTime(timeToMove);
-                StartCoroutine(PushCoroutine());
+                foreach (TilebodyDirection dir in pushableDirections)
+                {
+                    bool test;
+                    switch (dir)
+                    {
+                        case TilebodyDirection.Up:
+                            test = e.transform.position.y < transform.position.y &&
+                                   body.LastMovedDirection == TilebodyDirection.Up;
+                            break;
+                        case TilebodyDirection.Down:
+                            test = e.transform.position.y > transform.position.y &&
+                                    body.LastMovedDirection == TilebodyDirection.Down;
+                            break;
+                        case TilebodyDirection.Left:
+                            test = e.transform.position.x > transform.position.x &&
+                                  body.LastMovedDirection == TilebodyDirection.Left;
+                            break;
+                        case TilebodyDirection.Right:
+                            test = e.transform.position.x < transform.position.x &&
+                                   body.LastMovedDirection == TilebodyDirection.Right;
+                            break;
+                        default:
+                            test = false;
+                            break;
+                    }
+
+                    if (test)
+                    {
+                        triggered = true;
+                        e.WaitForTime(timeToMove);
+                        StartCoroutine(PushCoroutine(body.LastMovedDirection));
+                        break;
+                    }
+                }
             }
         }
 
-        private IEnumerator PushCoroutine()
+        private IEnumerator PushCoroutine(TilebodyDirection pushDirection)
         {
             float speed = (float)unitsToMove / timeToMove;
             Vector3 direction = Vector3.zero;
