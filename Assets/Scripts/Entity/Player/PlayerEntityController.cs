@@ -6,6 +6,7 @@ using UnityEngine.Tilemaps;
 using SQZL.UI;
 using SQZL.World;
 using System.Collections.Generic;
+using SQZL.Entity.Projectile;
 using UnityEngine.UI;
 
 namespace SQZL.Entity.Player
@@ -179,7 +180,7 @@ namespace SQZL.Entity.Player
             SetAnimatorState(xIn != 0 || yIn != 0, Facing);
         }
 
-        private void ODestroy()
+        private void OnDestroy()
         {
             if (_inventory != null)
             {
@@ -531,6 +532,7 @@ namespace SQZL.Entity.Player
         private void OnInventoryUnlockableUpdated(string itemKey, bool state)
         {
             RefreshUnlockedSecondaries();
+            Debug.Log("OnInventoryUnlockableUpdated called");
 
             if (state && Enum.TryParse<SecondaryType>(itemKey, true, out var newType))
             {
@@ -540,26 +542,21 @@ namespace SQZL.Entity.Player
 
             UpdateSecondaryUI();
         }
-
-
-        public void UnlockBoomerang()
-        {
-            _inventory?.ToggleUnlockable("Boomerang", true);
-        }
-
-        public void UnlockBow()
-        {
-            _inventory?.ToggleUnlockable("Bow", true);
-        }
         
         public void RefreshUnlockedSecondaries()
         {
+            Debug.Log("RefreshUnlockedSecondaries Called");
             unlockedSecondaries.Clear();
             
             if (_inventory != null)
             {
+                Debug.Log($"Check {_inventory.HasUnlockable("Bow")}");
                 if (_inventory.HasUnlockable("Bomb")) unlockedSecondaries.Add(SecondaryType.Bomb);
-                if (_inventory.HasUnlockable("Bow")) unlockedSecondaries.Add(SecondaryType.Bow);
+                if (_inventory.HasUnlockable("Bow"))
+                {
+                    unlockedSecondaries.Add(SecondaryType.Bow);
+                    Debug.Log("Bowowowwo");
+                }
                 if (_inventory.HasUnlockable("Boomerang")) unlockedSecondaries.Add(SecondaryType.Boomerang);
             }
 
@@ -679,7 +676,7 @@ namespace SQZL.Entity.Player
                     break;
                 case SecondaryType.Boomerang:
                     //Spawn le boomerang
-                    Debug.Log("Used Boomerang");
+                    FireBoomerang(dir);
                     break;
             }
         }
@@ -762,7 +759,6 @@ namespace SQZL.Entity.Player
             }
         }
         #endregion
-        
         #region TRANSITION
 
         private RoomSpawnManager tpRoom;
@@ -779,6 +775,52 @@ namespace SQZL.Entity.Player
             _transitionHandler.OnSlideTransitionEnd -= OnSlideFinished;
             RoomManager._Instance.LoadRoom(tpRoom);
             if (playerInputFrozen) playerInputFrozen = false;
+        }
+
+        public void WarpWithSlideInOut(RoomSpawnManager to)
+        {
+            _transitionHandler.OnSlideClosed += OnSlideClosed;
+            _transitionHandler.TriggerCloseStep();
+            tpRoom = to;
+        }
+
+        public void OnSlideClosed()
+        {
+            Debug.Log($"Closed and moving to {tpRoom.gameObject.name}");
+            TeleportPlayer(tpRoom.WarpPosition.position, tpRoom.CameraWarpPosition.position);
+            _transitionHandler.OnSlideClosed -= OnSlideClosed;
+            _transitionHandler.OnSlideTransitionEnd += OnSlideOpened;
+            _transitionHandler.TriggerCloseStep();
+        }
+
+        public void OnSlideOpened()
+        {
+            _transitionHandler.OnSlideTransitionEnd -= OnSlideOpened;
+            RoomManager._Instance.LoadRoom(tpRoom);
+            if (playerInputFrozen) playerInputFrozen = false;
+        }
+        #endregion
+        
+        #region BOOMERANG
+
+        private bool thrownBoomerang = false;
+        private BoomerangPlayerProjectile activeBoomerang;
+        
+        public void FireBoomerang(TilebodyDirection dir)
+        {
+            if (thrownBoomerang) return;
+            thrownBoomerang = true;
+            
+            GameObject proj = Instantiate(boomerangPrefab, transform.position, Quaternion.identity);
+            activeBoomerang = proj.GetComponent<BoomerangPlayerProjectile>();
+            //activeBoomerang.OnBoomerangHit += TriggerBoomerangReload;
+            activeBoomerang.OnBoomerangReturn += TriggerBoomerangReload;
+            activeBoomerang.FireBoomerang(dir, gameObject);
+        }
+
+        private void TriggerBoomerangReload()
+        {
+            thrownBoomerang = false;
         }
         #endregion
     }

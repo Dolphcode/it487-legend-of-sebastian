@@ -26,6 +26,8 @@ namespace SQZL.World.RoomClears
         private bool resetWithTransition;
 
         [SerializeField] private RoomTransitionTrigger trigger;
+        [SerializeField]private bool resetWithTeleport;
+        [SerializeField] private RoomTeleportTrigger tpTrigger;
         
         private bool triggered = false;
         private bool canBeTriggered = false;
@@ -48,6 +50,9 @@ namespace SQZL.World.RoomClears
             if (resetWithTransition)
             {
                 trigger.PreTransition += ResetTile;
+            } else if (resetWithTeleport)
+            {
+                tpTrigger.OnTransition += ResetTile;
             }
         }
 
