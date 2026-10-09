@@ -18,6 +18,9 @@ namespace SQZL.Entity.Player
         {
             inv.OnConsumableUpdated += UpdateConsumable;
             audioSource = GetComponent<AudioSource>();
+            rupees.text = $"{inv.GetConsumableAmount("rupee")}";
+            bombs.text = $"{inv.GetConsumableAmount("bomb")}";
+            keys.text = $"{inv.GetConsumableAmount("key")}";
         }
 
         private void UpdateConsumable(string name, int curr, int change)
