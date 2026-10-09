@@ -776,6 +776,29 @@ namespace SQZL.Entity.Player
             RoomManager._Instance.LoadRoom(tpRoom);
             if (playerInputFrozen) playerInputFrozen = false;
         }
+
+        public void WarpWithSlideInOut(RoomSpawnManager to)
+        {
+            _transitionHandler.OnSlideClosed += OnSlideClosed;
+            _transitionHandler.TriggerCloseStep();
+            tpRoom = to;
+        }
+
+        public void OnSlideClosed()
+        {
+            Debug.Log($"Closed and moving to {tpRoom.gameObject.name}");
+            TeleportPlayer(tpRoom.WarpPosition.position, tpRoom.CameraWarpPosition.position);
+            _transitionHandler.OnSlideClosed -= OnSlideClosed;
+            _transitionHandler.OnSlideTransitionEnd += OnSlideOpened;
+            _transitionHandler.TriggerCloseStep();
+        }
+
+        public void OnSlideOpened()
+        {
+            _transitionHandler.OnSlideTransitionEnd -= OnSlideOpened;
+            RoomManager._Instance.LoadRoom(tpRoom);
+            if (playerInputFrozen) playerInputFrozen = false;
+        }
         #endregion
     }
 }

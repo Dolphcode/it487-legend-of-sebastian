@@ -1708,7 +1708,7 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.20520835
+    x: 0.26458335
     y: 0
     width: 0.19833335
     height: 0.33055556
