@@ -41,6 +41,9 @@ namespace SQZL.Entity.Enemy
             // References
             _sprite = GetComponent<SpriteRenderer>();
             _animator = GetComponent<Animator>();
+
+            ControllerIsActive = false;
+            _sprite.enabled = false;
             
             // get the animator
             _a_Damaged = Animator.StringToHash("Damaged");
@@ -82,6 +85,7 @@ namespace SQZL.Entity.Enemy
                 currentHP -= amount;
                 if (currentHP <= 0f)
                 {
+                    InvokeEnemyDeath();
                     Destroy(gameObject);
                     base.DisconnectSpawnManager();
                 }
@@ -118,6 +122,7 @@ namespace SQZL.Entity.Enemy
         {
             ControllerIsActive = false;
             _sprite.enabled = false;
+            ControllerIsActive = false;
             _animator.SetBool(_a_Damaged, false);
         }
     }

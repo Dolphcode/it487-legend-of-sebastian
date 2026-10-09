@@ -1688,6 +1688,111 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6565615689530303704, guid: 5a8f06671553ebc4dac5fdf0d3c3f182, type: 3}
   m_PrefabInstance: {fileID: 260753230}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &263962304
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 263962305}
+  - component: {fileID: 263962307}
+  - component: {fileID: 263962306}
+  m_Layer: 0
+  m_Name: Transition_3_4_Left
+  m_TagString: Untagged
+  m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &263962305
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 263962304}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 73, y: 40, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1829089342}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &263962306
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 263962304}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
+--- !u!114 &263962307
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 263962304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 394b132a1a2e83143a4e2429986388de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoomTransitionTrigger
+  tileSize: 2
+  roomSize: {x: 16, y: 11}
+  associatedRoom: {fileID: 1829089343}
+  vertical: 0
+  initialPositionFlag: 0
+  trapTriggers: 0
+  playerMoveTilesAdditional: 0
+  wallTilemap: {fileID: 1892601857}
+  tilesToSwap: []
+  playerMoveTime: 0.5
+  playerMoveTiles: 4
+  cameraMoveTime: 2
+  aRoom: {fileID: 885150281}
+  bRoom: {fileID: 1829089343}
 --- !u!1 &271422626
 GameObject:
   m_ObjectHideFlags: 0
@@ -4639,6 +4744,55 @@ MonoBehaviour:
   startingRoom: 0
   cameraPosition: {fileID: 0}
   warpPosition: {fileID: 0}
+--- !u!1 &514059541
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 514059542}
+  - component: {fileID: 514059543}
+  m_Layer: 0
+  m_Name: Aquamentus Room Trigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &514059542
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514059541}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 885150280}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &514059543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514059541}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65ac5d0cbbf2d1f4fbb81df64ad6866e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: SQZL.World.RoomClears::SQZL.World.RoomClears.TileSwapRoomClearHandler
+  swapEntries:
+  - clearTile: 1
+    tileToSwap: {x: 35, y: 20, z: 0}
+    swapTo: {fileID: 0}
+  wallTiles: {fileID: 1892601857}
 --- !u!1 &528336164
 GameObject:
   m_ObjectHideFlags: 0
@@ -7479,6 +7633,17 @@ MonoBehaviour:
   cameraMoveTime: 2
   aRoom: {fileID: 1733081616}
   bRoom: {fileID: 1280440604}
+--- !u!114 &845835899 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6232050119981781405, guid: db5d6074939cc804abdbf4a16dfdd200, type: 3}
+  m_PrefabInstance: {fileID: 626745536}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ee979b896fa2de4fb5c720f94ca6913, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: SQZL.Entity.Enemy::SQZL.Entity.Enemy.AquamentusController
 --- !u!1 &861312259
 GameObject:
   m_ObjectHideFlags: 0
@@ -7648,6 +7813,7 @@ GameObject:
   m_Component:
   - component: {fileID: 885150280}
   - component: {fileID: 885150281}
+  - component: {fileID: 885150282}
   m_Layer: 0
   m_Name: Room_2_4
   m_TagString: Untagged
@@ -7670,6 +7836,8 @@ Transform:
   m_Children:
   - {fileID: 626745537}
   - {fileID: 625788923}
+  - {fileID: 2074478643}
+  - {fileID: 514059542}
   m_Father: {fileID: 1325055512}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &885150281
@@ -7687,6 +7855,20 @@ MonoBehaviour:
   startingRoom: 0
   cameraPosition: {fileID: 0}
   warpPosition: {fileID: 0}
+--- !u!114 &885150282
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 885150279}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b68115f7ecacd74b8bde0c40d4adadf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: SQZL.World.RoomClears::SQZL.World.RoomClears.RoomEntityTracker
+  enemies:
+  - {fileID: 845835899}
 --- !u!1 &914295664
 GameObject:
   m_ObjectHideFlags: 0
@@ -15343,6 +15525,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1829089342}
+  - component: {fileID: 1829089343}
   m_Layer: 0
   m_Name: Room_3_4
   m_TagString: Untagged
@@ -15362,9 +15545,25 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 263962305}
   m_Father: {fileID: 1325055512}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1829089343
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1829089341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a09ebf4187955c1418e1523efab55eb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: SQZL.World::SQZL.World.RoomSpawnManager
+  startingRoom: 0
+  cameraPosition: {fileID: 0}
+  warpPosition: {fileID: 0}
 --- !u!1001 &1842663551
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -39511,6 +39710,111 @@ MonoBehaviour:
   cameraMoveTime: 2
   aRoom: {fileID: 1975076056}
   bRoom: {fileID: 1733081616}
+--- !u!1 &2074478642
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2074478643}
+  - component: {fileID: 2074478645}
+  - component: {fileID: 2074478644}
+  m_Layer: 0
+  m_Name: Transition_2_4_Right
+  m_TagString: Untagged
+  m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2074478643
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2074478642}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 73, y: 40, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 885150280}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &2074478644
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2074478642}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
+--- !u!114 &2074478645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2074478642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 394b132a1a2e83143a4e2429986388de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoomTransitionTrigger
+  tileSize: 2
+  roomSize: {x: 16, y: 11}
+  associatedRoom: {fileID: 885150281}
+  vertical: 0
+  initialPositionFlag: 1
+  trapTriggers: 0
+  playerMoveTilesAdditional: 0
+  wallTilemap: {fileID: 1892601857}
+  tilesToSwap: []
+  playerMoveTime: 0.5
+  playerMoveTiles: 4
+  cameraMoveTime: 2
+  aRoom: {fileID: 885150281}
+  bRoom: {fileID: 1829089343}
 --- !u!1001 &2080423557
 PrefabInstance:
   m_ObjectHideFlags: 0
