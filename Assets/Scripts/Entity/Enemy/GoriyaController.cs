@@ -30,6 +30,8 @@ namespace SQZL.Entity.Enemy
             _a_Damaged = Animator.StringToHash("Damaged");
             
             timeToNextFire = Random.Range(minTimeToFire, maxTimeToFire);
+            _sprite.enabled = false;
+            ControllerIsActive = false;
         }
 
         protected override void FixedUpdate()
@@ -74,13 +76,14 @@ namespace SQZL.Entity.Enemy
                 if (currentHP <= 0f)
                 {
                     base.DisconnectSpawnManager();
+                    InvokeEnemyDeath();
                     Destroy(gameObject);
                 }
                 else
                 {
                     iframes = iframeTime;
                     _animator.SetBool(_a_Damaged, true);
-                    StartCoroutine(base.KnockbackCoroutine(attackDir));
+                    if (knockback) StartCoroutine(base.KnockbackCoroutine(attackDir));
                 }
             }
         }
@@ -88,6 +91,7 @@ namespace SQZL.Entity.Enemy
         public override void OnSpawn()
         {
             base.OnSpawn();
+            ControllerIsActive = true;
             _sprite.enabled = true;
         }
 
@@ -95,6 +99,7 @@ namespace SQZL.Entity.Enemy
         {
             base.OnDespawn();
             _sprite.enabled = false;
+            ControllerIsActive = false;
             _animator.SetBool(_a_Damaged, false);
         }
     }

@@ -20,6 +20,8 @@ namespace SQZL.UI
 
         public void TriggerSlide()
         {
+            Debug.Log($"{_animator} and {_a_TriggerSlide}");
+
             _animator.SetTrigger(_a_TriggerSlide);
         }
 

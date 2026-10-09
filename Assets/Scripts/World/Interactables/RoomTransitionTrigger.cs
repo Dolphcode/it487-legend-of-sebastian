@@ -1,9 +1,10 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using SQZL.Entity.Player;
-using System;
 using SQZL.Entity;
-using SQZL.World;
+using UnityEngine.Tilemaps;
 
 namespace SQZL.World.Interactable
 {
@@ -23,8 +24,15 @@ namespace SQZL.World.Interactable
         [SerializeField]
         private bool initialPositionFlag = false;
 
-        [Tooltip(
-            "Ensure that the object is placed in the center (vertically or horizontally) of the two tiles marking a gateway. The collider will be positioned automatically accordingly")]
+         // Ensure that the object is placed in the center (vertically or horizontally) of the two tiles marking a gateway. The collider will be positioned automatically accordingly")]
+
+         [Header("Trap Door Config")]
+         [SerializeField] private int trapTriggers;
+
+         [SerializeField] private int playerMoveTilesAdditional = 1;
+         [SerializeField] private Tilemap wallTilemap;
+         [SerializeField] private List<TileSwapEntry> tilesToSwap;
+         
         [Header("Transition Config")]
         [SerializeField]
         private float playerMoveTime = 1f;
@@ -44,6 +52,9 @@ namespace SQZL.World.Interactable
 
         private Camera mainCamera2D;
         private bool positionFlag;
+
+        public event Action PreTransition;
+        public event Action PostTransition;
 
 
         private void Start()
@@ -80,6 +91,7 @@ namespace SQZL.World.Interactable
                 if (player.playerInputFrozen) return; // If player is being moved right now don't do anything
                 if (RoomManager._Instance.CurrentRoomReference != associatedRoom) return;
                 player.playerInputFrozen = true;
+                PreTransition?.Invoke();
                 RoomManager._Instance.UnloadRoom();
                 StartCoroutine(CameraTransitionCoroutine(player));
             }
@@ -130,8 +142,18 @@ namespace SQZL.World.Interactable
             if (vertical && positionFlag) dir = TilebodyDirection.Up;
             else if (!vertical && positionFlag) dir = TilebodyDirection.Right;
             else if (!vertical && !positionFlag) dir = TilebodyDirection.Left;
-            yield return player.ForcePlayerCoroutine(playerMoveTiles, playerMoveTime, dir, true, false, false);
-
+            if (trapTriggers <= 0) yield return player.ForcePlayerCoroutine(playerMoveTiles, playerMoveTime, dir, true, false, false);
+            else
+            {
+                yield return player.ForcePlayerCoroutine(playerMoveTiles + playerMoveTilesAdditional, playerMoveTime, dir, true, false, false);
+                trapTriggers--;
+                
+                // Swap tiles
+                foreach (TileSwapEntry swapEntry in tilesToSwap)
+                {
+                    wallTilemap.SetTile(swapEntry.tileToSwap, swapEntry.swapTo);
+                }
+            }
             // And toggle the trigger's position        
             ToggleTriggerPosition();
 
@@ -141,6 +163,14 @@ namespace SQZL.World.Interactable
             // Animation has ended
             if (positionFlag) RoomManager._Instance.LoadRoom(bRoom);
             else RoomManager._Instance.LoadRoom(aRoom);
+            PostTransition?.Invoke();
+        }
+        
+        [System.Serializable]
+        internal struct TileSwapEntry
+        {
+            [SerializeField] internal Vector3Int tileToSwap;
+            [SerializeField] internal Tile swapTo;
         }
     }
 }

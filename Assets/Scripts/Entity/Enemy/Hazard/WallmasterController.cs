@@ -26,6 +26,9 @@ namespace SQZL.Entity.Enemy.Hazard
         private bool grabbed = false;
         private Vector3 exitDir, travelDir;
 
+        private Animator _animator;
+        private int _a_Damaged;
+
         protected override void Start()
         {
             base.Start();
@@ -54,6 +57,9 @@ namespace SQZL.Entity.Enemy.Hazard
             {
                 travelDir = new Vector2(-exitDir.y, exitDir.x);
             }
+
+            _animator = GetComponent<Animator>();
+            _a_Damaged = Animator.StringToHash("Damaged");
         }
         
         public override void TryDamage(int amount, bool knockback, TilebodyDirection attackDir)
@@ -70,6 +76,7 @@ namespace SQZL.Entity.Enemy.Hazard
                 else
                 {
                     iframes = iframeTime;
+                    _animator.SetBool(_a_Damaged, true);
                 }
             }
         }
@@ -102,11 +109,14 @@ namespace SQZL.Entity.Enemy.Hazard
         protected override void FixedUpdate()
         {
             base.FixedUpdate();
+            if (iframes <= 0f) _animator.SetBool(_a_Damaged, false);
             if (grabbed)
             {
                 playerRef.TeleportPlayer(transform.position, Camera.main.transform.position);
             }
         }
+        
+        
         
         private const float MOTION_END_THRESHOLD = 0.2f;
         private IEnumerator TripCoroutine()
@@ -155,8 +165,11 @@ namespace SQZL.Entity.Enemy.Hazard
             );
             
             // Check if we grabbed something, teleport accordingly
-            grabbed = false; // Release here
-            playerRef.WarpWithSlide(tpRoom);
+            if (grabbed)
+            {
+                grabbed = false; // Release here
+                playerRef.WarpWithSlide(tpRoom);
+            }
             //playerRef.TeleportPlayer(tpRoom.WarpPosition.position, tpRoom);
             //playerRef.playerInputFrozen = false;
             //RoomManager._Instance.LoadRoom(tpRoom);

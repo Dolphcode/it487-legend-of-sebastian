@@ -40,7 +40,8 @@ namespace SQZL.World.Interactable
                     playerInventory.AccumulateConsumable("key", -1);
                     foreach (TileSwapEntry swapEntry in swapTiles)
                     {
-                        wallLayer.SetTile(swapEntry.tileToSwap, swapEntry.swapTo);
+                        if (swapEntry.clearTile) wallLayer.SetTile(swapEntry.tileToSwap, null);
+                            else wallLayer.SetTile(swapEntry.tileToSwap, swapEntry.swapTo);
                     }
 
                     Destroy(gameObject);
@@ -53,6 +54,7 @@ namespace SQZL.World.Interactable
         {
             [SerializeField] internal Vector3Int tileToSwap;
             [SerializeField] internal Tile swapTo;
+            [SerializeField] internal bool clearTile;
         }
     }
 }

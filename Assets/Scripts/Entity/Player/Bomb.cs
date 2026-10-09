@@ -1,5 +1,3 @@
-using System;
-using Codice.Client.BaseCommands;
 using UnityEngine;
 
 namespace SQZL
@@ -11,7 +9,6 @@ namespace SQZL
 
         [Header("Sounds")]
         public AudioClip placeSound;
-        public AudioClip boomSound;
         private AudioSource audioSource;
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
@@ -23,12 +20,10 @@ namespace SQZL
 
         private void Explode()
         {
-            audioSource.PlayOneShot(boomSound);
             if (explosionPrefab != null)
             {
-                Instantiate(explosionPrefab);
+                Instantiate(explosionPrefab, transform.position, transform.rotation);
                 Debug.Log("BOOOOOM");
-                audioSource.PlayOneShot(boomSound);
             }
             Destroy(gameObject);
         }

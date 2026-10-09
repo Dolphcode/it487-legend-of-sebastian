@@ -52,8 +52,7 @@ namespace Player
 
         [Header ("Sounds")]
         public AudioClip swordSound;
-        public AudioClip hurtSound;
-        public AudioClip hitSound;
+        public AudioClip hurtSound; //Put this in enemy??? idk
         
         // On Start actions
         private InputAction moveAction;
