@@ -11,6 +11,7 @@ namespace SQZL.World.Interactable
 
         [SerializeField] private string identifier;
         [SerializeField] private int amount;
+        [SerializeField] private PlayerEntityController pecScript;
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
@@ -40,7 +41,17 @@ namespace SQZL.World.Interactable
                 }
                 else
                 {
-                    inv.ToggleUnlockable(identifier, true);
+                    if (identifier == "Bow")
+                    {
+                        Debug.Log("Bow Unlocked!");
+                        inv.ToggleUnlockable("Bow", true);
+                    }
+                    if (identifier == "Boomerang")
+                    {
+                        Debug.Log("Boomerang Unlocked!");
+                        inv.ToggleUnlockable("Boomerang", true);
+                    }
+                    //inv.ToggleUnlockable(identifier, true);
                 }
 
                 // Make the appropriate modification

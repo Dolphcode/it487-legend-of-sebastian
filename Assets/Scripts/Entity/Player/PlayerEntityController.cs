@@ -179,7 +179,7 @@ namespace SQZL.Entity.Player
             SetAnimatorState(xIn != 0 || yIn != 0, Facing);
         }
 
-        private void ODestroy()
+        private void OnDestroy()
         {
             if (_inventory != null)
             {
@@ -531,6 +531,7 @@ namespace SQZL.Entity.Player
         private void OnInventoryUnlockableUpdated(string itemKey, bool state)
         {
             RefreshUnlockedSecondaries();
+            Debug.Log("OnInventoryUnlockableUpdated called");
 
             if (state && Enum.TryParse<SecondaryType>(itemKey, true, out var newType))
             {
@@ -540,26 +541,21 @@ namespace SQZL.Entity.Player
 
             UpdateSecondaryUI();
         }
-
-
-        public void UnlockBoomerang()
-        {
-            _inventory?.ToggleUnlockable("Boomerang", true);
-        }
-
-        public void UnlockBow()
-        {
-            _inventory?.ToggleUnlockable("Bow", true);
-        }
         
         public void RefreshUnlockedSecondaries()
         {
+            Debug.Log("RefreshUnlockedSecondaries Called");
             unlockedSecondaries.Clear();
             
             if (_inventory != null)
             {
+                Debug.Log($"Check {_inventory.HasUnlockable("Bow")}");
                 if (_inventory.HasUnlockable("Bomb")) unlockedSecondaries.Add(SecondaryType.Bomb);
-                if (_inventory.HasUnlockable("Bow")) unlockedSecondaries.Add(SecondaryType.Bow);
+                if (_inventory.HasUnlockable("Bow"))
+                {
+                    unlockedSecondaries.Add(SecondaryType.Bow);
+                    Debug.Log("Bowowowwo");
+                }
                 if (_inventory.HasUnlockable("Boomerang")) unlockedSecondaries.Add(SecondaryType.Boomerang);
             }
 
