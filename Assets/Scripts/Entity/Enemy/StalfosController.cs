@@ -34,7 +34,6 @@ namespace SQZL.Entity.Enemy
                 }
                 MoveEntity(moveSpeed, moveDirection.x, moveDirection.y, true);
                 walkTimeLeft -= Time.fixedDeltaTime;
-                Debug.Log($"{gameObject.name}, {walkTimeLeft}, {Facing}");
             }
         }
 

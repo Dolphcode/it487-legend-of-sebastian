@@ -1,14 +1,15 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using SQZL.World;
+using SQZL.Entity.Projectile;
 
 namespace SQZL.Entity.Enemy
 {
-    public abstract class BaseEnemyController : BaseEntityDamageHandler
+    public abstract class BaseEnemyController : StunnableEntityDamageHandler
     {
-        
         [Header("Movement Config")] [SerializeField]
         protected float moveSpeed = 5f;
         [SerializeField] [Range(0f, 1.0e-4f)] protected float blockTestThreshold = 1.0e-5f;
@@ -24,6 +25,7 @@ namespace SQZL.Entity.Enemy
         protected float maxHP;
         [SerializeField] protected float iframeTime;
 
+        
         #region WALKABLE_FIELDS
         [Header("Walkable Region Config")]
         [SerializeField, HideInInspector] protected Vector2Int walkableRegion;
@@ -43,7 +45,20 @@ namespace SQZL.Entity.Enemy
         protected SpriteRenderer _sprite;
         private RoomSpawnManager _spawnManager;
 
-        public bool ControllerIsActive { protected set; get; } = true;
+        private bool controllerIsActive = true;
+        
+
+        public bool ControllerIsActive
+        {
+            protected set
+            {
+                controllerIsActive = value;
+            }
+            get
+            {
+                return controllerIsActive && !stunned;
+            }
+        }
 
         public event Action<BaseEnemyController> OnEnemyDeath;
 
@@ -140,6 +155,12 @@ namespace SQZL.Entity.Enemy
             if (ControllerIsActive)
             {
                 ControllerIsActive = false;
+                if (!(activeStunCoroutine is null))
+                {
+                    StopCoroutine(activeStunCoroutine);
+                }
+
+                stunned = false;
                 OnDespawn();
             }
         }
@@ -179,6 +200,8 @@ namespace SQZL.Entity.Enemy
 
             return validTiles;
         }
+
+        
 
     }
 }

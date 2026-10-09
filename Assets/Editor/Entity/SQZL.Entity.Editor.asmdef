@@ -6,7 +6,8 @@
         "UnityEngine.UI",
         "SQZL.Entity",
         "SQZL.Entity.Enemy",
-        "SQZL.World.Interactable"
+        "SQZL.World.Interactable",
+        "SQZL.Entity.Projectile"
     ],
     "includePlatforms": [
         "Editor"

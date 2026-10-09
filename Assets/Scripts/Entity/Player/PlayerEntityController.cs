@@ -6,6 +6,7 @@ using UnityEngine.Tilemaps;
 using SQZL.UI;
 using SQZL.World;
 using System.Collections.Generic;
+using SQZL.Entity.Projectile;
 using UnityEngine.UI;
 
 namespace SQZL.Entity.Player
@@ -675,7 +676,7 @@ namespace SQZL.Entity.Player
                     break;
                 case SecondaryType.Boomerang:
                     //Spawn le boomerang
-                    Debug.Log("Used Boomerang");
+                    FireBoomerang(dir);
                     break;
             }
         }
@@ -758,7 +759,6 @@ namespace SQZL.Entity.Player
             }
         }
         #endregion
-        
         #region TRANSITION
 
         private RoomSpawnManager tpRoom;
@@ -798,6 +798,29 @@ namespace SQZL.Entity.Player
             _transitionHandler.OnSlideTransitionEnd -= OnSlideOpened;
             RoomManager._Instance.LoadRoom(tpRoom);
             if (playerInputFrozen) playerInputFrozen = false;
+        }
+        #endregion
+        
+        #region BOOMERANG
+
+        private bool thrownBoomerang = false;
+        private BoomerangPlayerProjectile activeBoomerang;
+        
+        public void FireBoomerang(TilebodyDirection dir)
+        {
+            if (thrownBoomerang) return;
+            thrownBoomerang = true;
+            
+            GameObject proj = Instantiate(boomerangPrefab, transform.position, Quaternion.identity);
+            activeBoomerang = proj.GetComponent<BoomerangPlayerProjectile>();
+            //activeBoomerang.OnBoomerangHit += TriggerBoomerangReload;
+            activeBoomerang.OnBoomerangReturn += TriggerBoomerangReload;
+            activeBoomerang.FireBoomerang(dir, gameObject);
+        }
+
+        private void TriggerBoomerangReload()
+        {
+            thrownBoomerang = false;
         }
         #endregion
     }
