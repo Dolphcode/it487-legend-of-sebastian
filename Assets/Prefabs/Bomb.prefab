@@ -107,9 +107,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   countdown: 3
-  explosionPrefab: {fileID: 0}
+  explosionPrefab: {fileID: 4845840368653040871, guid: 021f607ea5fd71c4c9d1e263a54eddee, type: 3}
   placeSound: {fileID: 8300000, guid: b6397be531dce4c4cba8bff5bf517f35, type: 3}
-  boomSound: {fileID: 8300000, guid: 95ddbf2df270e47498c6c893a2d29626, type: 3}
 --- !u!82 &7813671968897508882
 AudioSource:
   m_ObjectHideFlags: 0

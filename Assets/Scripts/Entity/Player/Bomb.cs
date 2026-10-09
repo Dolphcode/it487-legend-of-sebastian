@@ -22,7 +22,7 @@ namespace SQZL
         {
             if (explosionPrefab != null)
             {
-                Instantiate(explosionPrefab);
+                Instantiate(explosionPrefab, transform.position, transform.rotation);
                 Debug.Log("BOOOOOM");
             }
             Destroy(gameObject);

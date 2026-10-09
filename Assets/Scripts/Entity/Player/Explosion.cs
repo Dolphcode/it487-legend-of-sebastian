@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SQZL
+namespace SQZL.Entity.Player
 {
     public class Explosion : MonoBehaviour
     {
@@ -21,6 +21,17 @@ namespace SQZL
             explosionDuration = animator.GetCurrentAnimatorClipInfo(0).Length;
             audioSource.PlayOneShot(boomSound);
             Destroy(gameObject, explosionDuration);
+        }
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            Debug.Log("Detected" + other.gameObject.name);
+            if (other.CompareTag("Enemy"))
+            {
+                BaseEntityDamageHandler ent = other.gameObject.GetComponent<BaseEntityDamageHandler>();
+                ent.TryDamage(4, false, TilebodyDirection.Down);
+                Debug.Log("Thingy is an enemy");
+            }
         }
     }
 }
