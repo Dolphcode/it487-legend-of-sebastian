@@ -68,7 +68,6 @@ namespace SQZL.World.RoomClears
 
         public void OnCollideWithTilebody(Tilebody2D body)
         {
-            Debug.Log("BLOCK: I am colliding with something?");
             if (canBeTriggered && !triggered && 
                 body.gameObject.CompareTag("Player"))
             {

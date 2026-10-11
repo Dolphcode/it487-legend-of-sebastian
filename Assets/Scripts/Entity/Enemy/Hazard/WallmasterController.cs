@@ -69,6 +69,7 @@ namespace SQZL.Entity.Enemy.Hazard
                 if (currentHP <= 0f)
                 {
                     base.DisconnectSpawnManager();
+                    InvokeEnemyDeath();
                     OnHazardDestroyed?.Invoke(this);
                     Destroy(gameObject);
                 }
