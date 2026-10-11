@@ -779,7 +779,6 @@ namespace SQZL.Entity.Player
 
         public void OnSlideClosed()
         {
-            Debug.Log($"Closed and moving to {tpRoom.gameObject.name}");
             TeleportPlayer(tpRoom.WarpPosition.position, tpRoom.CameraWarpPosition.position);
             _transitionHandler.OnSlideClosed -= OnSlideClosed;
             _transitionHandler.OnSlideTransitionEnd += OnSlideOpened;

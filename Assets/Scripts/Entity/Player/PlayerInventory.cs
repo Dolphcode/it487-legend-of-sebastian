@@ -82,13 +82,11 @@ namespace SQZL.Entity.Player {
 #endif
                 return;
             }
-            Debug.Log("ahhhhhh");
             // Check if changed, then invoke handler
             bool oldValue = _unlockableInventory[name];
             _unlockableInventory[name] = flag;
             
             if (oldValue != flag) OnUnlockableUpdated?.Invoke(name, flag);
-            Debug.Log($"{name} check if we unlocked {_unlockableInventory[name]}");
         }
 
         /// <summary>
