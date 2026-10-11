@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using SQZL.World.Interactable;
 
 namespace SQZL.Entity.Enemy
 {

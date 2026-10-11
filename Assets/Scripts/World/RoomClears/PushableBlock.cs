@@ -63,7 +63,6 @@ namespace SQZL.World.RoomClears
         
         public override void OnRoomClear()
         {
-            Debug.Log("BLOCK: Slimes have been cleared!!!");
             canBeTriggered = true;
         }
 

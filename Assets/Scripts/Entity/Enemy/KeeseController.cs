@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
@@ -78,7 +77,6 @@ namespace SQZL.Entity.Enemy
                 float v0 = speed;
                 float v1 = Mathf.Clamp(speed + (acceleration * ((currentState == KeeseState.SPEEDING) ? 1f : -1f)) 
                     * Time.fixedDeltaTime, 0f, maxSpeed);
-                Debug.Log($"Testing {v0} - {v1} with {i} time left after taking {Time.fixedDeltaTime}");
                 float dx = 0.5f * (v0 + v1) * Time.fixedDeltaTime;
                 
                 // Correct

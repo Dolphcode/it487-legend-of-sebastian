@@ -1,6 +1,4 @@
 using UnityEngine;
-using SQZL.World.Interactable;
-using SQZL.Entity.VFX;
 
 namespace SQZL.Entity.Enemy
 {
@@ -112,10 +110,8 @@ namespace SQZL.Entity.Enemy
 
         public override void OnSpawn()
         {
-            Debug.Log("We should be spawning right?");
             ControllerIsActive = true;
             _sprite.enabled = true;
-            // TODO RAISE GATES/BLOCKERS?
         }
 
         public override void OnDespawn()

@@ -13,20 +13,7 @@ namespace SQZL.World.Interactable
 
         // Like there is 100% a better way to handle this
         [SerializeField] private List<TileSwapEntry> swapTiles;
-
-
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
-        {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
-
+        
         public void OnCollideWithTilebody(Tilebody2D other)
         {
             //Debug.Log(other);

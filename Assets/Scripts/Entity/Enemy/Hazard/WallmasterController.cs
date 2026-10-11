@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using SQZL.Entity.Enemy;
 using SQZL.Entity.Player;
 using SQZL.World;
 
@@ -170,9 +169,6 @@ namespace SQZL.Entity.Enemy.Hazard
                 grabbed = false; // Release here
                 playerRef.WarpWithSlide(tpRoom);
             }
-            //playerRef.TeleportPlayer(tpRoom.WarpPosition.position, tpRoom);
-            //playerRef.playerInputFrozen = false;
-            //RoomManager._Instance.LoadRoom(tpRoom);
             
             // RECHARGE
             for (float x = lengthTime; x > MOTION_END_THRESHOLD; x -= Time.fixedDeltaTime)

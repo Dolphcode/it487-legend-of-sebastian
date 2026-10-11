@@ -1,6 +1,4 @@
-using SQZL.Entity;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 namespace SQZL.Entity.Player
 {

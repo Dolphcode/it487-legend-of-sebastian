@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -93,7 +92,6 @@ namespace SQZL.Entity.Enemy
                 Debug.LogError($"An enemy was created that was not a child of a spawn manager: {gameObject.name}");
             }
             
-            Debug.Log($"I am connecting my functions to {_spawnManager.gameObject.name}");
             _spawnManager.OnLoaded += OnRoomLoad;
             _spawnManager.OnUnloaded += OnRoomUnload;
         }

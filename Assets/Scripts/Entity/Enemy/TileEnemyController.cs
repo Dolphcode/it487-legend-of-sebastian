@@ -321,7 +321,9 @@ namespace SQZL.Entity.Enemy
 
             if (chosenDirection == Vector2Int.zero)
             {
+                #if DEBUG
                 Debug.LogError("Enemy is starting outside of its boundary region");
+                #endif
                 walkTimeLeft = 10f;
                 moveDirection = chosenDirection;
                 return;

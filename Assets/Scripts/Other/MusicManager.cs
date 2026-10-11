@@ -1,5 +1,3 @@
-using System;
-using NUnit.Framework;
 using SQZL.Entity.Player;
 using UnityEngine;
 
@@ -34,6 +32,5 @@ public class MusicManager : MonoBehaviour
         }
 
         hasStoppedPermanently = true;
-        Debug.Log("Music stopped");
     }
 }
