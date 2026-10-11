@@ -17116,7 +17116,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: SQZL.World.RoomClears::SQZL.World.RoomClears.TrapResetter
   trapResetters:
   - {fileID: 1350609318}
-  - {fileID: 212822517}
   trapToReset: {fileID: 1350609318}
   swapEntries:
   - clearTile: 1
