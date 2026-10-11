@@ -27,7 +27,7 @@ namespace SQZL.World.Interactable
          // Ensure that the object is placed in the center (vertically or horizontally) of the two tiles marking a gateway. The collider will be positioned automatically accordingly")]
 
          [Header("Trap Door Config")]
-         [SerializeField] private int trapTriggers;
+         [SerializeField] public int trapTriggers;
 
          [SerializeField] private int playerMoveTilesAdditional = 1;
          [SerializeField] private Tilemap wallTilemap;

@@ -2151,6 +2151,7 @@ Transform:
   - {fileID: 1645846317}
   - {fileID: 1092198367}
   - {fileID: 692652086}
+  - {fileID: 1710379927}
   m_Father: {fileID: 1325055512}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &298799085
@@ -17069,6 +17070,59 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 2, y: 2}
   m_EdgeRadius: 0
+--- !u!1 &1710379926
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1710379927}
+  - component: {fileID: 1710379928}
+  m_Layer: 0
+  m_Name: Trap Resetter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1710379927
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1710379926}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 298799084}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1710379928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1710379926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b4c016d45249814e9f3b9bb34af8f76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: SQZL.World.RoomClears::SQZL.World.RoomClears.TrapResetter
+  trapResetters:
+  - {fileID: 1350609318}
+  - {fileID: 212822517}
+  trapToReset: {fileID: 1350609318}
+  swapEntries:
+  - clearTile: 1
+    tileToSwap: {x: -13, y: -2, z: 0}
+    swapTo: {fileID: 0}
+  wallTiles: {fileID: 1892601857}
 --- !u!1 &1733081614
 GameObject:
   m_ObjectHideFlags: 0
