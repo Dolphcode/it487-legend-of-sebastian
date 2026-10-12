@@ -32,12 +32,10 @@ namespace SQZL.World.Interactable
                 {
                     if (identifier == "Bow")
                     {
-                        Debug.Log("Bow Unlocked!");
                         inv.ToggleUnlockable("Bow", true);
                     }
                     if (identifier == "Boomerang")
                     {
-                        Debug.Log("Boomerang Unlocked!");
                         inv.ToggleUnlockable("Boomerang", true);
                     }
                     //inv.ToggleUnlockable(identifier, true);
