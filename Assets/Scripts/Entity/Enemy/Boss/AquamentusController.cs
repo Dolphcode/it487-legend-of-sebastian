@@ -20,7 +20,6 @@ namespace SQZL.Entity.Enemy
 
         private Animator _animator;
         
-        private float walkTimeLeft;
         private float rechargeTimeLeft;
         private int dX;
 

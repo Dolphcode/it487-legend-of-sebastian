@@ -11258,9 +11258,21 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7462067368277283565, guid: 6382c41d23cd16245a1c8bd9ef80c374, type: 3}
+      propertyPath: bowSprite
+      value: 
+      objectReference: {fileID: -167416144, guid: 540c1724d4f4e3b47a9eeac7fba72da8, type: 3}
+    - target: {fileID: 7462067368277283565, guid: 6382c41d23cd16245a1c8bd9ef80c374, type: 3}
+      propertyPath: bombSprite
+      value: 
+      objectReference: {fileID: -4216791421744005944, guid: 540c1724d4f4e3b47a9eeac7fba72da8, type: 3}
+    - target: {fileID: 7462067368277283565, guid: 6382c41d23cd16245a1c8bd9ef80c374, type: 3}
       propertyPath: boomerangPrefab
       value: 
       objectReference: {fileID: 1421901422526139657, guid: 1cb279f0ebf0dc94e88e2bf267d58c73, type: 3}
+    - target: {fileID: 7462067368277283565, guid: 6382c41d23cd16245a1c8bd9ef80c374, type: 3}
+      propertyPath: boomerangSprite
+      value: 
+      objectReference: {fileID: -4124297175497577528, guid: 540c1724d4f4e3b47a9eeac7fba72da8, type: 3}
     - target: {fileID: 8250976676185244053, guid: 6382c41d23cd16245a1c8bd9ef80c374, type: 3}
       propertyPath: m_IsActive
       value: 1

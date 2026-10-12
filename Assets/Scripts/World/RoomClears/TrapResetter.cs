@@ -24,7 +24,7 @@ namespace SQZL.World.RoomClears
 
         private void ResetTrap()
         {
-            if (!trapBroken) ;
+            if (trapBroken) return;
             trapToReset.trapTriggers++;
             foreach (TileSwapEntry swapEntry in swapEntries)
             {
