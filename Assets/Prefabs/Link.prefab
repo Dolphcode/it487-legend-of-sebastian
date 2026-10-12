@@ -940,6 +940,12 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
+  contactMask:
+    serializedVersion: 2
+    m_Bits: 64
+  knockbackMask:
+    serializedVersion: 2
+    m_Bits: 64
   playerInputFrozen: 0
   swordHitbox: {fileID: 8022130059243689780}
   swordOffset: 0.8
@@ -1710,7 +1716,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1681864608795065491
 RectTransform:
   m_ObjectHideFlags: 0

@@ -24,6 +24,8 @@ namespace SQZL.Entity.Player
         [SerializeField] private float motionBias = 0.1f;
 
         [Header("Collision Config")] [SerializeField] private ContactFilter2D contactFilter;
+        [SerializeField] private LayerMask contactMask;
+        [SerializeField] private LayerMask knockbackMask;
 
         [Header("Player Control Settings")] public bool playerInputFrozen = false;
 
@@ -88,6 +90,8 @@ namespace SQZL.Entity.Player
         private Vector3 lastPosition, deltaPosition;
         private bool vBlocked = false;
         private bool godModeActive = false;
+
+        private ContactFilter2D filterInstance;
         
         // Properties
         public TilebodyDirection Facing { private set; get; } = TilebodyDirection.Down;
@@ -124,6 +128,11 @@ namespace SQZL.Entity.Player
             {
                 _inventory.OnUnlockableUpdated += OnInventoryUnlockableUpdated;
             }
+            
+            // Create the contact filter
+            filterInstance = new();
+            filterInstance.useLayerMask = true;
+            filterInstance.layerMask = contactMask;
 
             //Get the initial list of unlocked secondaries
             RefreshUnlockedSecondaries();
@@ -288,7 +297,7 @@ namespace SQZL.Entity.Player
             
             /* COLLISION SOLVING */
             //Debug.Log($"Here's the new position im moving into {newPosition}");
-            _tilebody2D.MoveAndCollide(newPosition, contactFilter);
+            _tilebody2D.MoveAndCollide(newPosition, filterInstance);
         }
 
         /// <summary>
@@ -454,6 +463,7 @@ namespace SQZL.Entity.Player
         public IEnumerator KnockbackCoroutine()
         {
             playerInputFrozen = true;
+            filterInstance.layerMask = knockbackMask;
             yield return StartCoroutine(ForcePlayerCoroutine(
                 knockbackTilesMax,
                 knockbackTime,
@@ -463,6 +473,7 @@ namespace SQZL.Entity.Player
                 true
                 ));
             playerInputFrozen = false;
+            filterInstance.layerMask = contactMask;
         }
 
         
