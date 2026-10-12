@@ -271,6 +271,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cd5e74e618e4ab4580041c6b3e552e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: SQZL.Entity.Enemy::SQZL.Entity.Enemy.KeeseController
+  stunTime: 2
+  stunnable: 1
   moveSpeed: 5
   blockTestThreshold: 0.00001
   motionBias: 0.1
@@ -288,6 +290,9 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
+  contactMask:
+    serializedVersion: 2
+    m_Bits: 64
   startActive: 0
   maxHP: 1
   iframeTime: 0.25

@@ -283,6 +283,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ee979b896fa2de4fb5c720f94ca6913, type: 3}
   m_Name: 
   m_EditorClassIdentifier: SQZL.Entity.Enemy::SQZL.Entity.Enemy.AquamentusController
+  stunTime: 2
+  stunnable: 1
   moveSpeed: 2
   blockTestThreshold: 0.00001
   motionBias: 0.1
@@ -300,6 +302,9 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
+  contactMask:
+    serializedVersion: 2
+    m_Bits: 64
   startActive: 0
   maxHP: 10
   iframeTime: 1
@@ -310,6 +315,9 @@ MonoBehaviour:
   preCached: 0
   knockbackTilesMax: 0
   knockbackSpeed: 0
+  knockbackMask:
+    serializedVersion: 2
+    m_Bits: 0
   unitsToWalk: 6
   walkOscillateTime: 2
   startUnit: 3

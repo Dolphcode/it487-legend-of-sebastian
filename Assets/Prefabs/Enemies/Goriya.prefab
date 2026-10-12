@@ -48,6 +48,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73581b281836a7c49a04df9dcd02d28b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: SQZL.Entity.Enemy::SQZL.Entity.Enemy.GoriyaController
+  stunTime: 2
+  stunnable: 1
   moveSpeed: 5
   blockTestThreshold: 0.00001
   motionBias: 0.1
@@ -60,11 +62,14 @@ MonoBehaviour:
     useOutsideNormalAngle: 0
     layerMask:
       serializedVersion: 2
-      m_Bits: 192
+      m_Bits: 64
     minDepth: 0
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
+  contactMask:
+    serializedVersion: 2
+    m_Bits: 64
   startActive: 0
   maxHP: 3
   iframeTime: 0.5
@@ -77,6 +82,9 @@ MonoBehaviour:
   preCached: 1
   knockbackTilesMax: 6
   knockbackSpeed: 0.25
+  knockbackMask:
+    serializedVersion: 2
+    m_Bits: 576
   boomerangeProj: {fileID: 1421901422526139657, guid: 813faa38ad5a4bc45923f1319281c164, type: 3}
   minTimeToFire: 1
   maxTimeToFire: 2

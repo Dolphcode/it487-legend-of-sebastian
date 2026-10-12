@@ -12,6 +12,7 @@ namespace SQZL.Entity.Enemy
         [Tooltip("The entity does not need to use these values, only if they are able to be knocked back for the sake of providing common functionality across tilemap enemies")]
         [SerializeField] protected int knockbackTilesMax = 10;
         [SerializeField] protected float knockbackSpeed = 20f;
+        [SerializeField] protected LayerMask knockbackMask;
         
         // State Variables
         protected Vector3 lastPosition, deltaPosition;
@@ -252,6 +253,7 @@ namespace SQZL.Entity.Enemy
         {
             ControllerIsActive = false;
             iframes = iframeTime;
+            _filterInstance.layerMask = knockbackMask;
             yield return StartCoroutine(ForceEntityCoroutine(
                 knockbackTilesMax,
                 knockbackSpeed,
@@ -261,6 +263,7 @@ namespace SQZL.Entity.Enemy
                 true
             ));
             ControllerIsActive = true;
+            _filterInstance.layerMask = contactMask;
             PickDirection();
         }
 

@@ -16,6 +16,7 @@ namespace SQZL.Entity.Enemy
 
         [Header("Collision Config")] [SerializeField]
         protected ContactFilter2D contactFilter;
+        [SerializeField] protected LayerMask contactMask;
 
         [Header("Spawn Config")]
         [SerializeField] protected bool startActive = false;
@@ -45,6 +46,8 @@ namespace SQZL.Entity.Enemy
         private RoomSpawnManager _spawnManager;
 
         private bool controllerIsActive = true;
+
+        protected ContactFilter2D _filterInstance;
         
 
         public bool ControllerIsActive
@@ -80,6 +83,11 @@ namespace SQZL.Entity.Enemy
             _tilebody2D = GetComponent<Tilebody2D>();
             _collider2D = GetComponent<BoxCollider2D>();
             _sprite = GetComponent<SpriteRenderer>();
+            
+            // Create the contact filter
+            _filterInstance = new ContactFilter2D();
+            _filterInstance.useLayerMask = true;
+            _filterInstance.layerMask = contactMask;
             
             // Should we start active
             ControllerIsActive = startActive;

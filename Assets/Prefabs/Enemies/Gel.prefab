@@ -176,6 +176,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa488c0861aba1e41a9ebb8a8c922589, type: 3}
   m_Name: 
   m_EditorClassIdentifier: SQZL.Entity.Enemy::SQZL.Entity.Enemy.GelController
+  stunTime: 2
+  stunnable: 1
   moveSpeed: 5
   blockTestThreshold: 0.00001
   motionBias: 0.1
@@ -193,6 +195,9 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
+  contactMask:
+    serializedVersion: 2
+    m_Bits: 64
   startActive: 0
   maxHP: 2
   iframeTime: 0.5
@@ -205,6 +210,9 @@ MonoBehaviour:
   preCached: 1
   knockbackTilesMax: 10
   knockbackSpeed: 20
+  knockbackMask:
+    serializedVersion: 2
+    m_Bits: 0
   waitBetweenSteps: 0.5
 --- !u!114 &547069145262135075
 MonoBehaviour:
