@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6526270585043120480}
   - component: {fileID: 5125116545008747465}
   - component: {fileID: 3186808706369305908}
+  - component: {fileID: 8632001552221780757}
   m_Layer: 0
   m_Name: Goriya
   m_TagString: Enemy
@@ -233,3 +234,21 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.9375, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &8632001552221780757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3042037831126563595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f00ed32f7b4c6b341b06f7ed0f1dd5e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: SQZL.Entity.Enemy::SQZL.Entity.Enemy.EnemyRandomDrop
+  noDropChance: 0.4
+  dropTable:
+  - prefab: {fileID: 7677459395372124466, guid: 42e9545a4d4d974429ddec1237e08fef, type: 3}
+    probability: 7
+  - prefab: {fileID: 7677459395372124466, guid: 8bdff31ea65f6914894c7f391fcb35d4, type: 3}
+    probability: 3
