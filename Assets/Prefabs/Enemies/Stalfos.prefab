@@ -250,6 +250,8 @@ MonoBehaviour:
     probability: 8
   - prefab: {fileID: 7677459395372124466, guid: 8bdff31ea65f6914894c7f391fcb35d4, type: 3}
     probability: 2
+  - prefab: {fileID: 7677459395372124466, guid: eae20f3b896f34b4eb4d32e8a3177ca0, type: 3}
+    probability: 2
 --- !u!1 &6209482974749297682
 GameObject:
   m_ObjectHideFlags: 0

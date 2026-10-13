@@ -342,4 +342,6 @@ MonoBehaviour:
   noDropChance: 0.5
   dropTable:
   - prefab: {fileID: 7677459395372124466, guid: 42e9545a4d4d974429ddec1237e08fef, type: 3}
+    probability: 9
+  - prefab: {fileID: 7677459395372124466, guid: eae20f3b896f34b4eb4d32e8a3177ca0, type: 3}
     probability: 1

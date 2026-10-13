@@ -124,6 +124,7 @@ GameObject:
   - component: {fileID: 6232050119981781405}
   - component: {fileID: 5767364459162210919}
   - component: {fileID: 421187813587552266}
+  - component: {fileID: 6700855828880175828}
   m_Layer: 0
   m_Name: Aquamentus
   m_TagString: Enemy
@@ -182,7 +183,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.5}
+  m_Offset: {x: 0.0625, y: 0.3}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.25}
@@ -192,7 +193,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.4, y: 1.6}
+  m_Size: {x: 1.375, y: 1.6}
   m_EdgeRadius: 0
 --- !u!212 &3672089700137578437
 SpriteRenderer:
@@ -361,5 +362,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: SQZL.Entity::SQZL.Entity.Hurtbox
   targetTag: Player
-  damageAmount: 6
+  damageAmount: 1
   doKnockback: 1
+--- !u!114 &6700855828880175828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6961946412235332191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f00ed32f7b4c6b341b06f7ed0f1dd5e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: SQZL.Entity.Enemy::SQZL.Entity.Enemy.EnemyRandomDrop
+  noDropChance: 0
+  dropTable:
+  - prefab: {fileID: 7677459395372124466, guid: eae20f3b896f34b4eb4d32e8a3177ca0, type: 3}
+    probability: 1

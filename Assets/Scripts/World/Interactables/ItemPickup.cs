@@ -19,13 +19,19 @@ namespace SQZL.World.Interactable
             {
                 // Get the player's inventory
                 PlayerInventory inv = other.gameObject.GetComponent<PlayerInventory>();
+                PlayerHealthManager health = other.gameObject.GetComponent<PlayerHealthManager>();
 
                 if (isCollectible)
                 {
                     inv.AccumulateConsumable(identifier, amount);
-                    if (identifier == "rupee")
+                    if (identifier == "health")
                     {
-                        Debug.Log("Rupee");
+                        // TODO: THIS HARDCODING IS TERRIBLE PLEASE FIX THIS LATER
+                        health.Heal(amount); 
+                    }
+                    else if (identifier == "maxhealth")
+                    {
+                        health.AddMaxHealth(amount);
                     }
                 }
                 else

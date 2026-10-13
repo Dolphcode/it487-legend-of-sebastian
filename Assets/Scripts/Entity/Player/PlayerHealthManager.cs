@@ -43,6 +43,7 @@ namespace SQZL.Entity.Player
             if (pcScript.IFrames <= 0f)
             {
                 currentHealth -= amount;
+                currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
                 _animator.SetBool(_a_Damaged, true);
                 audioSource.PlayOneShot(hurtSound);
 
@@ -98,6 +99,23 @@ namespace SQZL.Entity.Player
                     Heart3.sprite = fullHeart;
                     break;
             }
+        }
+
+        public void Heal(int amount)
+        {
+            currentHealth += amount;
+            currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+        }
+
+        /// <summary>
+        /// TODO IMPLEMENT, JUST MAXES OUT HEALTH RN
+        /// The function itself should be simple but we need to adapt the UI
+        /// </summary>
+        /// <param name="amount">amount to add</param>
+        public void AddMaxHealth(int amount)
+        {
+            // maxHealth += amount;
+            currentHealth = maxHealth;
         }
     }
 }

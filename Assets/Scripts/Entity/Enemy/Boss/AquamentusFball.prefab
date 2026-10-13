@@ -48,7 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: SQZL.Entity.Enemy::SQZL.Entity.Enemy.AquamentusFireball
   targetTag: Player
-  damageAmount: 2
+  damageAmount: 1
   doKnockback: 0
   spawnTime: 0.4
   totalLifeTime: 3
