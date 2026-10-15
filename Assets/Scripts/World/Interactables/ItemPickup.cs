@@ -12,17 +12,6 @@ namespace SQZL.World.Interactable
         [SerializeField] private string identifier;
         [SerializeField] private int amount;
         [SerializeField] private PlayerEntityController pecScript;
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
-        {
-            
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
@@ -30,25 +19,29 @@ namespace SQZL.World.Interactable
             {
                 // Get the player's inventory
                 PlayerInventory inv = other.gameObject.GetComponent<PlayerInventory>();
+                PlayerHealthManager health = other.gameObject.GetComponent<PlayerHealthManager>();
 
                 if (isCollectible)
                 {
                     inv.AccumulateConsumable(identifier, amount);
-                    if (identifier == "rupee")
+                    if (identifier == "health")
                     {
-                        Debug.Log("Rupee");
+                        // TODO: THIS HARDCODING IS TERRIBLE PLEASE FIX THIS LATER
+                        health.Heal(amount); 
+                    }
+                    else if (identifier == "maxhealth")
+                    {
+                        health.AddMaxHealth(amount);
                     }
                 }
                 else
                 {
                     if (identifier == "Bow")
                     {
-                        Debug.Log("Bow Unlocked!");
                         inv.ToggleUnlockable("Bow", true);
                     }
                     if (identifier == "Boomerang")
                     {
-                        Debug.Log("Boomerang Unlocked!");
                         inv.ToggleUnlockable("Boomerang", true);
                     }
                     //inv.ToggleUnlockable(identifier, true);

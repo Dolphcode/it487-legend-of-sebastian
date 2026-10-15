@@ -1,3 +1,4 @@
+using SQZL.World;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,11 +26,13 @@ namespace SQZL.Entity.Player
 
         private Animator _animator;
         private int _a_Damaged;
+        private int _a_Dead;
         
         void Start()
         {
             _animator = GetComponent<Animator>();
             _a_Damaged = Animator.StringToHash("Damaged");
+            _a_Dead = Animator.StringToHash("Dead");
             
             //Planning ahead since max health can be increased later via heart containers,
             //so it's best to create a max health and current health variable.
@@ -43,6 +46,15 @@ namespace SQZL.Entity.Player
             if (pcScript.IFrames <= 0f)
             {
                 currentHealth -= amount;
+                currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+
+                if (currentHealth == 0)
+                {
+                    pcScript.playerInputFrozen = true;
+                    RoomManager._Instance.UnloadRoom();
+                    _animator.SetTrigger(_a_Dead);
+                    return;
+                }
                 _animator.SetBool(_a_Damaged, true);
                 audioSource.PlayOneShot(hurtSound);
 
@@ -98,6 +110,23 @@ namespace SQZL.Entity.Player
                     Heart3.sprite = fullHeart;
                     break;
             }
+        }
+
+        public void Heal(int amount)
+        {
+            currentHealth += amount;
+            currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+        }
+
+        /// <summary>
+        /// TODO IMPLEMENT, JUST MAXES OUT HEALTH RN
+        /// The function itself should be simple but we need to adapt the UI
+        /// </summary>
+        /// <param name="amount">amount to add</param>
+        public void AddMaxHealth(int amount)
+        {
+            // maxHealth += amount;
+            currentHealth = maxHealth;
         }
     }
 }

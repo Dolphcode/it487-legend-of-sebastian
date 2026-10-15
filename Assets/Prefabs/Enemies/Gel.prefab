@@ -1,5 +1,99 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1394396190912101073
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 811464137305517037}
+  - component: {fileID: 2272928095693800572}
+  - component: {fileID: 8251962703683169291}
+  m_Layer: 0
+  m_Name: Hurtbox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &811464137305517037
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1394396190912101073}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3118841630243355679}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &2272928095693800572
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1394396190912101073}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: -0.0625}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 0.5, y: 0.5}
+  m_EdgeRadius: 0
+--- !u!114 &8251962703683169291
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1394396190912101073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b731b8d5e045c2840b5e89015318d045, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: SQZL.Entity::SQZL.Entity.Hurtbox
+  targetTag: Player
+  damageAmount: 1
+  doKnockback: 1
 --- !u!1 &3323580775898254631
 GameObject:
   m_ObjectHideFlags: 0
@@ -14,6 +108,7 @@ GameObject:
   - component: {fileID: 6926356997206767860}
   - component: {fileID: 8891420571308772250}
   - component: {fileID: 547069145262135075}
+  - component: {fileID: 622327711519903871}
   m_Layer: 0
   m_Name: Gel
   m_TagString: Enemy
@@ -33,7 +128,8 @@ Transform:
   m_LocalPosition: {x: -46, y: -4, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 811464137305517037}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &7660164798357251479
@@ -176,6 +272,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa488c0861aba1e41a9ebb8a8c922589, type: 3}
   m_Name: 
   m_EditorClassIdentifier: SQZL.Entity.Enemy::SQZL.Entity.Enemy.GelController
+  stunTime: 2
+  stunnable: 1
   moveSpeed: 5
   blockTestThreshold: 0.00001
   motionBias: 0.1
@@ -193,6 +291,9 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
+  contactMask:
+    serializedVersion: 2
+    m_Bits: 64
   startActive: 0
   maxHP: 2
   iframeTime: 0.5
@@ -205,6 +306,9 @@ MonoBehaviour:
   preCached: 1
   knockbackTilesMax: 10
   knockbackSpeed: 20
+  knockbackMask:
+    serializedVersion: 2
+    m_Bits: 0
   waitBetweenSteps: 0.5
 --- !u!114 &547069145262135075
 MonoBehaviour:
@@ -223,3 +327,21 @@ MonoBehaviour:
   overlapOvershootMax: 0.2
   doOverrideCollider: 0
   overrideBoxCollider: {fileID: 0}
+--- !u!114 &622327711519903871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3323580775898254631}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f00ed32f7b4c6b341b06f7ed0f1dd5e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: SQZL.Entity.Enemy::SQZL.Entity.Enemy.EnemyRandomDrop
+  noDropChance: 0.5
+  dropTable:
+  - prefab: {fileID: 7677459395372124466, guid: 42e9545a4d4d974429ddec1237e08fef, type: 3}
+    probability: 9
+  - prefab: {fileID: 7677459395372124466, guid: eae20f3b896f34b4eb4d32e8a3177ca0, type: 3}
+    probability: 1

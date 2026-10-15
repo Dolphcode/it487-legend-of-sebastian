@@ -24,6 +24,8 @@ namespace SQZL.Entity.Player
         [SerializeField] private float motionBias = 0.1f;
 
         [Header("Collision Config")] [SerializeField] private ContactFilter2D contactFilter;
+        [SerializeField] private LayerMask contactMask;
+        [SerializeField] private LayerMask knockbackMask;
 
         [Header("Player Control Settings")] public bool playerInputFrozen = false;
 
@@ -88,6 +90,8 @@ namespace SQZL.Entity.Player
         private Vector3 lastPosition, deltaPosition;
         private bool vBlocked = false;
         private bool godModeActive = false;
+
+        private ContactFilter2D filterInstance;
         
         // Properties
         public TilebodyDirection Facing { private set; get; } = TilebodyDirection.Down;
@@ -124,6 +128,11 @@ namespace SQZL.Entity.Player
             {
                 _inventory.OnUnlockableUpdated += OnInventoryUnlockableUpdated;
             }
+            
+            // Create the contact filter
+            filterInstance = new();
+            filterInstance.useLayerMask = true;
+            filterInstance.layerMask = contactMask;
 
             //Get the initial list of unlocked secondaries
             RefreshUnlockedSecondaries();
@@ -288,7 +297,7 @@ namespace SQZL.Entity.Player
             
             /* COLLISION SOLVING */
             //Debug.Log($"Here's the new position im moving into {newPosition}");
-            _tilebody2D.MoveAndCollide(newPosition, contactFilter);
+            _tilebody2D.MoveAndCollide(newPosition, filterInstance);
         }
 
         /// <summary>
@@ -454,6 +463,7 @@ namespace SQZL.Entity.Player
         public IEnumerator KnockbackCoroutine()
         {
             playerInputFrozen = true;
+            filterInstance.layerMask = knockbackMask;
             yield return StartCoroutine(ForcePlayerCoroutine(
                 knockbackTilesMax,
                 knockbackTime,
@@ -463,6 +473,7 @@ namespace SQZL.Entity.Player
                 true
                 ));
             playerInputFrozen = false;
+            filterInstance.layerMask = contactMask;
         }
 
         
@@ -480,12 +491,12 @@ namespace SQZL.Entity.Player
             if(godModeActive)
             {
                 //Disable hurtbox and set items to max
-                Debug.Log("God Mode Enabled");
+                //Debug.Log("God Mode Enabled");
             }
             else
             {
                 //Reenable hurtbox
-                Debug.Log("God Mode Disabled");
+                //Debug.Log("God Mode Disabled");
             }
         }
 
@@ -532,7 +543,6 @@ namespace SQZL.Entity.Player
         private void OnInventoryUnlockableUpdated(string itemKey, bool state)
         {
             RefreshUnlockedSecondaries();
-            Debug.Log("OnInventoryUnlockableUpdated called");
 
             if (state && Enum.TryParse<SecondaryType>(itemKey, true, out var newType))
             {
@@ -545,17 +555,14 @@ namespace SQZL.Entity.Player
         
         public void RefreshUnlockedSecondaries()
         {
-            Debug.Log("RefreshUnlockedSecondaries Called");
             unlockedSecondaries.Clear();
             
             if (_inventory != null)
             {
-                Debug.Log($"Check {_inventory.HasUnlockable("Bow")}");
                 if (_inventory.HasUnlockable("Bomb")) unlockedSecondaries.Add(SecondaryType.Bomb);
                 if (_inventory.HasUnlockable("Bow"))
                 {
                     unlockedSecondaries.Add(SecondaryType.Bow);
-                    Debug.Log("Bowowowwo");
                 }
                 if (_inventory.HasUnlockable("Boomerang")) unlockedSecondaries.Add(SecondaryType.Boomerang);
             }
@@ -576,7 +583,6 @@ namespace SQZL.Entity.Player
 
             currentSecondaryIndex = (currentSecondaryIndex + 1) % unlockedSecondaries.Count;
             UpdateSecondaryUI();
-            Debug.Log($"Swapped to: {CurrentSecondary}");
         }
 
         private void UpdateSecondaryUI()
@@ -654,7 +660,6 @@ namespace SQZL.Entity.Player
         }
         IEnumerator Secondary()
         {
-            Debug.Log("Secondary Attack Started!");
             ExecuteSecondaryAttack(Facing);
             playerInputFrozen = false;
             yield return null;
@@ -669,7 +674,6 @@ namespace SQZL.Entity.Player
                 case SecondaryType.Bomb:
                     //Spawn le bomb
                     FireBomb(dir);
-                    Debug.Log("Used Bomb");
                     break;
                 case SecondaryType.Bow:
                     FireArrow(dir);
@@ -786,7 +790,6 @@ namespace SQZL.Entity.Player
 
         public void OnSlideClosed()
         {
-            Debug.Log($"Closed and moving to {tpRoom.gameObject.name}");
             TeleportPlayer(tpRoom.WarpPosition.position, tpRoom.CameraWarpPosition.position);
             _transitionHandler.OnSlideClosed -= OnSlideClosed;
             _transitionHandler.OnSlideTransitionEnd += OnSlideOpened;
@@ -813,7 +816,6 @@ namespace SQZL.Entity.Player
             
             GameObject proj = Instantiate(boomerangPrefab, transform.position, Quaternion.identity);
             activeBoomerang = proj.GetComponent<BoomerangPlayerProjectile>();
-            //activeBoomerang.OnBoomerangHit += TriggerBoomerangReload;
             activeBoomerang.OnBoomerangReturn += TriggerBoomerangReload;
             activeBoomerang.FireBoomerang(dir, gameObject);
         }

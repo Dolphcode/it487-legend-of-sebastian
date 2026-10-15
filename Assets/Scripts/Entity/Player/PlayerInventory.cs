@@ -70,7 +70,6 @@ namespace SQZL.Entity.Player {
         /// <param name="flag"><c>true</c> to unlock, <c>false</c> to lock</param>
         public void ToggleUnlockable(string name, bool flag)
         {
-            Debug.Log(name + flag);
             // Check if unlockable exists
             if (!_unlockableInventory.ContainsKey(name))
             {
@@ -82,13 +81,11 @@ namespace SQZL.Entity.Player {
 #endif
                 return;
             }
-            Debug.Log("ahhhhhh");
             // Check if changed, then invoke handler
             bool oldValue = _unlockableInventory[name];
             _unlockableInventory[name] = flag;
             
             if (oldValue != flag) OnUnlockableUpdated?.Invoke(name, flag);
-            Debug.Log($"{name} check if we unlocked {_unlockableInventory[name]}");
         }
 
         /// <summary>

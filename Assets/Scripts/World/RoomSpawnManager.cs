@@ -30,7 +30,6 @@ namespace SQZL.World
         
         internal void TriggerLoad()
         {
-            Debug.Log($"How many things connected to load?");
             OnLoaded?.Invoke(this);
         }
 

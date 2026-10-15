@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace SQZL.Entity {
    /// <summary>
    /// Components that should respond to the tile collisions system should implement this interface AND use the tag

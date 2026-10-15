@@ -101,9 +101,7 @@ namespace SQZL.Entity.Projectile
         
         private void OnTriggerEnter2D(Collider2D other)
         {
-            Debug.Log("Trying to stun other");
             StunnableEntityDamageHandler hitbox;
-            Debug.Log(other.GetComponent<StunnableEntityDamageHandler>());
             if (other.gameObject.CompareTag("Enemy") && other.TryGetComponent(out hitbox))
             {
                 // TODO Stun

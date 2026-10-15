@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -17,6 +16,7 @@ namespace SQZL.Entity.Enemy
 
         [Header("Collision Config")] [SerializeField]
         protected ContactFilter2D contactFilter;
+        [SerializeField] protected LayerMask contactMask;
 
         [Header("Spawn Config")]
         [SerializeField] protected bool startActive = false;
@@ -46,6 +46,8 @@ namespace SQZL.Entity.Enemy
         private RoomSpawnManager _spawnManager;
 
         private bool controllerIsActive = true;
+
+        protected ContactFilter2D _filterInstance;
         
 
         public bool ControllerIsActive
@@ -82,6 +84,11 @@ namespace SQZL.Entity.Enemy
             _collider2D = GetComponent<BoxCollider2D>();
             _sprite = GetComponent<SpriteRenderer>();
             
+            // Create the contact filter
+            _filterInstance = new ContactFilter2D();
+            _filterInstance.useLayerMask = true;
+            _filterInstance.layerMask = contactMask;
+            
             // Should we start active
             ControllerIsActive = startActive;
         }
@@ -93,7 +100,6 @@ namespace SQZL.Entity.Enemy
                 Debug.LogError($"An enemy was created that was not a child of a spawn manager: {gameObject.name}");
             }
             
-            Debug.Log($"I am connecting my functions to {_spawnManager.gameObject.name}");
             _spawnManager.OnLoaded += OnRoomLoad;
             _spawnManager.OnUnloaded += OnRoomUnload;
         }

@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace SQZL.Entity.Enemy.Hazard
@@ -12,6 +11,7 @@ namespace SQZL.Entity.Enemy.Hazard
         
         private void Start()
         {
+            #if DEBUG
             if (!transform.parent.TryGetComponent<WallmasterController>(out _controller))
             {
                 Debug.LogError("whar? No wallmaster controller as parent of grabbox :(\nMight be in no-Godot (No-Dot?) hell");
@@ -21,6 +21,9 @@ namespace SQZL.Entity.Enemy.Hazard
             {
                 Debug.LogError("didn't set this grab box to be a trigger smdh");
             }
+            #else
+            _controller = transform.parent.GetComponent<WallmasterController>();
+            #endif
         }
 
         private void OnTriggerEnter2D(Collider2D other)

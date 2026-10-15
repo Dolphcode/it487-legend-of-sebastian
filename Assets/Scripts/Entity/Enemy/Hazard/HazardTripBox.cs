@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -23,14 +22,12 @@ namespace SQZL.Entity.Enemy.Hazard
                 {
                     h.OnHazardDestroyed += OnBoundHazardDestroyed;
                     boundHazards.Add(h);
-                    Debug.Log("Tracking a hazard");
                 }
             }
         }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            Debug.Log("whoa");
             if (other.gameObject.CompareTag(targetTag))
             {
                 foreach (IHazard tracked in boundHazards)

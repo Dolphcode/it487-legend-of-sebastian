@@ -1,5 +1,3 @@
-using SQZL.Entity;
-using SQZL.World.Interactable;
 using SQZL.Entity.Projectile;
 using UnityEngine;
 

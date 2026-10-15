@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6888942978803212847}
   - component: {fileID: 53863775899604853}
   - component: {fileID: 1215618576800488265}
+  - component: {fileID: 1398396154923894573}
   m_Layer: 0
   m_Name: Stalfos
   m_TagString: Enemy
@@ -155,6 +156,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ffcb4f8a665429e8d63116c57e23017, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SQZL.Entity.Enemy.StalfosController
+  stunTime: 2
+  stunnable: 1
   moveSpeed: 5
   blockTestThreshold: 0.00001
   motionBias: 0.1
@@ -172,6 +175,9 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
+  contactMask:
+    serializedVersion: 2
+    m_Bits: 64
   startActive: 0
   maxHP: 2
   iframeTime: 0.5
@@ -184,6 +190,9 @@ MonoBehaviour:
   preCached: 1
   knockbackTilesMax: 6
   knockbackSpeed: 0.25
+  knockbackMask:
+    serializedVersion: 2
+    m_Bits: 576
 --- !u!114 &53863775899604853
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -223,6 +232,26 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1398396154923894573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1330510782966898044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f00ed32f7b4c6b341b06f7ed0f1dd5e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: SQZL.Entity.Enemy::SQZL.Entity.Enemy.EnemyRandomDrop
+  noDropChance: 0.5
+  dropTable:
+  - prefab: {fileID: 7677459395372124466, guid: 42e9545a4d4d974429ddec1237e08fef, type: 3}
+    probability: 8
+  - prefab: {fileID: 7677459395372124466, guid: 8bdff31ea65f6914894c7f391fcb35d4, type: 3}
+    probability: 2
+  - prefab: {fileID: 7677459395372124466, guid: eae20f3b896f34b4eb4d32e8a3177ca0, type: 3}
+    probability: 2
 --- !u!1 &6209482974749297682
 GameObject:
   m_ObjectHideFlags: 0

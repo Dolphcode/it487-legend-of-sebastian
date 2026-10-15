@@ -107,6 +107,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6d379c854fd9754ba338a476d0ea84c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: SQZL.Entity.Enemy.Hazard::SQZL.Entity.Enemy.Hazard.SpikeTrapController
+  stunTime: 2
+  stunnable: 1
   moveSpeed: 5
   blockTestThreshold: 0.00001
   motionBias: 0.1
@@ -124,6 +126,9 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
+  contactMask:
+    serializedVersion: 2
+    m_Bits: 0
   startActive: 0
   maxHP: 0
   iframeTime: 0

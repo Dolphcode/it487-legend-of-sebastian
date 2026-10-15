@@ -17,7 +17,6 @@ namespace SQZL.World
 
         private void Start()
         {
-            Debug.Log($"We are starting with {_currentRoom}");
             if (!(_currentRoom is null)) _currentRoom.TriggerLoad();
         }
 

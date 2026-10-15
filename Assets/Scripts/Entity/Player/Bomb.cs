@@ -7,9 +7,10 @@ namespace SQZL
         [SerializeField] private int countdown = 3;
         [SerializeField] private GameObject explosionPrefab;
 
-        [Header("Sounds")]
-        public AudioClip placeSound;
+        [Header("Sounds")] public AudioClip placeSound;
+
         private AudioSource audioSource;
+
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
@@ -23,15 +24,10 @@ namespace SQZL
             if (explosionPrefab != null)
             {
                 Instantiate(explosionPrefab, transform.position, transform.rotation);
-                Debug.Log("BOOOOOM");
             }
-            Destroy(gameObject);
-        }
 
-        // Update is called once per frame
-        void Update()
-        {
-        
+            Destroy(gameObject);
+
         }
     }
 }

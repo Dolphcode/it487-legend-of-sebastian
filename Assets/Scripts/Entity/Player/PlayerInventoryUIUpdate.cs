@@ -38,11 +38,5 @@ namespace SQZL.Entity.Player
                     break;
             }
         }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using SQZL.World.Interactable;
 
 namespace SQZL.Entity.Enemy
 {
@@ -45,6 +44,7 @@ namespace SQZL.Entity.Enemy
                 if (currentHP <= 0f)
                 {
                     base.DisconnectSpawnManager();
+                    InvokeEnemyDeath();
                     Destroy(gameObject);
                 }
                 else
