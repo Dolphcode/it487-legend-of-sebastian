@@ -10,8 +10,11 @@ public class MusicManager : MonoBehaviour
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
-        audioSource.Play();
-        audioSource.loop = true;
+
+        if(audioSource != null)
+        {
+            audioSource.Play();
+        }
     }
 
     // Update is called once per frame

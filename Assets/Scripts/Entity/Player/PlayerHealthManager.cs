@@ -8,7 +8,7 @@ namespace SQZL.Entity.Player
     {
         //Going with ints instead of floats for the sake of using a switch statement to handle the UI.
         //This means that half a heart = 1 health and 1 full heart = 2 health. Keep this in mind when doing damage values.
-        private int maxHealth;
+        public int maxHealth;
         public int currentHealth;
         [SerializeField] public AudioClip hurtSound;
         private AudioSource audioSource;
