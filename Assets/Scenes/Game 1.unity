@@ -18228,6 +18228,54 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1178776563}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &205741018
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 205741019}
+  - component: {fileID: 205741020}
+  m_Layer: 0
+  m_Name: Room0_0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &205741019
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 205741018}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 909849211}
+  m_Father: {fileID: 736811588}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &205741020
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 205741018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a09ebf4187955c1418e1523efab55eb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: SQZL.World::SQZL.World.RoomSpawnManager
+  startingRoom: 1
+  cameraPosition: {fileID: 909849211}
+  warpPosition: {fileID: 0}
 --- !u!1 &212822514
 GameObject:
   m_ObjectHideFlags: 0
@@ -27657,7 +27705,9 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 205741019}
+  - {fileID: 1589092517}
   m_Father: {fileID: 1074940480}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &747113628
@@ -30849,6 +30899,37 @@ MonoBehaviour:
   cameraMoveTime: 2
   aRoom: {fileID: 620775191}
   bRoom: {fileID: 925276525}
+--- !u!1 &909849210
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 909849211}
+  m_Layer: 0
+  m_Name: CameraPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &909849211
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 909849210}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 121, y: -88, z: -10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 205741019}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &914295664
 GameObject:
   m_ObjectHideFlags: 0
@@ -71071,11 +71152,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4232005782449720885, guid: 6382c41d23cd16245a1c8bd9ef80c374, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 57
+      value: 121
       objectReference: {fileID: 0}
     - target: {fileID: 4232005782449720885, guid: 6382c41d23cd16245a1c8bd9ef80c374, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -52
+      value: -88
       objectReference: {fileID: 0}
     - target: {fileID: 4232005782449720885, guid: 6382c41d23cd16245a1c8bd9ef80c374, type: 3}
       propertyPath: m_LocalPosition.z
@@ -77623,6 +77704,53 @@ MonoBehaviour:
   cameraMoveTime: 2
   aRoom: {fileID: 620775191}
   bRoom: {fileID: 757528609}
+--- !u!1 &1589092516
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1589092517}
+  - component: {fileID: 1589092518}
+  m_Layer: 0
+  m_Name: Room0_0 (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1589092517
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1589092516}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 736811588}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1589092518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1589092516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a09ebf4187955c1418e1523efab55eb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: SQZL.World::SQZL.World.RoomSpawnManager
+  startingRoom: 0
+  cameraPosition: {fileID: 0}
+  warpPosition: {fileID: 0}
 --- !u!1001 &1590048119
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -83247,7 +83375,7 @@ Transform:
   m_GameObject: {fileID: 2016034834}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 57, y: -44, z: -10}
+  m_LocalPosition: {x: 121, y: -88, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -83402,7 +83530,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a09ebf4187955c1418e1523efab55eb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: SQZL.World::SQZL.World.RoomSpawnManager
-  startingRoom: 1
+  startingRoom: 0
   cameraPosition: {fileID: 518503645}
   warpPosition: {fileID: 0}
 --- !u!1 &2039355897
