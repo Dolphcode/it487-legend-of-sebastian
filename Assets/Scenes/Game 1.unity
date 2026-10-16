@@ -28276,7 +28276,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: cc2a45d88f084f741b7028c41ac59e1f, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -86100,9 +86100,9 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0
+    x: 0.20000002
     y: 0
-    width: 1
+    width: 0.6
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
