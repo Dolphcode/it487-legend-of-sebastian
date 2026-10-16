@@ -19,6 +19,8 @@ namespace SQZL.World.Interactable
         private Animator _animator;
         private int _a_Turn;
         private int _a_HasTorchFace;
+
+        private PlayerInventory _playerInv;
         
         internal StatueObjectFace CurrentFace { private set; get; }
         
@@ -32,6 +34,8 @@ namespace SQZL.World.Interactable
             
             // TODO: Maybe implement starting face if needed?
             CurrentFace = StatueObjectFace.PIGEON; // just default
+            
+            _playerInv = _playerRef.GetComponent<PlayerInventory>();
 
         }
 
@@ -63,7 +67,7 @@ namespace SQZL.World.Interactable
 
         public void OnCollideWithTilebody(Tilebody2D body)
         {
-            if (!hasTorchFace)
+            if (!hasTorchFace && _playerInv.HasUnlockable("TorchFace"))
             {
                 hasTorchFace = true;
                 _animator.SetBool(_a_HasTorchFace, true);
