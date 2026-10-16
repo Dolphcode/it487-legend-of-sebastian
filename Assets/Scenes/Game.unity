@@ -12692,6 +12692,10 @@ PrefabInstance:
       propertyPath: knockbackMask.m_Bits
       value: 576
       objectReference: {fileID: 0}
+    - target: {fileID: 7462067368277283565, guid: 6382c41d23cd16245a1c8bd9ef80c374, type: 3}
+      propertyPath: swordProjectilePrefab
+      value: 
+      objectReference: {fileID: 8862248808451639820, guid: a193583bc5111b942a2199b30c121fd8, type: 3}
     - target: {fileID: 8250976676185244053, guid: 6382c41d23cd16245a1c8bd9ef80c374, type: 3}
       propertyPath: m_IsActive
       value: 1

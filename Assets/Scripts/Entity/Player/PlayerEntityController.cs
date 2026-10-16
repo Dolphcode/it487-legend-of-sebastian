@@ -32,6 +32,7 @@ namespace SQZL.Entity.Player
         [Header("Sword Config")]
         [SerializeField] private GameObject swordHitbox;
         [SerializeField] private float swordOffset = 0.8f;
+        [SerializeField] private GameObject swordProjectilePrefab;
 
         [Header("Secondary Config")]
         [SerializeField] private GameObject arrowPrefab;
@@ -82,6 +83,7 @@ namespace SQZL.Entity.Player
         private PlayerInventory _inventory;
         private Camera _camera2D;
         private AudioSource _audioSource;
+        private PlayerHealthManager _health;
         
         // Animator IDs
         private int _animMovingId, _animDirectionId;
@@ -107,6 +109,7 @@ namespace SQZL.Entity.Player
             _sprite = GetComponent<SpriteRenderer>();
             _tilebody2D = GetComponent<Tilebody2D>();
             _inventory = GetComponent<PlayerInventory>();
+            _health = GetComponent<PlayerHealthManager>();
             _camera2D = Camera.main;
             _audioSource = GetComponent<AudioSource>();
             
@@ -632,6 +635,7 @@ namespace SQZL.Entity.Player
             if (swordHitbox != null)
             {
                 // TODO: Cache this, suboptimal but lazy
+                if (_health.currentHealth == _health.maxHealth && GameObject.FindGameObjectWithTag("SwordProjectile") == null) FireSwordProjectile(dir);
                 Hurtbox swordHurtbox = swordHitbox.GetComponent<Hurtbox>();
                 
                 Vector3 offsetVector = Vector3.zero;
@@ -657,6 +661,48 @@ namespace SQZL.Entity.Player
                 swordHitbox.transform.localPosition = offsetVector;
                 swordHitbox.SetActive(true);
             }
+        }
+
+        private void FireSwordProjectile(TilebodyDirection dir)
+        {
+            if (swordProjectilePrefab == null) return;
+
+            Vector2 fireDirection = Vector2.down;
+            float zRotation = 0f;
+
+            switch (dir)
+            {
+                case TilebodyDirection.Down:
+                    fireDirection = Vector2.down;
+                    zRotation = 180f;
+                    break;
+                case TilebodyDirection.Right:
+                    fireDirection = Vector2.right;
+                    zRotation = -90f;
+                    break;
+                case TilebodyDirection.Left:
+                    fireDirection = Vector2.left;
+                    zRotation = 90f;
+                    break;
+                case TilebodyDirection.Up:
+                    fireDirection = Vector2.up;
+                    zRotation = 0f;
+                    break;
+            }
+
+            //Calculate spawn position in front of Link
+            Vector3 spawnPos = transform.position + (Vector3)(fireDirection * arrowSpawnOffset);
+
+            //Spawn sword with correct rotation
+            Quaternion spawnRotation = Quaternion.Euler(0f, 0f, zRotation);
+            GameObject swordObj = Instantiate(swordProjectilePrefab, spawnPos, spawnRotation);
+
+            
+            PlayerArrow playerArrowScript = swordObj.GetComponent<PlayerArrow>();
+            if (playerArrowScript != null)
+            {
+                playerArrowScript.Initialize(fireDirection);
+            }            
         }
         IEnumerator Secondary()
         {
