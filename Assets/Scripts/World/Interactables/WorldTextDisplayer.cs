@@ -8,6 +8,7 @@ namespace SQZL.World.Interactable
     public class WorldTextDisplayer : MonoBehaviour
     {
         [SerializeField] private RoomTransitionTrigger displayToggleTrigger;
+        [SerializeField] private RoomTransitionTrigger[] additionalToggleTriggers;
         [SerializeField] private TextMeshProUGUI textDisplay;
         [SerializeField] private float timePerChar = 0.1f;
         [SerializeField] private PlayerEntityController playerRef;
@@ -17,6 +18,8 @@ namespace SQZL.World.Interactable
         {
             textUnfiltered = textDisplay.text;
             displayToggleTrigger.PostTransition += TriggerText;
+            foreach (var trigger in additionalToggleTriggers)
+                trigger.PostTransition += TriggerText;
         }
 
         private void TriggerText()
