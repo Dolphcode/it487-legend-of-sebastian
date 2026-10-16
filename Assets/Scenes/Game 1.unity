@@ -16579,6 +16579,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: SQZL.World.Interactable::SQZL.World.Interactable.RoomTeleportTrigger
   teleportTo: {fileID: 205741020}
+  setsMusic: 1
+  music: {fileID: 723260581}
+  newClip: {fileID: 8300000, guid: f294a7eeb58e3d44da527e6884029a6e, type: 3}
 --- !u!61 &67398932
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -28431,6 +28434,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: SQZL.World.Interactable::SQZL.World.Interactable.RoomTeleportTrigger
   teleportTo: {fileID: 1178776564}
+  setsMusic: 0
+  music: {fileID: 0}
+  newClip: {fileID: 0}
 --- !u!61 &728057802
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -73824,6 +73830,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: SQZL.World.Interactable::SQZL.World.Interactable.RoomTeleportTrigger
   teleportTo: {fileID: 1065133484}
+  setsMusic: 1
+  music: {fileID: 723260581}
+  newClip: {fileID: 8300000, guid: 1b52f6b24351aae4c926865632e688fd, type: 3}
 --- !u!61 &1205868277
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -80649,6 +80658,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: SQZL.World.Interactable::SQZL.World.Interactable.RoomTeleportTrigger
   teleportTo: {fileID: 1683466541}
+  setsMusic: 0
+  music: {fileID: 0}
+  newClip: {fileID: 0}
 --- !u!61 &1638231286
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -86088,9 +86100,9 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.20000002
+    x: 0
     y: 0
-    width: 0.6
+    width: 1
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
@@ -88565,6 +88577,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: SQZL.World.Interactable::SQZL.World.Interactable.RoomTeleportTrigger
   teleportTo: {fileID: 2033021657}
+  setsMusic: 1
+  music: {fileID: 723260581}
+  newClip: {fileID: 8300000, guid: 1b52f6b24351aae4c926865632e688fd, type: 3}
 --- !u!61 &2126404608
 BoxCollider2D:
   m_ObjectHideFlags: 0
