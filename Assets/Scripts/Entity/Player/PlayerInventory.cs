@@ -233,6 +233,12 @@ namespace SQZL.Entity.Player {
             #endif
             return _durabilityTracker[name].currDurability > 0;
         }
+
+        public float DurabilityFracLeft(string name)
+        {
+            PlayerDurabilityEntry ent = _durabilityTracker[name];
+            return (float)ent.currDurability / (float)ent.maxDurability;
+        }
         #endregion
         
         /// <summary>

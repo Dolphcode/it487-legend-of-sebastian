@@ -179,7 +179,10 @@ namespace SQZL.Entity.Player
 
             if (primaryRepairAction.WasPressedThisFrame()) _inventory.RepairDurability("Sword");
             if (secondaryRepairAction.WasPressedThisFrame() && CurrentSecondary == SecondaryType.Boomerang)
+            {
                 _inventory.RepairDurability("Boomerang");
+                UpdateSecondaryUI();
+            }
         }
         
         void FixedUpdate()
@@ -621,12 +624,30 @@ namespace SQZL.Entity.Player
             {
                 case SecondaryType.Bomb:
                     SecondaryImage.sprite = bombSprite;
+                    SecondaryImage.color = Color.white;
                     break;
                 case SecondaryType.Bow:
                     SecondaryImage.sprite = bowSprite;
+                    SecondaryImage.color = Color.white;
                     break;
                 case SecondaryType.Boomerang:
                     SecondaryImage.sprite = boomerangSprite;
+                    float fracLeft = _inventory.DurabilityFracLeft("Boomerang");
+                    if (fracLeft <= 0f)
+                    {
+                        SecondaryImage.color = Color.darkRed;
+                    } else if (fracLeft <= 0.1f)
+                    {
+                        SecondaryImage.color = Color.orangeRed;
+                    } 
+                    else if (fracLeft <= 0.5f)
+                    {
+                        SecondaryImage.color = Color.deepPink;
+                    }
+                    else
+                    {
+                        SecondaryImage.color = Color.white;
+                    }
                     break;
             }
         }
@@ -902,6 +923,7 @@ namespace SQZL.Entity.Player
         private void TickBoomerangDurability()
         {
             _inventory.ConsumeDurability("Boomerang");
+            UpdateSecondaryUI();
             if (!_inventory.HasDurability("Boomerang"))
             {
                 TriggerBoomerangReload();
