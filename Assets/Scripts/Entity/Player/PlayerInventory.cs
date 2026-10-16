@@ -21,6 +21,11 @@ namespace SQZL.Entity.Player {
         [SerializeField] private List<PlayerUnlockableEntry> unlockableEntries;
 
         /// <summary>
+        /// Populate this list to specify the durability data bindings for items with durability
+        /// </summary>
+        [SerializeField] private List<PlayerDurabilityEntry> durabilityTrackEntries;
+        
+        /// <summary>
         /// Subscribe to this event to be notified when an unlockable is toggled. The first argument is the identifier of the unlockable
         /// while the second argument is the new state (<c>true</c> if it was just unlocked, and <c>false</c> if it was not). This will
         /// ONLY fire if the unlockable's value is actually changed.
@@ -55,13 +60,16 @@ namespace SQZL.Entity.Player {
         
         private Dictionary<string, int> _consumableInventory = new();
         private Dictionary<string, bool> _unlockableInventory = new();
+        private Dictionary<string, PlayerDurabilityEntry> _durabilityTracker = new();
 
         private void Awake()
         {
             foreach (PlayerConsumableEntry entry in consumableEntries) _consumableInventory[entry.name] = entry.startingCount;
             foreach (PlayerUnlockableEntry entry in unlockableEntries) _unlockableInventory[entry.name] = entry.startsWith;
+            foreach (PlayerDurabilityEntry entry in durabilityTrackEntries) _durabilityTracker[entry.name] = entry;
         }
 
+        #region UNLOCKABLE
         /// <summary>
         /// Call this to unlock or remove an unlockable item from the player's inventory. This function will do nothing if the unlockable name
         /// specified does not exist (or will throw a warning if in <c>DEBUG</c> mode).
@@ -110,7 +118,8 @@ namespace SQZL.Entity.Player {
             // Then get value
             return _unlockableInventory[name];
         }
-        
+        #endregion
+        #region CONSUMABLE
         /// <summary>
         /// Call this to consume or add to a consumable in the player's inventory. This function will do nothing if the consumable name
         /// specified does not exist (or will throw a warning if in <c>DEBUG</c> mode).
@@ -158,6 +167,73 @@ namespace SQZL.Entity.Player {
             // Then get value
             return _consumableInventory[name];
         }
+        #endregion
+        #region DURABILITY
+
+        /// <summary>
+        /// Call this function to consume the durability of an entry with durability
+        /// </summary>
+        /// <param name="name">The name of the durability entry to be modified</param>
+        public void ConsumeDurability(string name)
+        {
+            #if DEBUG
+            if (!_durabilityTracker.ContainsKey(name))
+            {
+                Debug.LogWarning($"WARNING: No durability entry called {name}, this function call will do nothing");
+                return;
+            }
+            #endif
+            PlayerDurabilityEntry ent = _durabilityTracker[name];
+            ent.currDurability--;
+            _durabilityTracker[name] = ent;
+        }
+
+        public const int DURABILITY_REPAIR_SUCCESS = 0;
+        public const int DURABILITY_REPAIR_UNNEEDED = 1;
+        public const int DURABILITY_REPAIR_FAILURE = -1;
+        
+        /// <summary>
+        /// A complete function to easily repair an item's durability. Specify the item and this
+        /// function will check if the player has hammers, this function will also refrain from
+        /// </summary>
+        /// <param name="name">Entry to repair</param>
+        /// <returns><c>PlayerInventory.DURABILITY_REPAIR_SUCCESS</c> if successful, <c>PlayerInventory.DURABILITY_REPAIR_UNNEEDED if item does not need repairing, no hammers will be consumed, highest priority <c>PlayerInventory.DURABILITY_REPAIR_FAILURE if error or no hammers</c></returns>
+        public int RepairDurability(string name)
+        {
+            #if DEBUG
+            if (!_durabilityTracker.ContainsKey(name))
+            {
+                Debug.LogWarning($"WARNING: No durability entry called {name}, this function call will return {DURABILITY_REPAIR_FAILURE}");
+                return DURABILITY_REPAIR_FAILURE;
+            }
+            #endif
+
+            if (GetConsumableAmount("hammer") <= 0) return DURABILITY_REPAIR_FAILURE;
+            PlayerDurabilityEntry ent = _durabilityTracker[name];
+            if (ent.currDurability >= ent.maxDurability) return DURABILITY_REPAIR_UNNEEDED;
+            AccumulateConsumable("hammer", -1);
+            ent.currDurability = ent.maxDurability;
+            _durabilityTracker[name] = ent;
+            return DURABILITY_REPAIR_SUCCESS;
+        }
+
+        /// <summary>
+        /// Call this function to check the durability of an item/entry.
+        /// </summary>
+        /// <param name="name">The durability entry to be checked</param>
+        /// <returns>true if the durability entry called for has a current durability greater than 0</returns>
+        public bool HasDurability(string name)
+        {
+            #if DEBUG
+            if (!_durabilityTracker.ContainsKey(name))
+            {
+                Debug.LogWarning($"WARNING: No durability entry called {name}, this function call will return false");
+                return false;
+            }
+            #endif
+            return _durabilityTracker[name].currDurability > 0;
+        }
+        #endregion
         
         /// <summary>
         /// This serializable struct represents an entry for a type of consumable.
@@ -173,6 +249,14 @@ namespace SQZL.Entity.Player {
         {
             [SerializeField] internal string name;
             [SerializeField] internal bool startsWith;
+        }
+
+        [System.Serializable]
+        internal struct PlayerDurabilityEntry
+        {
+            [SerializeField] internal string name;
+            [SerializeField] internal int maxDurability;
+            [SerializeField] internal int currDurability;
         }
     }
 }

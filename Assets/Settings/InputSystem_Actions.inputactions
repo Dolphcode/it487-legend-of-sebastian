@@ -135,6 +135,26 @@
                     "interactions": "",
                     "initialStateCheck": false,
                     "priority": 0
+                },
+                {
+                    "name": "PrimaryRepair",
+                    "type": "Button",
+                    "id": "643188c4-3a73-46b5-a002-9ccf75a9429d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "SecondaryRepair",
+                    "type": "Button",
+                    "id": "18d74375-a03c-4e2d-823f-f350b4a932a9",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -597,6 +617,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "SwitchSecondary",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a5edc82e-f85f-4cf2-ba55-7ca936d56812",
+                    "path": "<Keyboard>/o",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "PrimaryRepair",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "032ce2bf-f19e-4ee7-8b09-ecab4588bf64",
+                    "path": "<Keyboard>/p",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SecondaryRepair",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

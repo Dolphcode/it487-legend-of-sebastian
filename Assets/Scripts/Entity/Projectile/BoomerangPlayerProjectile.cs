@@ -107,6 +107,7 @@ namespace SQZL.Entity.Projectile
                 // TODO Stun
                 //hitbox.TryDamage(damageAmiount, doKnockback, _attackDirection);
                 hitbox.TryStun();
+                OnBoomerangHit?.Invoke();
             }
         }
     }

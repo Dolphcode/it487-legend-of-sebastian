@@ -74,6 +74,8 @@ namespace SQZL.Entity.Player
         private InputAction secondaryAction;
         private InputAction godAction;
         private InputAction switchAction;
+        private InputAction primaryRepairAction;
+        private InputAction secondaryRepairAction;
         
         // On Start components
         private BoxCollider2D _collider2D;
@@ -123,6 +125,8 @@ namespace SQZL.Entity.Player
             secondaryAction = InputSystem.actions.FindAction("SecondaryWeapon");
             godAction = InputSystem.actions.FindAction("GodMode");
             switchAction = InputSystem.actions.FindAction("SwitchSecondary");
+            primaryRepairAction = InputSystem.actions.FindAction("PrimaryRepair");
+            secondaryRepairAction = InputSystem.actions.FindAction("SecondaryRepair");
             
             // Save the current y position
             lastPosition = transform.position;
@@ -139,6 +143,9 @@ namespace SQZL.Entity.Player
 
             //Get the initial list of unlocked secondaries
             RefreshUnlockedSecondaries();
+            
+            // Connect durability ticking for sword
+            swordHitbox.GetComponent<Hurtbox>().OnHit += TickSwordDurability;
         }
 
         // Update is called once per frame
@@ -146,7 +153,7 @@ namespace SQZL.Entity.Player
         {
             if (playerInputFrozen) return;
 
-            if (primaryAction.WasPressedThisFrame())
+            if (primaryAction.WasPressedThisFrame() && _inventory.HasDurability("Sword"))
             {
                 playerInputFrozen = true;
                 StartCoroutine(Primary());
@@ -169,6 +176,10 @@ namespace SQZL.Entity.Player
             {
                 CycleSecondaryItem();
             }
+
+            if (primaryRepairAction.WasPressedThisFrame()) _inventory.RepairDurability("Sword");
+            if (secondaryRepairAction.WasPressedThisFrame() && CurrentSecondary == SecondaryType.Boomerang)
+                _inventory.RepairDurability("Boomerang");
         }
         
         void FixedUpdate()
@@ -190,6 +201,12 @@ namespace SQZL.Entity.Player
             MovePlayer(this.moveSpeed, xIn, yIn);
             
             SetAnimatorState(xIn != 0 || yIn != 0, Facing);
+        }
+
+        private void LateUpdate()
+        {
+            // After everything executes, reset durability ticking
+            swordDurabilityTickedThisFrame = false;
         }
 
         private void OnDestroy()
@@ -616,7 +633,7 @@ namespace SQZL.Entity.Player
         #endregion
         #region ATTACKS
         IEnumerator Primary()
-        {
+        {   
             _audioSource.PlayOneShot(swordSound);
             ExecutePrimaryAttack(Facing);
             yield return null;
@@ -661,6 +678,16 @@ namespace SQZL.Entity.Player
                 swordHitbox.transform.localPosition = offsetVector;
                 swordHitbox.SetActive(true);
             }
+        }
+
+        private bool swordDurabilityTickedThisFrame = false;
+        private void TickSwordDurability()
+        {
+            if (_inventory.HasDurability("Sword") && !swordDurabilityTickedThisFrame)
+            {
+                swordDurabilityTickedThisFrame = true;
+                _inventory.ConsumeDurability("Sword");
+            } 
         }
 
         private void FireSwordProjectile(TilebodyDirection dir)
@@ -726,7 +753,7 @@ namespace SQZL.Entity.Player
                     break;
                 case SecondaryType.Boomerang:
                     //Spawn le boomerang
-                    FireBoomerang(dir);
+                    if (_inventory.HasDurability("Boomerang")) FireBoomerang(dir);
                     break;
             }
         }
@@ -863,12 +890,24 @@ namespace SQZL.Entity.Player
             GameObject proj = Instantiate(boomerangPrefab, transform.position, Quaternion.identity);
             activeBoomerang = proj.GetComponent<BoomerangPlayerProjectile>();
             activeBoomerang.OnBoomerangReturn += TriggerBoomerangReload;
+            activeBoomerang.OnBoomerangHit += TickBoomerangDurability;
             activeBoomerang.FireBoomerang(dir, gameObject);
         }
 
         private void TriggerBoomerangReload()
         {
             thrownBoomerang = false;
+        }
+
+        private void TickBoomerangDurability()
+        {
+            _inventory.ConsumeDurability("Boomerang");
+            if (!_inventory.HasDurability("Boomerang"))
+            {
+                TriggerBoomerangReload();
+                activeBoomerang.gameObject.SetActive(false);
+                Destroy(activeBoomerang.gameObject);
+            }
         }
         #endregion
     }

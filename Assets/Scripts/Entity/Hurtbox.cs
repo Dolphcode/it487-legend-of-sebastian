@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace SQZL.Entity
@@ -19,6 +20,8 @@ namespace SQZL.Entity
             get { return _attackDirection; }
         }
 
+        public event Action OnHit;
+
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
@@ -38,6 +41,7 @@ namespace SQZL.Entity
             if (other.gameObject.CompareTag(targetTag) && other.TryGetComponent(out hitbox))
             {
                 hitbox.TryDamage(damageAmount, doKnockback, _attackDirection);
+                OnHit?.Invoke();
             }
         }
     }
