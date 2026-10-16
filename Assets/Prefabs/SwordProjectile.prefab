@@ -130,8 +130,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cce836e17b67c7a42aef1597c287dfba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: SQZL.Entity.Player::SQZL.Entity.Player.PlayerArrow
-  speed: 10
-  lifeTime: 5
+  speed: 20
+  lifeTime: 0.75
 --- !u!61 &-8656406352185556080
 BoxCollider2D:
   m_ObjectHideFlags: 0

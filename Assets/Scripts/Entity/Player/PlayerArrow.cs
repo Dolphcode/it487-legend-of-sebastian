@@ -32,7 +32,9 @@ namespace SQZL.Entity.Player
                 // I added it twin :>
                 //   ||
                 //  \ /
-                BaseEntityDamageHandler ent = other.gameObject.GetComponent<BaseEntityDamageHandler>();
+                //BaseEntityDamageHandler ent = other.gameObject.GetComponent<BaseEntityDamageHandler>();
+                BaseEntityDamageHandler ent = null;
+                if (!other.gameObject.TryGetComponent(out ent)) return;
                 ent.TryDamage(/*new Vector2Int(Mathf.RoundToInt(moveDirection.x), Mathf.RoundToInt(moveDirection.y)), */1, false, TilebodyDirection.Down);
                 
                 Destroy(gameObject);
