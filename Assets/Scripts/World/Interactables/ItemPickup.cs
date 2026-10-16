@@ -38,12 +38,18 @@ namespace SQZL.World.Interactable
                 {
                     if (identifier == "Bow")
                     {
-                        inv.ToggleUnlockable("Bow", true);
+                        if (inv.HasUnlockable("Bow"))
+                        {
+                            inv.AccumulateConsumable("rupee", 5);
+                        } else {
+                            inv.ToggleUnlockable("Bow", true);
+                        }
                     }
                     if (identifier == "Boomerang")
                     {
                         inv.ToggleUnlockable("Boomerang", true);
                     }
+                    if (identifier == "TorchFace") inv.ToggleUnlockable("TorchFace", true);
                     //inv.ToggleUnlockable(identifier, true);
                 }
 
