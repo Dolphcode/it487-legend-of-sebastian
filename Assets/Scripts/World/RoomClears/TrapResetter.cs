@@ -7,7 +7,12 @@ namespace SQZL.World.RoomClears
 {
     public class TrapResetter : BaseRoomClearHandler
     {
-        // TODO : May need to make a list for teleporters too? idek
+
+        [Header("Trap Set Config")] [SerializeField]
+        private List<RoomTransitionTrigger> trapSetters;
+        [SerializeField] private List<TileSwapEntry> setSwapEntries;
+        
+        [Header("Trap Reset Config")]
         [SerializeField] private List<RoomTransitionTrigger> trapResetters;
         [SerializeField] private RoomTransitionTrigger trapToReset;
         [SerializeField] private List<TileSwapEntry> swapEntries;
@@ -20,12 +25,23 @@ namespace SQZL.World.RoomClears
             base.Start();
             foreach (RoomTransitionTrigger resetter in trapResetters)
                 resetter.PreTransition += ResetTrap;
+            foreach (RoomTransitionTrigger resetter in trapSetters)
+                resetter.PostTransition += TrySetTrap;
+        }
+
+        public void TrySetTrap()
+        {
+            if (trapBroken) return; 
+            // Swap tiles
+            foreach (TileSwapEntry swapEntry in setSwapEntries)
+            {
+                wallTiles.SetTile(swapEntry.tileToSwap, swapEntry.swapTo);
+            }
         }
 
         private void ResetTrap()
         {
             if (trapBroken) return;
-            if (trapToReset.trapTriggers <= 0) trapToReset.trapTriggers++;
             foreach (TileSwapEntry swapEntry in swapEntries)
             {
                 if (swapEntry.clearTile)
@@ -42,6 +58,8 @@ namespace SQZL.World.RoomClears
         public override void OnRoomClear()
         {
             trapBroken = true;
+            foreach (RoomTransitionTrigger trigger in trapSetters)
+                trigger.trapSettable = false;
         }
 
         [System.Serializable]

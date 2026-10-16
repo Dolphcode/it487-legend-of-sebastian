@@ -27,11 +27,13 @@ namespace SQZL.World.Interactable
          // Ensure that the object is placed in the center (vertically or horizontally) of the two tiles marking a gateway. The collider will be positioned automatically accordingly")]
 
          [Header("Trap Door Config")]
-         [SerializeField] public int trapTriggers;
+         //[SerializeField] public int trapTriggers;
+
+         [SerializeField] public bool trapSettable = false;
 
          [SerializeField] private int playerMoveTilesAdditional = 1;
-         [SerializeField] private Tilemap wallTilemap;
-         [SerializeField] private List<TileSwapEntry> tilesToSwap;
+         //[SerializeField] private Tilemap wallTilemap;
+         //[SerializeField] private List<TileSwapEntry> tilesToSwap;
          
         [Header("Transition Config")]
         [SerializeField]
@@ -142,17 +144,10 @@ namespace SQZL.World.Interactable
             if (vertical && positionFlag) dir = TilebodyDirection.Up;
             else if (!vertical && positionFlag) dir = TilebodyDirection.Right;
             else if (!vertical && !positionFlag) dir = TilebodyDirection.Left;
-            if (trapTriggers <= 0) yield return player.ForcePlayerCoroutine(playerMoveTiles, playerMoveTime, dir, true, false, false);
+            if (!trapSettable) yield return player.ForcePlayerCoroutine(playerMoveTiles, playerMoveTime, dir, true, false, false);
             else
             {
                 yield return player.ForcePlayerCoroutine(playerMoveTiles + playerMoveTilesAdditional, playerMoveTime, dir, true, false, false);
-                trapTriggers--;
-                
-                // Swap tiles
-                foreach (TileSwapEntry swapEntry in tilesToSwap)
-                {
-                    wallTilemap.SetTile(swapEntry.tileToSwap, swapEntry.swapTo);
-                }
             }
             // And toggle the trigger's position        
             ToggleTriggerPosition();
@@ -164,13 +159,6 @@ namespace SQZL.World.Interactable
             if (positionFlag) RoomManager._Instance.LoadRoom(bRoom);
             else RoomManager._Instance.LoadRoom(aRoom);
             PostTransition?.Invoke();
-        }
-        
-        [System.Serializable]
-        internal struct TileSwapEntry
-        {
-            [SerializeField] internal Vector3Int tileToSwap;
-            [SerializeField] internal Tile swapTo;
         }
     }
 }

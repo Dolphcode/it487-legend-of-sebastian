@@ -17199,10 +17199,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 375539109}
   vertical: 0
   initialPositionFlag: 0
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -17532,10 +17530,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 1784542520}
   vertical: 1
   initialPositionFlag: 1
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -17956,10 +17952,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 685202552}
   vertical: 1
   initialPositionFlag: 0
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -18274,10 +18268,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 130109286}
   vertical: 1
   initialPositionFlag: 0
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -18441,6 +18433,63 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8476557151987588003, guid: df723f44cff501747bc55e4bd29cf4a6, type: 3}
   m_PrefabInstance: {fileID: 229157438}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &258392700
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 258392701}
+  - component: {fileID: 258392702}
+  m_Layer: 0
+  m_Name: Trap
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &258392701
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 258392700}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1195927490}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &258392702
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 258392700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b4c016d45249814e9f3b9bb34af8f76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: SQZL.World.RoomClears::SQZL.World.RoomClears.TrapResetter
+  trapSetters:
+  - {fileID: 528336167}
+  setSwapEntries:
+  - clearTile: 0
+    tileToSwap: {x: -13, y: -24, z: 0}
+    swapTo: {fileID: 11400000, guid: c8a8bc8ad5761244eaa1a648ad4a0727, type: 2}
+  trapResetters: []
+  trapToReset: {fileID: 0}
+  swapEntries:
+  - clearTile: 1
+    tileToSwap: {x: -13, y: -24, z: 0}
+    swapTo: {fileID: 0}
+  wallTiles: {fileID: 2026553272429360888}
 --- !u!1001 &260753230
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18683,10 +18732,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 1829089343}
   vertical: 0
   initialPositionFlag: 0
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 0
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -19141,10 +19188,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 548572242}
   vertical: 1
   initialPositionFlag: 1
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 3
   cameraMoveTime: 2
@@ -19246,10 +19291,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 757528609}
   vertical: 1
   initialPositionFlag: 1
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -19492,10 +19535,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 1975076056}
   vertical: 0
   initialPositionFlag: 0
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -23469,10 +23510,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 492280118}
   vertical: 1
   initialPositionFlag: 0
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -24538,10 +24577,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 2033021657}
   vertical: 0
   initialPositionFlag: 1
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -24643,12 +24680,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 548572242}
   vertical: 0
   initialPositionFlag: 0
-  trapTriggers: 1
+  trapSettable: 1
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap:
-  - tileToSwap: {x: -13, y: -24, z: 0}
-    swapTo: {fileID: 11400000, guid: c8a8bc8ad5761244eaa1a648ad4a0727, type: 2}
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -24704,7 +24737,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a09ebf4187955c1418e1523efab55eb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: SQZL.World::SQZL.World.RoomSpawnManager
-  startingRoom: 0
+  startingRoom: 1
   cameraPosition: {fileID: 831700347}
   warpPosition: {fileID: 1687846541}
 --- !u!1001 &566060164
@@ -25449,10 +25482,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 1733081616}
   vertical: 1
   initialPositionFlag: 1
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -25554,10 +25585,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 885150281}
   vertical: 1
   initialPositionFlag: 0
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 0
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -25963,10 +25992,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 863813552}
   vertical: 1
   initialPositionFlag: 0
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -27075,10 +27102,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 914295666}
   vertical: 0
   initialPositionFlag: 0
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -27211,10 +27236,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 1065133484}
   vertical: 1
   initialPositionFlag: 1
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -28458,10 +28481,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 1195927491}
   vertical: 0
   initialPositionFlag: 1
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 1
-  wallTilemap: {fileID: 0}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -28843,10 +28864,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 831826541}
   vertical: 0
   initialPositionFlag: 0
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -29584,10 +29603,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 1280440604}
   vertical: 1
   initialPositionFlag: 0
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -29700,12 +29717,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 305225827}
   vertical: 1
   initialPositionFlag: 1
-  trapTriggers: 1
+  trapSettable: 0
   playerMoveTilesAdditional: 0
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap:
-  - tileToSwap: {x: 35, y: 20, z: 0}
-    swapTo: {fileID: 11400000, guid: c8a8bc8ad5761244eaa1a648ad4a0727, type: 2}
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -29925,10 +29938,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 1784542520}
   vertical: 0
   initialPositionFlag: 1
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -30030,10 +30041,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 925276525}
   vertical: 1
   initialPositionFlag: 1
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -30135,10 +30144,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 620775191}
   vertical: 0
   initialPositionFlag: 1
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -30310,10 +30317,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 447028245}
   vertical: 0
   initialPositionFlag: 0
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -31388,10 +31393,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 1733081616}
   vertical: 1
   initialPositionFlag: 0
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -32405,10 +32408,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 1178776564}
   vertical: 0
   initialPositionFlag: 1
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -34229,10 +34230,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 130109286}
   vertical: 0
   initialPositionFlag: 0
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -69787,7 +69786,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 575397331308366522, guid: 6382c41d23cd16245a1c8bd9ef80c374, type: 3}
       propertyPath: consumableEntries.Array.data[1].startingCount
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 575397331308366522, guid: 6382c41d23cd16245a1c8bd9ef80c374, type: 3}
       propertyPath: consumableEntries.Array.data[2].startingCount
@@ -69807,7 +69806,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4232005782449720885, guid: 6382c41d23cd16245a1c8bd9ef80c374, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 57
+      value: -7
       objectReference: {fileID: 0}
     - target: {fileID: 4232005782449720885, guid: 6382c41d23cd16245a1c8bd9ef80c374, type: 3}
       propertyPath: m_LocalPosition.y
@@ -69887,7 +69886,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6450106679707885394, guid: 6382c41d23cd16245a1c8bd9ef80c374, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7462067368277283565, guid: 6382c41d23cd16245a1c8bd9ef80c374, type: 3}
       propertyPath: bowSprite
@@ -70063,12 +70062,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 510268823}
   vertical: 0
   initialPositionFlag: 1
-  trapTriggers: 1
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap:
-  - tileToSwap: {x: -26, y: 9, z: 0}
-    swapTo: {fileID: 11400000, guid: c8a8bc8ad5761244eaa1a648ad4a0727, type: 2}
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -70818,6 +70813,7 @@ Transform:
   - {fileID: 621991327}
   - {fileID: 1560941550}
   - {fileID: 649175169}
+  - {fileID: 258392701}
   m_Father: {fileID: 1325055512}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1195927491
@@ -70947,10 +70943,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 620775191}
   vertical: 1
   initialPositionFlag: 1
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -71052,10 +71046,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 1784542520}
   vertical: 0
   initialPositionFlag: 0
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -71175,10 +71167,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 375539109}
   vertical: 0
   initialPositionFlag: 1
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -71709,10 +71699,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 1280440604}
   vertical: 0
   initialPositionFlag: 0
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -72678,12 +72666,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 492280118}
   vertical: 0
   initialPositionFlag: 0
-  trapTriggers: 1
+  trapSettable: 1
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap:
-  - tileToSwap: {x: -13, y: -2, z: 0}
-    swapTo: {fileID: 11400000, guid: c8a8bc8ad5761244eaa1a648ad4a0727, type: 2}
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -72785,10 +72769,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 620775191}
   vertical: 0
   initialPositionFlag: 0
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -72890,10 +72872,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 375539109}
   vertical: 1
   initialPositionFlag: 0
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -74180,10 +74160,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 72112369}
   vertical: 0
   initialPositionFlag: 0
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -74347,10 +74325,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 1065133484}
   vertical: 0
   initialPositionFlag: 1
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -74483,10 +74459,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 863813552}
   vertical: 1
   initialPositionFlag: 1
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 3
   cameraMoveTime: 2
@@ -75483,10 +75457,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 1975076056}
   vertical: 0
   initialPositionFlag: 1
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -75894,10 +75866,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 305225827}
   vertical: 0
   initialPositionFlag: 0
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -76212,10 +76182,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 757528609}
   vertical: 1
   initialPositionFlag: 0
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -77049,10 +77017,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 1065133484}
   vertical: 0
   initialPositionFlag: 0
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -77154,10 +77120,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 298799085}
   vertical: 1
   initialPositionFlag: 1
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 3
   cameraMoveTime: 2
@@ -77408,6 +77372,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b4c016d45249814e9f3b9bb34af8f76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: SQZL.World.RoomClears::SQZL.World.RoomClears.TrapResetter
+  trapSetters:
+  - {fileID: 1350609318}
+  setSwapEntries:
+  - clearTile: 0
+    tileToSwap: {x: -13, y: -2, z: 0}
+    swapTo: {fileID: 11400000, guid: c8a8bc8ad5761244eaa1a648ad4a0727, type: 2}
   trapResetters:
   - {fileID: 1350609318}
   trapToReset: {fileID: 1350609318}
@@ -77512,10 +77482,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 438345383}
   vertical: 0
   initialPositionFlag: 1
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -77670,10 +77638,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 925276525}
   vertical: 0
   initialPositionFlag: 0
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -78198,10 +78164,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 1784542520}
   vertical: 1
   initialPositionFlag: 0
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -78546,10 +78510,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 703463239}
   vertical: 1
   initialPositionFlag: 0
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -78790,10 +78752,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 263221199}
   vertical: 1
   initialPositionFlag: 0
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -80124,10 +80084,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 298799085}
   vertical: 0
   initialPositionFlag: 1
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -80509,10 +80467,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 548572242}
   vertical: 0
   initialPositionFlag: 1
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -80614,10 +80570,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 492280118}
   vertical: 0
   initialPositionFlag: 1
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -81651,10 +81605,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 130109286}
   vertical: 0
   initialPositionFlag: 1
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -81861,7 +81813,7 @@ Transform:
   m_GameObject: {fileID: 2016034834}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 57, y: -44, z: -10}
+  m_LocalPosition: {x: -7, y: -44, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -82016,7 +81968,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a09ebf4187955c1418e1523efab55eb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: SQZL.World::SQZL.World.RoomSpawnManager
-  startingRoom: 1
+  startingRoom: 0
   cameraPosition: {fileID: 518503645}
   warpPosition: {fileID: 0}
 --- !u!1 &2039355897
@@ -82115,10 +82067,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 1975076056}
   vertical: 1
   initialPositionFlag: 1
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -82220,10 +82170,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 685202552}
   vertical: 1
   initialPositionFlag: 1
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -82362,10 +82310,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 885150281}
   vertical: 0
   initialPositionFlag: 1
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 0
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
@@ -82856,10 +82802,8 @@ MonoBehaviour:
   associatedRoom: {fileID: 914295666}
   vertical: 0
   initialPositionFlag: 1
-  trapTriggers: 0
+  trapSettable: 0
   playerMoveTilesAdditional: 2
-  wallTilemap: {fileID: 2026553272429360888}
-  tilesToSwap: []
   playerMoveTime: 0.5
   playerMoveTiles: 4
   cameraMoveTime: 2
