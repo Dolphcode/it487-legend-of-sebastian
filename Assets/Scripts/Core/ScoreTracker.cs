@@ -1,4 +1,6 @@
+using SQZL.Entity.Player;
 using UnityEngine;
+using System.Collections;
 using UnityEngine.SceneManagement;
 
 namespace SQZL.Core
@@ -36,6 +38,8 @@ namespace SQZL.Core
         void Start()
         {
             Reset();
+            playing = true; 
+            FindAnyObjectByType<PlayerEntityController>().GetComponent<PlayerHealthManager>().OnLose += LoseGame;
         }
 
         // Update is called once per frame
@@ -60,9 +64,29 @@ namespace SQZL.Core
 
         public void StartGame()
         {
+            StartCoroutine(SetupTracking());
+        }
+
+        private IEnumerator SetupTracking()
+        {
             SceneManager.LoadScene(gameScene);
             Reset();
+            PlayerEntityController ent = null;
+            PlayerHealthManager hp = null;
+            while (ent is null)
+            {
+                ent = FindAnyObjectByType<PlayerEntityController>();
+                yield return null;
+            }
+            hp = ent.GetComponent<PlayerHealthManager>();
+            hp.OnLose += LoseGame;
             playing = true;
+        }
+
+        public void LoseGame()
+        {
+            playing = false;
+            SceneManager.LoadScene(loseScene);
         }
     }
 }

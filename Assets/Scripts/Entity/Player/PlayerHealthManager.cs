@@ -1,3 +1,4 @@
+using System;
 using SQZL.World;
 using UnityEngine;
 using UnityEngine.UI;
@@ -127,6 +128,12 @@ namespace SQZL.Entity.Player
         {
             // maxHealth += amount;
             currentHealth = maxHealth;
+        }
+
+        public event Action OnLose;
+        public void OnDeathAnimEnd() 
+        {
+            OnLose?.Invoke();
         }
     }
 }

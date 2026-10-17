@@ -1,31 +1,34 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameOver : MonoBehaviour
+namespace SQZL.Core
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public class GameOver : MonoBehaviour
     {
-        
-    }
+        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        void Start()
+        {
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+        }
 
-    public void Continue()
-    {
-        SceneManager.LoadScene("Game");
-    }
+        // Update is called once per frame
+        void Update()
+        {
 
-    public void Quit()
-    {
-        Application.Quit();
+        }
 
-        #if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-        #endif
+        public void Continue()
+        {
+            ScoreTracker.Instance.StartGame();
+        }
+
+        public void Quit()
+        {
+            Application.Quit();
+
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#endif
+        }
     }
 }
