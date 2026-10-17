@@ -47,7 +47,10 @@ namespace SQZL.World.Interactable
                     }
                     if (identifier == "Boomerang")
                     {
-                        inv.ToggleUnlockable("Boomerang", true);
+                        if (inv.HasUnlockable("Boomerang"))
+                            inv.AccumulateConsumable("hammer", 2);
+                        else
+                            inv.ToggleUnlockable("Boomerang", true);
                     }
                     if (identifier == "TorchFace") inv.ToggleUnlockable("TorchFace", true);
                     //inv.ToggleUnlockable(identifier, true);
