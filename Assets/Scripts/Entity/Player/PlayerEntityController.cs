@@ -18,6 +18,7 @@ namespace SQZL.Entity.Player
             Bomb,
             Bow,
             Boomerang,
+            Pickaxe,
         }
         [Header("Player Movement & Collision Config")] [SerializeField] private float moveSpeed = 5f;
         [SerializeField] [Range(0f, 1.0e-4f)] private float blockTestThreshold = 1.0e-5f;
@@ -46,6 +47,7 @@ namespace SQZL.Entity.Player
         [SerializeField] Sprite bowSprite;
         [SerializeField] Sprite bombSprite;
         [SerializeField] Sprite boomerangSprite;
+        [SerializeField] Sprite pickaxeSprite;
 
         //Secondary things
         private List<SecondaryType> unlockedSecondaries = new List<SecondaryType>();
@@ -64,6 +66,7 @@ namespace SQZL.Entity.Player
 
         [Header ("Sounds")]
         public AudioClip swordSound;
+        public AudioClip swordProjectileSound;
 
         [Header("Transition")] [SerializeField]
         private TransitionHandler _transitionHandler;
@@ -563,11 +566,9 @@ namespace SQZL.Entity.Player
             if (_inventory != null)
             {
                 if (_inventory.HasUnlockable("Bomb")) unlockedSecondaries.Add(SecondaryType.Bomb);
-                if (_inventory.HasUnlockable("Bow"))
-                {
-                    unlockedSecondaries.Add(SecondaryType.Bow);
-                }
+                if (_inventory.HasUnlockable("Bow")) unlockedSecondaries.Add(SecondaryType.Bow);
                 if (_inventory.HasUnlockable("Boomerang")) unlockedSecondaries.Add(SecondaryType.Boomerang);
+                if (_inventory.HasUnlockable("Pickaxe")) unlockedSecondaries.Add(SecondaryType.Pickaxe);
             }
 
             if (unlockedSecondaries.Count == 0)
@@ -611,6 +612,9 @@ namespace SQZL.Entity.Player
                 case SecondaryType.Boomerang:
                     SecondaryImage.sprite = boomerangSprite;
                     break;
+                case SecondaryType.Pickaxe:
+                    SecondaryImage.sprite = pickaxeSprite;
+                    break;
             }
         }
         #endregion
@@ -635,6 +639,8 @@ namespace SQZL.Entity.Player
             if (swordHitbox != null)
             {
                 // TODO: Cache this, suboptimal but lazy
+
+                //Spawns Sword Projectile if health is max, only allows for one instance of the projectile to be out at a time.
                 if (_health.currentHealth == _health.maxHealth && GameObject.FindGameObjectWithTag("SwordProjectile") == null) FireSwordProjectile(dir);
                 Hurtbox swordHurtbox = swordHitbox.GetComponent<Hurtbox>();
                 
@@ -702,7 +708,9 @@ namespace SQZL.Entity.Player
             if (playerArrowScript != null)
             {
                 playerArrowScript.Initialize(fireDirection);
-            }            
+            }
+
+            _audioSource.PlayOneShot(swordProjectileSound);            
         }
         IEnumerator Secondary()
         {

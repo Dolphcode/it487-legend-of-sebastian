@@ -1014,6 +1014,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad3a01cb4c207144b9cd6a9cd5bb441c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
+  maxHealth: 0
   currentHealth: 6
   hurtSound: {fileID: 8300000, guid: 147e0be3070c3a44ca1cdcb740970691, type: 3}
   pcScript: {fileID: 7462067368277283565}
@@ -1048,6 +1049,8 @@ MonoBehaviour:
   - name: Bow
     startsWith: 0
   - name: Boomerang
+    startsWith: 0
+  - name: Pickaxe
     startsWith: 0
 --- !u!114 &1672063891142741221
 MonoBehaviour:
@@ -1104,18 +1107,21 @@ MonoBehaviour:
   playerInputFrozen: 0
   swordHitbox: {fileID: 8022130059243689780}
   swordOffset: 0.8
+  swordProjectilePrefab: {fileID: 0}
   arrowPrefab: {fileID: 5745978206075673744, guid: eee66bf0da13af54fa1c1cdb957eb2b8, type: 3}
   arrowSpawnOffset: 0.5
   bombPrefab: {fileID: 8096689150842380967, guid: 556ca44617e32c74e92daa92133aab40, type: 3}
   boomerangPrefab: {fileID: 0}
   SecondaryImage: {fileID: 6350862045700796130}
-  bowSprite: {fileID: 21300326, guid: 45afd34443b96473598b76e2b1778b4e, type: 3}
-  bombSprite: {fileID: 21300292, guid: 45afd34443b96473598b76e2b1778b4e, type: 3}
-  boomerangSprite: {fileID: 5718304784226621280, guid: 0515e9223a8e2cf4899bf9a1ce39c235, type: 3}
+  bowSprite: {fileID: -167416144, guid: 540c1724d4f4e3b47a9eeac7fba72da8, type: 3}
+  bombSprite: {fileID: -4216791421744005944, guid: 540c1724d4f4e3b47a9eeac7fba72da8, type: 3}
+  boomerangSprite: {fileID: -4124297175497577528, guid: 540c1724d4f4e3b47a9eeac7fba72da8, type: 3}
+  pickaxeSprite: {fileID: 5807921338739458136, guid: 0910bc5d8f7b82d4cb72bfca9742886c, type: 3}
   knockbackTime: 0.25
   knockbackTilesMax: 6
   iframeTime: 0.5
   swordSound: {fileID: 8300000, guid: f9205f122fd728843ae80513e89157dc, type: 3}
+  swordProjectileSound: {fileID: 8300000, guid: 19a61254bf5373b40b8c8628c41a981e, type: 3}
   _transitionHandler: {fileID: 4411489700460924941}
 --- !u!114 &7879077194045855388
 MonoBehaviour:
@@ -1146,7 +1152,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -1957,6 +1963,7 @@ MonoBehaviour:
   targetTag: Enemy
   damageAmount: 1
   doKnockback: 1
+  hitSound: {fileID: 0}
 --- !u!1 &8250976676185244053
 GameObject:
   m_ObjectHideFlags: 0

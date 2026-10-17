@@ -44,6 +44,10 @@ namespace SQZL.World.Interactable
                     {
                         inv.ToggleUnlockable("Boomerang", true);
                     }
+                    if (identifier == "Pickaxe")
+                    {
+                        inv.ToggleUnlockable("Pickaxe", true);
+                    }
                     //inv.ToggleUnlockable(identifier, true);
                 }
 
