@@ -12,6 +12,8 @@ namespace SQZL.Entity
         [SerializeField] private bool doKnockback = false;
         // Components
         private Collider2D _hurtboxCollider;
+        private AudioSource _audioSource;
+        public AudioClip hitSound;
 
         private TilebodyDirection _attackDirection = TilebodyDirection.Down;
         public TilebodyDirection AttackDirection
@@ -26,6 +28,7 @@ namespace SQZL.Entity
         void Start()
         {
             _hurtboxCollider = GetComponent<Collider2D>();
+            _audioSource = GetComponent<AudioSource>();
 #if DEBUG
             if (!_hurtboxCollider.isTrigger)
             {
@@ -42,6 +45,7 @@ namespace SQZL.Entity
             {
                 hitbox.TryDamage(damageAmount, doKnockback, _attackDirection);
                 OnHit?.Invoke();
+                _audioSource.PlayOneShot(hitSound);
             }
         }
     }
