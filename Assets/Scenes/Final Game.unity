@@ -36280,7 +36280,7 @@ TilemapRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_MaskInteraction: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -78271,7 +78271,7 @@ PrefabInstance:
       objectReference: {fileID: 8862248808451639820, guid: a193583bc5111b942a2199b30c121fd8, type: 3}
     - target: {fileID: 8250976676185244053, guid: 6382c41d23cd16245a1c8bd9ef80c374, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -88082,9 +88082,9 @@ MonoBehaviour:
   collectibleScore: 0
   healthBonus: 0
   playing: 1
-  gameScene: 0
-  winScene: 1
-  loseScene: 2
+  gameScene: 1
+  winScene: 2
+  loseScene: 3
 --- !u!4 &1642387220
 Transform:
   m_ObjectHideFlags: 0
@@ -94088,10 +94088,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.20000002
+    x: 0.033333335
     y: 0
-    width: 0.6
-    height: 1
+    width: 0.26666668
+    height: 0.44444445
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 34
