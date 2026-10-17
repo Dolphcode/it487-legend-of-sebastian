@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace SQZL.Entity.Player
 {
@@ -10,6 +11,7 @@ namespace SQZL.Entity.Player
         public TextMeshProUGUI keys;
         public TextMeshProUGUI bombs;
         public TextMeshProUGUI hammer;
+        public Image primary;
         private AudioSource audioSource;
         public AudioClip rupeeSound;
 
@@ -22,6 +24,22 @@ namespace SQZL.Entity.Player
             bombs.text = $"{inv.GetConsumableAmount("bomb")}";
             keys.text = $"{inv.GetConsumableAmount("key")}";
             hammer.text = $"{inv.GetConsumableAmount("hammer")}";
+        }
+
+        void Update()
+        {
+            float frac = inv.DurabilityFracLeft("Sword");
+            if (frac <= 0f)
+            {
+                primary.color = Color.darkRed;
+            } else if (frac <= 0.5f)
+            {
+                primary.color = Color.orangeRed;
+            }
+            else
+            {
+                primary.color = Color.white;
+            }
         }
 
         private void UpdateConsumable(string name, int curr, int change)
