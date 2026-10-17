@@ -1,6 +1,7 @@
 using System;
 using SQZL.Entity.Player;
 using UnityEngine;
+using SQZL.Core;
 
 namespace SQZL.World.Interactable
 {
@@ -33,6 +34,7 @@ namespace SQZL.World.Interactable
                     {
                         health.AddMaxHealth(amount);
                     }
+
                 }
                 else
                 {
@@ -60,6 +62,7 @@ namespace SQZL.World.Interactable
                 // TODO Should probably have a coroutine to call in the player if this is an unlockable rather than a collectible
 
                 // Destroy the pickup
+                ScoreTracker.Instance.collectibleScore++;
                 Destroy(gameObject);
             }
         }

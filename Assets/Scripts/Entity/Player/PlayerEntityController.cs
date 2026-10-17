@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using SQZL.Entity.Projectile;
 using UnityEngine.UI;
 
+
 namespace SQZL.Entity.Player
 {
     public class PlayerEntityController : MonoBehaviour
