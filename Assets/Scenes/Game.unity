@@ -12772,11 +12772,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6428675686490230310, guid: 6382c41d23cd16245a1c8bd9ef80c374, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: -0.000015258789
       objectReference: {fileID: 0}
     - target: {fileID: 6445059896691141926, guid: 6382c41d23cd16245a1c8bd9ef80c374, type: 3}
       propertyPath: m_Name
       value: Link
+      objectReference: {fileID: 0}
+    - target: {fileID: 6445059896691141926, guid: 6382c41d23cd16245a1c8bd9ef80c374, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6450106679707885394, guid: 6382c41d23cd16245a1c8bd9ef80c374, type: 3}
       propertyPath: m_IsActive
